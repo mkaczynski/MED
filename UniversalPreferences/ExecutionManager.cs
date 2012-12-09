@@ -45,6 +45,7 @@ namespace UniversalPreferences
         
         private void GetData()
         {
+            dataManager.Initialize();
             data = dataManager.GetData();
 
             var mappings = dataManager.GetMappings();

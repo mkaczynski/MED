@@ -7,6 +7,11 @@ namespace UniversalPreferences.DAL
     // 1: bergstrasse, 2: Reichenbachstr., 3: Klinikum, 4: Siedepunkt
     public class SimpleData : IDataManager
     {
+        public void Initialize()
+        {
+            //nie ma nic do robienia
+        }
+
         public IList<Row> GetData()
         {
             var res = new List<Row>();
