@@ -6,7 +6,7 @@
         public int MainObjectId { get; set; }    // identyfikator pierwszego obiektu
         public int SecondObjectId { get; set; }  // identyfikator obiektu ktory z nim zestawiamy
 
-        public bool[] Atributes { get; set; }    // tabela zawierajaca wartosci atrybutow - jedna dla obu obiektow
+        public bool[] Attributes { get; set; }    // tabela zawierajaca wartosci atrybutow - jedna dla obu obiektow
 
         public int FirstSecondObjectAtribute { get; set; } // indeks pierwszego atrybutu drugiego obiektu w tabeli wyzej
 
