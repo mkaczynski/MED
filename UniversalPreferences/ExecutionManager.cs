@@ -48,7 +48,7 @@ namespace UniversalPreferences
             data = dataManager.GetData();
 
             var mappings = dataManager.GetMappings();
-            resultConverter = new ResultConverter(mappings); // mozna by zrobic jakis IoC
+            resultConverter = new ResultConverter(mappings);
         }
     }
 }
