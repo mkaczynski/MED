@@ -10,14 +10,16 @@ namespace UniversalPreferences
     public class ExecutionManager
     {
         private readonly IAlgorithm algorithm;
+        private readonly IDataManager dataManager;
         private IResultConverter resultConverter;
 
         private IList<Row> data;
         private IList<bool[]> preferences;
 
-        public ExecutionManager(IAlgorithm algorithm)
+        public ExecutionManager(IAlgorithm algorithm, IDataManager dataManager)
         {
             this.algorithm = algorithm;
+            this.dataManager = dataManager;
         }
 
         public void Execute()
@@ -43,10 +45,9 @@ namespace UniversalPreferences
         
         private void GetData()
         {
-            var sd = new SimpleData();
-            data = sd.GetData();
+            data = dataManager.GetData();
 
-            var mappings = sd.GetMappings();
+            var mappings = dataManager.GetMappings();
             resultConverter = new ResultConverter(mappings); // mozna by zrobic jakis IoC
         }
     }

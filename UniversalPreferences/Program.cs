@@ -1,4 +1,5 @@
 ﻿using UniversalPreferences.Algorithm;
+using UniversalPreferences.DAL;
 
 namespace UniversalPreferences
 {
@@ -6,7 +7,7 @@ namespace UniversalPreferences
     {
         static void Main(string[] args)
         {
-            var manager = new ExecutionManager(new ModifiedApriori());
+            var manager = new ExecutionManager(new ModifiedApriori(), new SimpleData());
             manager.Execute();
         }
     }
