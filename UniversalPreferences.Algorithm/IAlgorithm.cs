@@ -5,6 +5,6 @@ namespace UniversalPreferences.Algorithm
 {
     public interface IAlgorithm
     {
-        IEnumerable<ushort?[]> FindPreferences(IEnumerable<Row> transactions); // byc moze bedzie zwracac w formie listy obiektow a nie listy tablic
+        IEnumerable<ushort[]> FindPreferences(IEnumerable<Row> transactions); // byc moze bedzie zwracac w formie listy obiektow a nie listy tablic
     }
 }

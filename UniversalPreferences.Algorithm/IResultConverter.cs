@@ -2,6 +2,6 @@
 {
     public interface IResultConverter
     {
-        string Convert(ushort?[] preferences);
+        string Convert(ushort[] preferences);
     }
 }

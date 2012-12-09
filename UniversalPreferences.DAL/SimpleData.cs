@@ -116,5 +116,10 @@ namespace UniversalPreferences.DAL
 
             return dict;
         }
+
+        public int MinLeftSideIndex()
+        {
+            return 5;
+        }
     }
 }
