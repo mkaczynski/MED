@@ -40,7 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IAlgorithm.cs" />
+    <Compile Include="ModifiedApriori.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalPreferences.Common\UniversalPreferences.Common.csproj">
+      <Project>{74655F7D-A6DB-4F8C-9F8A-EF8C345E2411}</Project>
+      <Name>UniversalPreferences.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
