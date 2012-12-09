@@ -43,8 +43,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExecutionManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalPreferences.Algorithm\UniversalPreferences.Algorithm.csproj">
+      <Project>{C6B2DBC3-063B-4501-B523-02D97036BA78}</Project>
+      <Name>UniversalPreferences.Algorithm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UniversalPreferences.Common\UniversalPreferences.Common.csproj">
+      <Project>{74655F7D-A6DB-4F8C-9F8A-EF8C345E2411}</Project>
+      <Name>UniversalPreferences.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UniversalPreferences.DAL\UniversalPreferences.DAL.csproj">
+      <Project>{CB28E3D1-A428-4D19-BD33-5AA07CD114C5}</Project>
+      <Name>UniversalPreferences.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,7 +5,7 @@ namespace UniversalPreferences.Algorithm
 {
     public class ModifiedApriori : IAlgorithm
     {
-        public IEnumerable<byte[]> FindPreferences(IEnumerable<Row> transactions)
+        public IEnumerable<bool[]> FindPreferences(IEnumerable<Row> transactions)
         {
             throw new System.NotImplementedException();
         }

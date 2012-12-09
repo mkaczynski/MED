@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IAlgorithm.cs" />
+    <Compile Include="IResultConverter.cs" />
     <Compile Include="ModifiedApriori.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UniversalPreferences.Common\UniversalPreferences.Common.csproj">

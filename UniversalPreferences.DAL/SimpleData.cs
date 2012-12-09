@@ -5,7 +5,7 @@ namespace UniversalPreferences.DAL
 {
     // dane z artkulu, do testow
     // 1: bergstrasse, 2: Reichenbachstr., 3: Klinikum, 4: Siedepunkt
-    public class SimpleData
+    public class SimpleData : IDataManager
     {
         public IList<Row> GetData()
         {
@@ -92,6 +92,20 @@ namespace UniversalPreferences.DAL
             });
 
             return res;
+        }
+
+        public Dictionary<int, string> GetMappings()
+        {
+            var dict = 
+                new Dictionary<int, string>
+                    {
+                        {0, "vegetarian meal"},
+                        {1, "non-vegetarian meal without pork"},
+                        {2, "meal containing alcohol"},
+                        {4, "other meal"}
+                    };
+
+            return dict;
         }
     }
 }
