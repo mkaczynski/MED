@@ -14,7 +14,7 @@ namespace UniversalPreferences
         private IResultConverter resultConverter;
 
         private IList<Row> data;
-        private IList<bool[]> preferences;
+        private IList<ushort?[]> preferences;
 
         public ExecutionManager(IAlgorithm algorithm, IDataManager dataManager)
         {
@@ -40,7 +40,7 @@ namespace UniversalPreferences
 
         private void CalculatePreferences()
         {
-            preferences = new List<bool[]>(algorithm.FindPreferences(data));
+            preferences = new List<ushort?[]>(algorithm.FindPreferences(data));
         }
         
         private void GetData()

@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace UniversalPreferences.Algorithm
+﻿namespace UniversalPreferences.Algorithm
 {
     public interface IResultConverter
     {
-        string Convert(bool[] preferences);
+        string Convert(ushort?[] preferences);
     }
 }

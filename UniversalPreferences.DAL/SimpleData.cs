@@ -16,83 +16,83 @@ namespace UniversalPreferences.DAL
         {
             var res = new List<Row>();
 
-            res.Add(new Row { MainObjectId = 1, SecondObjectId = 1, 
-                Attributes = new[] { true, true, false, true, true, true, false, true}, 
+            res.Add(new Row { MainObjectId = 1, SecondObjectId = 1,
+                Attributes = new ushort?[] { 1, 2, null, 4, 5, 6, null, 8 }, 
                 FirstSecondObjectAtribute = 4, Value = Relation.Complied
             });
 
             res.Add(new Row { MainObjectId = 1, SecondObjectId = 2, 
-                Attributes = new[] { true, true, false, true, true, false, true, false}, 
+                Attributes = new ushort?[] { 1, 2, null, 4, 5, null, 7, null}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.Complied
             });
 
-            res.Add(new Row { MainObjectId = 1, SecondObjectId = 3, 
-                Attributes = new[] { true, true, false, true, true, true, false, false}, 
+            res.Add(new Row { MainObjectId = 1, SecondObjectId = 3,
+                Attributes = new ushort?[] { 1, 2, null, 4, 5, 6, null, null }, 
                 FirstSecondObjectAtribute = 4, Value = Relation.NotComplied
             });
 
             res.Add(new Row { MainObjectId = 1, SecondObjectId = 4, 
-                Attributes = new[] { true, true, false, true, true, false, false, false}, 
+                Attributes = new ushort?[] { 1, 2, null, 4, 5, null, null, null }, 
                 FirstSecondObjectAtribute = 4, Value = Relation.Complied
             });
 
             res.Add(new Row { MainObjectId = 2, SecondObjectId = 1, 
-                Attributes = new[] { true, false, true, false, true, true, false, true}, 
+                Attributes = new ushort?[] { 1, null, 3, null, 5, 6, null, 8}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.NotComplied
             });
 
             res.Add(new Row { MainObjectId = 2, SecondObjectId = 2, 
-                Attributes = new[] { true, false, true, false, true, false, true, false}, 
+                Attributes = new ushort?[] { 1, null, 3, null, 5, null, 7, null}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.Complied
             });
 
             res.Add(new Row { MainObjectId = 2, SecondObjectId = 3, 
-                Attributes = new[] { true, false, true, false, true, true, false, false}, 
+                Attributes = new ushort?[] { 1, null, 3, null, 5, 6, null, null}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.NotComplied
             });
 
-            res.Add(new Row { MainObjectId = 2, SecondObjectId = 4, 
-                Attributes = new[] { true, false, true, false, true, false, false, false}, 
+            res.Add(new Row { MainObjectId = 2, SecondObjectId = 4,
+                Attributes = new ushort?[] { 1, null, 3, null, 5, null, null, null }, 
                 FirstSecondObjectAtribute = 4, Value = Relation.Complied
             });
 
             res.Add(new Row { MainObjectId = 3, SecondObjectId = 1, 
-                Attributes = new[] { true, true, false, false, true, true, false, true}, 
+                Attributes = new ushort?[] { 1, 2, null, null, 5, 6, null, 8}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.NotComplied
             });
 
             res.Add(new Row { MainObjectId = 3, SecondObjectId = 2, 
-                Attributes = new[] { true, true, false, false, true, false, true, false}, 
+                Attributes = new ushort?[] { 1, 2, null, null, 5, null, 7, null}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.NotComplied
             });
 
             res.Add(new Row { MainObjectId = 3, SecondObjectId = 3, 
-                Attributes = new[] { true, true, false, false, true, true, false, false}, 
+                Attributes = new ushort?[] { 1, 2, null, null, 4, 5, null, null}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.Complied
             });
 
             res.Add(new Row { MainObjectId = 3, SecondObjectId = 4, 
-                Attributes = new[] { true, true, false, false, true, false, false, false}, 
+                Attributes = new ushort?[] { 1, 2, null, null, 5, null, null, null}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.Complied
             });
 
             res.Add(new Row { MainObjectId = 4, SecondObjectId = 1, 
-                Attributes = new[] { true, false, false, false, true, true, false, true}, 
+                Attributes = new ushort?[] { 1, null, null, null, 5, 6, null, 8}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.NotComplied
             });
 
             res.Add(new Row { MainObjectId = 4, SecondObjectId = 2, 
-                Attributes = new[] { true, false, false, false, true, false, true, false}, 
+                Attributes = new ushort?[] { 1, null, null, null, 5, null, 7, null}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.NotComplied
             });
 
             res.Add(new Row { MainObjectId = 4, SecondObjectId = 3, 
-                Attributes = new[] { true, false, false, false, true, true, false, false}, 
+                Attributes = new ushort?[] { 1, null, null, null, 5, 6, null, null }, 
                 FirstSecondObjectAtribute = 4, Value = Relation.NotComplied
             });
 
             res.Add(new Row { MainObjectId = 4, SecondObjectId = 4, 
-                Attributes = new[] { true, false, false, false, true, false, false, false}, 
+                Attributes = new ushort?[] { 1, null, null, null, 5, null, null, null}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.Complied
             });
 

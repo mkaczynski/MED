@@ -5,7 +5,13 @@ namespace UniversalPreferences.Algorithm
 {
     public class ModifiedApriori : IAlgorithm
     {
-        public IEnumerable<bool[]> FindPreferences(IEnumerable<Row> transactions)
+        public IEnumerable<ushort?[]> FindPreferences(IEnumerable<Row> transactions)
+        {
+            var itemsets = FindSetsWhichHasOneElement(transactions);
+            return null;
+        }
+
+        private IEnumerable<Row> FindSetsWhichHasOneElement(IEnumerable<Row> trancactions)
         {
             throw new System.NotImplementedException();
         }

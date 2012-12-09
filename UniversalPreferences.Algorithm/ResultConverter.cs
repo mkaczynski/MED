@@ -12,7 +12,7 @@ namespace UniversalPreferences.Algorithm
             this.mappings = mappings;
         }
 
-        public string Convert(bool[] preferences)
+        public string Convert(ushort?[] preferences)
         {
             //todo
             return null;
