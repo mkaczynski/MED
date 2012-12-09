@@ -104,10 +104,14 @@ namespace UniversalPreferences.DAL
             var dict = 
                 new Dictionary<int, string>
                     {
-                        {0, "vegetarian meal"},
-                        {1, "non-vegetarian meal without pork"},
-                        {2, "meal containing alcohol"},
-                        {4, "other meal"}
+                        {1, "vegetarian meal"},
+                        {2, "non-vegetarian meal without pork"},
+                        {3, "meal containing alcohol"},
+                        {4, "other meal"},
+                        {5, "vegetarian meal"},
+                        {6, "non-vegetarian meal without pork"},
+                        {7, "meal containing alcohol"},
+                        {8, "other meal"}
                     };
 
             return dict;
