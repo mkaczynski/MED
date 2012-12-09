@@ -7,6 +7,26 @@ namespace UniversalPreferences.Algorithm
 {
     public class CandidatesGenerator : ICandidatesGenerator
     {
+        public IEnumerable<ushort[]>
+            FindSetsWhichHasOneElement(IEnumerable<Row> transactions)
+        {
+            var dict = new Dictionary<ushort, ushort>();
+
+            foreach (var transaction in transactions)
+            {
+                foreach (var value in transaction.Attributes)
+                {
+                    if (value.HasValue && !dict.ContainsKey(value.Value))
+                    {
+                        dict[value.Value] = value.Value;
+                    }
+                }
+            }
+
+            var res = dict.Select(x => new[] { x.Key });
+            return res;
+        }
+
         public IEnumerable<ushort[]> GetCandidates(IEnumerable<ushort[]> previousCandidates, IEnumerable<Row> transactions)
         {
             var newCandidates = new List<ushort[]>();

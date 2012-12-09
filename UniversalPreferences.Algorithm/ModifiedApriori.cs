@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UniversalPreferences.Common;
@@ -22,7 +21,7 @@ namespace UniversalPreferences.Algorithm
         {
             results = new List<ushort[]>();
 
-            var itemsets = FindSetsWhichHasOneElement(transactions);
+            var itemsets = candidatesGenerator.FindSetsWhichHasOneElement(transactions);
             itemsets = PruneResults(itemsets, transactions);
 
             for (int i = 1; i < transactions.First().Attributes.Length; ++i)
@@ -32,26 +31,6 @@ namespace UniversalPreferences.Algorithm
             }
 
             return results;
-        }
-
-        private IEnumerable<ushort[]> 
-            FindSetsWhichHasOneElement(IEnumerable<Row> transactions)
-        {
-            var dict = new Dictionary<ushort, ushort>(); 
-
-            foreach(var transaction in transactions)
-            {
-                foreach(var value in transaction.Attributes)
-                {
-                    if(value.HasValue && !dict.ContainsKey(value.Value))
-                    {
-                        dict[value.Value] = value.Value;
-                    }
-                }
-            }
-
-            var res = dict.Select(x => new ushort[] {x.Key});
-            return res;
         }
 
         private IEnumerable<ushort[]> PruneResults(IEnumerable<ushort[]> itemsets, IEnumerable<Row> transactions)
