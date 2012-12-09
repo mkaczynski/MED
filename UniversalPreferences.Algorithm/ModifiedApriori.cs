@@ -8,8 +8,15 @@ namespace UniversalPreferences.Algorithm
 {
     public class ModifiedApriori : IAlgorithm
     {
+        private readonly ICandidatesGenerator candidatesGenerator;
+
         private Dictionary<string, SimpleRow> temporaryResults;
         private IList<ushort[]> results;
+
+        public ModifiedApriori(ICandidatesGenerator candidatesGenerator)
+        {
+            this.candidatesGenerator = candidatesGenerator;
+        }
 
         public IEnumerable<ushort[]> FindPreferences(IEnumerable<Row> transactions)
         {
@@ -20,7 +27,7 @@ namespace UniversalPreferences.Algorithm
 
             for (int i = 1; i < transactions.First().Attributes.Length; ++i)
             {
-                itemsets = GetCandidates(itemsets, transactions, i+1);
+                itemsets = candidatesGenerator.GetCandidates(itemsets, transactions);
                 itemsets = PruneResults(itemsets, transactions);
             }
 
@@ -58,72 +65,6 @@ namespace UniversalPreferences.Algorithm
             return res;
         }
 
-        private IEnumerable<ushort[]> GetCandidates(IEnumerable<ushort[]> previousCandidates, IEnumerable<Row> transactions, int len)
-        {
-            var newCandidates = new List<ushort[]>();
-
-            //tutaj chyba mozna wykorzystac drzewo
-            foreach(var transaction in transactions)
-            {
-                foreach(var candidate in previousCandidates)
-                {
-                    if(IsItemsetSupported(candidate, transaction))
-                    {
-                        var candidates = GenerateCandidates(candidate, transaction);
-                        foreach(var c in candidates)
-                        {
-                            if(!newCandidates.Any(x => x.SequenceEqual(c)))
-                            {
-                                newCandidates.Add(c);                                
-                            }
-                        }
-                    }
-                }
-            }
-
-            return newCandidates;
-        }
-
-        //todo: zoptymalizowac/zrefaktoryzowac
-        private IEnumerable<ushort[]> GenerateCandidates(ushort[] candidate, Row transaction)
-        {
-            var res = new List<ushort[]>();
-
-            for(int i = 0; i < transaction.Attributes.Length; ++i)
-            {
-                if(!transaction.Attributes[i].HasValue)
-                {
-                    continue;
-                }
-
-                var @continue = false;
-                for(int j = 0; j < candidate.Length; ++j)
-                {
-                    if (candidate[j] == transaction.Attributes[i].Value)
-                    {
-                        @continue = true;
-                        continue;
-                    }
-                }
-
-                if(@continue)
-                {
-                    continue;
-                }
-
-                var newCandidate = new ushort[candidate.Length + 1];
-                for(int j = 0; j < candidate.Length; ++j)
-                {
-                    newCandidate[j] = candidate[j];
-                }
-                newCandidate[candidate.Length] = transaction.Attributes[i].Value;
-                Array.Sort(newCandidate);
-                res.Add(newCandidate);
-            }
-
-            return res;
-        }
-
         private void CheckItemsets(IEnumerable<ushort[]> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
         {
             //tutaj chyba mozna wykorzystac drzewo
@@ -131,7 +72,7 @@ namespace UniversalPreferences.Algorithm
             {
                 foreach (var transaction in transactions)
                 {
-                    if (IsItemsetSupported(itemset, transaction))
+                    if (Helper.IsItemsetSupported(itemset, transaction))
                     {
                         var description = GetDescription(itemset);
                         AddNode(description, itemset);
@@ -161,19 +102,6 @@ namespace UniversalPreferences.Algorithm
             }
 
             return tmp;
-        }
-
-        private bool IsItemsetSupported(ushort[] itemset, Row transaction)
-        {
-            var contains = true;
-            for (int i = 0; i < itemset.Length; ++i)
-            {
-                if (!transaction.Attributes.Contains(itemset[i]))
-                {
-                    contains = false;
-                }
-            }
-            return contains;
         }
 
         private void AddNode(string description, ushort[] itemset)

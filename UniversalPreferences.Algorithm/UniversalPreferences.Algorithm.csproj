@@ -40,7 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CandidatesGenerator.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="IAlgorithm.cs" />
+    <Compile Include="ICandidatesGenerator.cs" />
     <Compile Include="IResultConverter.cs" />
     <Compile Include="ModifiedApriori.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

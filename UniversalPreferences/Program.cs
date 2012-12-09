@@ -7,7 +7,8 @@ namespace UniversalPreferences
     {
         static void Main(string[] args)
         {
-            var manager = new ExecutionManager(new ModifiedApriori(), new SimpleData()); // IoC?
+            var manager = new ExecutionManager(new ModifiedApriori(
+                new CandidatesGenerator()), new SimpleData()); // IoC?
             manager.Execute();
         }
     }
