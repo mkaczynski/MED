@@ -18,11 +18,17 @@ namespace UniversalPreferences.Algorithm
             var firstProcessed = false;
 
             sb.Append("(");
+
+            if (preferences[0] >= dataManager.MinLeftSideIndex())
+            {
+                sb.Append(") => (");
+            }
+
             for (int i = 0; i < preferences.Length; ++i)
             {
                 sb.Append(dataManager.GetMappings()[preferences[i]]);
 
-                if (!firstProcessed && preferences[i + 1] >= dataManager.MinLeftSideIndex() &&
+                if (!firstProcessed && (i + 1 == preferences.Length || preferences[i + 1] >= dataManager.MinLeftSideIndex()) &&
                     preferences[i] < dataManager.MinLeftSideIndex())
                 {
                     firstProcessed = true;

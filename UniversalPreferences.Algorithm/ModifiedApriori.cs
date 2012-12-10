@@ -49,6 +49,7 @@ namespace UniversalPreferences.Algorithm
             //tutaj chyba mozna wykorzystac drzewo
             foreach (var itemset in itemsets)
             {
+                var test = true;
                 foreach (var transaction in transactions)
                 {
                     if (Helper.IsItemsetSupported(itemset, transaction))
@@ -56,7 +57,13 @@ namespace UniversalPreferences.Algorithm
                         var description = GetDescription(itemset);
                         AddNode(description, itemset);
                         IncrementCounters(description, transaction);
+                        test = false;
                     }
+                }
+
+                if(test)
+                {
+                    results.Add(itemset);
                 }
             }
         }
