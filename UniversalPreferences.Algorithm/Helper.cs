@@ -9,8 +9,9 @@ namespace UniversalPreferences.Algorithm
         {
             var intersection = transaction.Attributes.Where(x => x.HasValue).
                 Select(x => x.Value).Intersect(itemset);
-            
-            return intersection.Count() == itemset.Length;
+
+            var count = intersection.Count();
+            return count == itemset.Length;
             
             //var contains = true;
             //for (int i = 0; i < itemset.Length; ++i)

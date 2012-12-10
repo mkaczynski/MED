@@ -67,7 +67,7 @@ namespace UniversalPreferences.DAL
             });
 
             res.Add(new Row { MainObjectId = 3, SecondObjectId = 3, 
-                Attributes = new ushort?[] { 1, 2, null, null, 4, 5, null, null}, 
+                Attributes = new ushort?[] { 1, 2, null, null, 5, 6, null, null}, 
                 FirstSecondObjectAtribute = 4, Value = Relation.Complied
             });
 
