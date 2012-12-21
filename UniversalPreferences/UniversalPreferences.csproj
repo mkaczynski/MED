@@ -60,6 +60,10 @@
       <Project>{CB28E3D1-A428-4D19-BD33-5AA07CD114C5}</Project>
       <Name>UniversalPreferences.DAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UniversalPreferences.HashTree\UniversalPreferences.HashTree.csproj">
+      <Project>{3AA24484-17C9-4377-82E0-46A8A698A3C5}</Project>
+      <Name>UniversalPreferences.HashTree</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

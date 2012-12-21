@@ -1,4 +1,6 @@
-﻿using UniversalPreferences.Algorithm;
+﻿using System.Collections.Generic;
+using UniversalPreferences.Algorithm;
+using UniversalPreferences.Common;
 using UniversalPreferences.DAL;
 
 namespace UniversalPreferences
