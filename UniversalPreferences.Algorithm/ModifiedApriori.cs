@@ -25,7 +25,7 @@ namespace UniversalPreferences.Algorithm
             var itemsets = candidatesGenerator.FindSetsWhichHasOneElement(transactions);
             itemsets = PruneResults(itemsets, transactions);
 
-            for (int i = 1; i < transactions.First().Attributes.Length; ++i)
+            for (int i = 1; i < 8; ++i) //todo: po usunieciu tych nulli trzeba dodac w IDataManager info jak to moze byc dlugie
             {
                 itemsets = candidatesGenerator.GetCandidates(itemsets, transactions);
                 itemsets = PruneResults(itemsets, transactions);
@@ -47,41 +47,33 @@ namespace UniversalPreferences.Algorithm
 
         private void CheckItemsets(IEnumerable<ushort[]> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
         {
-            //var transaction = transactions.First();
-            //var hashTree = HashTreeFactory.Create(transaction.Attributes.Length, 20, 3);
-
-            var hashTree = new FakeHashTree();
-
-            hashTree.FillTree(transactions);
-
-            foreach (var itemset in itemsets)
+            if (!itemsets.Any())
             {
-                var test = true;
-                var supported = hashTree.GetSupportedSets(new Row { Attributes = itemset });
+                return;
+            }
+
+            var copy = new List<ushort[]>(itemsets);
+
+            var hashTree = HashTreeFactory.Create(itemsets.First().Length, 2, 3);
+            hashTree.FillTree(itemsets.Select(x => new Row { Attributes = x }));
+            
+            foreach (var transaction in transactions)
+            {
+                var supported = hashTree.GetSupportedSets(transaction);
 
                 foreach (var simpleRow in supported)
                 {
-                    var description = GetDescription(itemset);
-                    AddNode(description, itemset);
-                    IncrementCounters(description, simpleRow);
-                    test = false;
+                    var description = GetDescription(simpleRow.Attributes);
+                    AddNode(description, simpleRow.Attributes);
+                    IncrementCounters(description, transaction);
+             
+                    copy.Remove(copy.FirstOrDefault(x => x.SequenceEqual(simpleRow.Attributes)));
                 }
+            }
 
-                //foreach (var transaction in transactions)
-                //{
-                //    if (FakeHashTree.IsItemsetSupported(itemset, transaction))
-                //    {
-                //        var description = GetDescription(itemset);
-                //        AddNode(description, itemset);
-                //        IncrementCounters(description, transaction);
-                //        test = false;
-                //    }
-                //}
-
-                if(test)
-                {
-                    results.Add(itemset);
-                }
+            foreach (var notSupported in copy)
+            {
+                results.Add(notSupported);
             }
         }
 
