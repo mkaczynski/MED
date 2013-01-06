@@ -8,8 +8,6 @@
 
         public ushort[] Attributes { get; set; }    // tabela zawierajaca wartosci atrybutow - jedna dla obu obiektow
 
-        public int FirstSecondObjectAtribute { get; set; } // indeks pierwszego atrybutu drugiego obiektu w tabeli wyzej
-
         public Relation Value { get; set; }      // okresla czy relacja jest spelniona dla tego wiersza
     }
 }
