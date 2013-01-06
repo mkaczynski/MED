@@ -48,7 +48,8 @@ namespace UniversalPreferences.Algorithm
         private void CheckItemsets(IEnumerable<ushort[]> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
         {
             //var transaction = transactions.First();
-            //var hashTree = HashTreeFactory.Create(transaction.Attributes.Length, 2, 3);
+            //var hashTree = HashTreeFactory.Create(transaction.Attributes.Length, 20, 3);
+
             var hashTree = new FakeHashTree();
 
             hashTree.FillTree(transactions);
