@@ -7,9 +7,7 @@ namespace UniversalPreferences.Algorithm
     {
         public static bool IsItemsetSupported(ushort[] itemset, Row transaction)
         {
-            var intersection = transaction.Attributes.Where(x => x.HasValue).
-                Select(x => x.Value).Intersect(itemset);
-
+            var intersection = transaction.Attributes.Select(x => x).Intersect(itemset);
             var count = intersection.Count();
             return count == itemset.Length;
             

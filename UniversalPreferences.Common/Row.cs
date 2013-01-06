@@ -6,7 +6,7 @@
         public int MainObjectId { get; set; }    // identyfikator pierwszego obiektu
         public int SecondObjectId { get; set; }  // identyfikator obiektu ktory z nim zestawiamy
 
-        public ushort?[] Attributes { get; set; }    // tabela zawierajaca wartosci atrybutow - jedna dla obu obiektow
+        public ushort[] Attributes { get; set; }    // tabela zawierajaca wartosci atrybutow - jedna dla obu obiektow
 
         public int FirstSecondObjectAtribute { get; set; } // indeks pierwszego atrybutu drugiego obiektu w tabeli wyzej
 

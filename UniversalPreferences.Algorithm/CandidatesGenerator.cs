@@ -16,9 +16,9 @@ namespace UniversalPreferences.Algorithm
             {
                 foreach (var value in transaction.Attributes)
                 {
-                    if (value.HasValue && !dict.ContainsKey(value.Value))
+                    if (!dict.ContainsKey(value))
                     {
-                        dict[value.Value] = value.Value;
+                        dict[value] = value;
                     }
                 }
             }
