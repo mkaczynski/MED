@@ -2,13 +2,14 @@
 using System.Linq;
 using System.Text;
 using UniversalPreferences.Common;
+using UniversalPreferences.HashTree;
 
 namespace UniversalPreferences.Algorithm
 {
     public class ModifiedApriori : IAlgorithm
     {
         private readonly ICandidatesGenerator candidatesGenerator;
-
+        
         private Dictionary<string, SimpleRow> temporaryResults;
         private IList<ushort[]> results;
 
@@ -46,20 +47,35 @@ namespace UniversalPreferences.Algorithm
 
         private void CheckItemsets(IEnumerable<ushort[]> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
         {
-            //tutaj chyba mozna wykorzystac drzewo
+            //var transaction = transactions.First();
+            //var hashTree = HashTreeFactory.Create(transaction.Attributes.Length, 2, 3);
+            var hashTree = new FakeHashTree();
+
+            hashTree.FillTree(transactions);
+
             foreach (var itemset in itemsets)
             {
                 var test = true;
-                foreach (var transaction in transactions)
+                var supported = hashTree.GetSupportedSets(new Row { Attributes = itemset });
+
+                foreach (var simpleRow in supported)
                 {
-                    if (Helper.IsItemsetSupported(itemset, transaction))
-                    {
-                        var description = GetDescription(itemset);
-                        AddNode(description, itemset);
-                        IncrementCounters(description, transaction);
-                        test = false;
-                    }
+                    var description = GetDescription(itemset);
+                    AddNode(description, itemset);
+                    IncrementCounters(description, simpleRow);
+                    test = false;
                 }
+
+                //foreach (var transaction in transactions)
+                //{
+                //    if (FakeHashTree.IsItemsetSupported(itemset, transaction))
+                //    {
+                //        var description = GetDescription(itemset);
+                //        AddNode(description, itemset);
+                //        IncrementCounters(description, transaction);
+                //        test = false;
+                //    }
+                //}
 
                 if(test)
                 {

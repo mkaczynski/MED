@@ -56,7 +56,7 @@ namespace UniversalPreferences.Algorithm
             //{
             //    foreach (var candidate in previousCandidates)
             //    {
-            //        if (Helper.IsItemsetSupported(candidate, transaction))
+            //        if (FakeHashTree.IsItemsetSupported(candidate, transaction))
             //        {
             //            var candidates = GenerateCandidates(candidate, transaction);
             //            foreach (var c in candidates)

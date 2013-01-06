@@ -11,7 +11,7 @@ namespace UniversalPreferences.HashTree
         private readonly int transactionLength;
         private readonly int depth;
         private Node[] children;
-        private IList<SimpleRow> elements;
+        private IList<Row> elements;
 
         private bool isLeafNode;
 
@@ -29,7 +29,7 @@ namespace UniversalPreferences.HashTree
             }
             else
             {
-                elements = new List<SimpleRow>();
+                elements = new List<Row>();
             }
             
         }
@@ -43,7 +43,7 @@ namespace UniversalPreferences.HashTree
             }
         }
 
-        public void Add(SimpleRow newRow)
+        public void Add(Row newRow)
         {
             if (isLeafNode)
             {
@@ -61,12 +61,12 @@ namespace UniversalPreferences.HashTree
             children[hash].Add(newRow);
         }
 
-        private int CalculateHashForElement(SimpleRow newRow)
+        private int CalculateHashForElement(Row newRow)
         {
-            return newRow.Transaction[depth]%firstNumber;
+            return newRow.Attributes[depth]%firstNumber;
         }
 
-        private void SplitPage(SimpleRow newRow)
+        private void SplitPage(Row newRow)
         {
             isLeafNode = false;
             InitializeChildren();
@@ -84,7 +84,7 @@ namespace UniversalPreferences.HashTree
             return depth == transactionLength || elements.Count  != pageSize;
         }
 
-        public void FillSupportedRows(ICollection<SimpleRow> supportedRows, ushort[] row, int firstIndexToCheck)
+        public void FillSupportedRows(ICollection<Row> supportedRows, ushort[] row, int firstIndexToCheck)
         {
             if (isLeafNode)
             {
@@ -118,7 +118,7 @@ namespace UniversalPreferences.HashTree
             return false;
         }
 
-        private void FillSupportedRowsFromLeaf(ICollection<SimpleRow> supportedRows, ushort[] row)
+        private void FillSupportedRowsFromLeaf(ICollection<Row> supportedRows, ushort[] row)
         {
             foreach (var element in elements)
             {
@@ -126,7 +126,7 @@ namespace UniversalPreferences.HashTree
                 // przy sprawdzaniu czy element istnieje w tablicy zlozonosc jest rowna nm
                 // przy uzyciu hashset dla sprawdzanie zlozonosc jest rowna n+m
                 var set = new HashSet<ushort>(row);
-                if (element.Transaction.All(set.Contains))
+                if (element.Attributes.All(set.Contains))
                 {
                     supportedRows.Add(element);
                 }

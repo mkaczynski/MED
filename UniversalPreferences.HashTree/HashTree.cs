@@ -12,7 +12,7 @@ namespace UniversalPreferences.HashTree
             root = new Node(pageSize, firstNumber, transactionLength, 0);
         }
 
-        public void FillTree(IEnumerable<SimpleRow> elements)
+        public void FillTree(IEnumerable<Row> elements)
         {
             foreach (var simpleRow in elements)
             {
@@ -20,10 +20,10 @@ namespace UniversalPreferences.HashTree
             }
         }
 
-        public IEnumerable<SimpleRow> GetSupportedSets(SimpleRow transaction)
+        public IEnumerable<Row> GetSupportedSets(Row transaction)
         {
-            var supportedRows = new List<SimpleRow>();
-            root.FillSupportedRows(supportedRows, transaction.Transaction, 0);
+            var supportedRows = new List<Row>();
+            root.FillSupportedRows(supportedRows, transaction.Attributes, 0);
             return supportedRows;
         }
     }
