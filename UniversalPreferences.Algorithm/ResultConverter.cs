@@ -26,7 +26,7 @@ namespace UniversalPreferences.Algorithm
 
             for (int i = 0; i < preferences.Length; ++i)
             {
-                sb.Append(dataManager.GetMappings()[preferences[i]]);
+                sb.Append(dataManager.GetMappings()[preferences[i]]); //TODO
 
                 if (!firstProcessed && (i + 1 == preferences.Length || preferences[i + 1] >= dataManager.MinLeftSideIndex()) &&
                     preferences[i] < dataManager.MinLeftSideIndex())

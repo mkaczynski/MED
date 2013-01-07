@@ -26,6 +26,7 @@ namespace UniversalPreferences
             GetData();
             CalculatePreferences();
             ShowResults();
+            Console.ReadLine();
         }
 
         private void ShowResults()
@@ -44,8 +45,8 @@ namespace UniversalPreferences
         
         private void GetData()
         {
-            dataManager.Initialize();
-            data = dataManager.GetData();
+            //dataManager.Initialize();   //BG to normalnie będzie wywoływane
+            data = dataManager.GetData(); //BG tu normalnie będzie wywoływane GetBGData()
 
             resultConverter = new ResultConverter(dataManager);
         }

@@ -1,0 +1,7 @@
+unacc<acc
+unacc<good
+unacc<vgood
+acc<good
+acc<vgood
+good<vgood
+vgood<?
