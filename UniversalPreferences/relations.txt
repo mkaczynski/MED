@@ -1,1 +1,3 @@
-unacc<acc<good<vgood
+unacc<acc
+acc<good
+good<vgood

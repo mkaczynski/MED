@@ -148,10 +148,10 @@ namespace UniversalPreferences.DAL
             return res;
         }
 
-        public Dictionary<int, string> GetMappings()
+        public Dictionary<ushort, string> GetMappings()
         {
             var dict = 
-                new Dictionary<int, string>
+                new Dictionary<ushort, string>
                     {
                         {1, "vegetarian meal"},
                         {2, "non-vegetarian meal without pork"},

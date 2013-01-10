@@ -6,13 +6,13 @@ namespace UniversalPreferences.DAL
     {
         public int  Id { get; set; }
 
-        public IList<int> AttributeIds { get; private set; }
+        public IList<ushort> AttributeIds { get; private set; }
 
         public string ClassName { get; set; }
 
         public InternalRow()
         {
-            AttributeIds = new List<int>();
+            AttributeIds = new List<ushort>();
         }
 
         public InternalRow(int id, string className) : this()
@@ -21,7 +21,7 @@ namespace UniversalPreferences.DAL
             ClassName = className;
         }
 
-        public void AddAttributeId(int attributeId)
+        public void AddAttributeId(ushort attributeId)
         {
             AttributeIds.Add(attributeId);
         }
