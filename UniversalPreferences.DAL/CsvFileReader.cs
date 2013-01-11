@@ -21,8 +21,6 @@ namespace UniversalPreferences.DAL
 
         public IList<string> ClassNames { get; private set; }
 
-        public Dictionary<string, HashSet<string>> ClassRelations { get; set; }
-
         public CsvFileReader(string fileName, string separator, int classNameIndex)
         {
             this.fileName = fileName;
@@ -32,7 +30,6 @@ namespace UniversalPreferences.DAL
             internalMapping = new Dictionary<string, ushort>();
             Mapping = new Dictionary<ushort, string>();
             ClassNames = new List<string>();
-            ClassRelations = new Dictionary<string, HashSet<string>>();
         }
 
         public void ProcessFile()
@@ -42,40 +39,6 @@ namespace UniversalPreferences.DAL
                 ProcessLine(line);
             }
             CreateMapping();
-        }
-
-        public void ProcessRelationsFile()
-        {
-            string line;
-            string[] parts = null;
-            System.IO.StreamReader file =
-               new System.IO.StreamReader(@"C:\Documents and Settings\Bartek\Moje dokumenty\MED\UniversalPreferences\relations.txt");
-
-            while ((line = file.ReadLine()) != null)
-            {
-                parts = line.Split('<');
-                ClassRelations.Add(parts[0], new HashSet<string>());
-                ClassRelations[parts[0]].Add(parts[1]);
-            }
-            ClassRelations[parts[1]] = new HashSet<string>();
-
-            int cnt = 0;
-            foreach (var item in ClassRelations.Reverse())
-            {
-                if(item.Value.Count !=0)
-                {
-                    foreach (string s2 in ClassRelations[ClassRelations.Keys.ElementAt(ClassRelations.Keys.Count -1-(cnt++))])
-                    {
-                        if (!item.Value.Contains(s2))
-                            ClassRelations[item.Key].Add(s2);
-                    }
-                }
-            }
-          
-            file.Close();
-
-            Console.WriteLine("Finished processing relations file");
-
         }
 
         private void ProcessLine(string line)

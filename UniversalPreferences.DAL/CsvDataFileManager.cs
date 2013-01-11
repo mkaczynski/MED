@@ -5,45 +5,47 @@ namespace UniversalPreferences.DAL
 {
     public class CsvDataFileManager : IDataManager
     {
-        private readonly CsvFileReader reader;
+        private readonly CsvFileReader csvReader;
+        private readonly PreferenceFileReader preferenceReader;
 
-        public CsvDataFileManager(string fileName, string separator, int classNameColumnIndex)
+        public CsvDataFileManager(string fileNameObjects, string separator, int classNameColumnIndex, string fileNameRelations)
         {
-            reader = new CsvFileReader(fileName, separator, classNameColumnIndex);
+            csvReader = new CsvFileReader(fileNameObjects, separator, classNameColumnIndex);
+            preferenceReader = new PreferenceFileReader(fileNameRelations);
         }
 
         public void Initialize()
         {
-            reader.ProcessFile();
-            reader.ProcessRelationsFile();
+            csvReader.ProcessFile();
+            preferenceReader.ProcessRelationsFile();
         }
 
         public IList<Row> GetData()
         {
             List<Row> rowList = new List<Row>();
-            for (int i = 0; i < reader.Rows.Count; ++i)
+            for (int i = 0; i < csvReader.Rows.Count; ++i)
             {
-                int numberOfAttributesFirst = reader.Rows[i].AttributeIds.Count;
-                for (int j = 0; j < reader.Rows.Count; ++j)
+                int numberOfAttributesFirst = csvReader.Rows[i].AttributeIds.Count;
+                for (int j = 0; j < csvReader.Rows.Count; ++j)
                 {
-                    int numberOfAttributesSecond = reader.Rows[j].AttributeIds.Count;
+                    int numberOfAttributesSecond = csvReader.Rows[j].AttributeIds.Count;
                     ushort[] attributes = new ushort[numberOfAttributesFirst + numberOfAttributesSecond];
                     for (int k = 0; k < numberOfAttributesFirst; ++k)
                     {
-                        attributes[k] = reader.Rows[i].AttributeIds[k];
+                        attributes[k] = csvReader.Rows[i].AttributeIds[k];
                     }
                     for (int l = numberOfAttributesFirst; l < numberOfAttributesFirst + numberOfAttributesSecond; ++l)
                     {
-                        attributes[l] = reader.Rows[j].AttributeIds[l - numberOfAttributesFirst];
+                        attributes[l] = csvReader.Rows[j].AttributeIds[l - numberOfAttributesFirst];
                     }
 
-                    bool contains = reader.ClassRelations[reader.Rows[i].ClassName].Contains(reader.Rows[j].ClassName);
+                    bool contains = preferenceReader.ClassRelations[csvReader.Rows[i].ClassName].Contains(csvReader.Rows[j].ClassName);
                     Relation value;
                     if (contains)
                         value = Relation.Complied;
                     else
                         value = Relation.NotComplied;
-                    rowList.Add(new Row(reader.Rows[i].Id, reader.Rows[j].Id, attributes, value));
+                    rowList.Add(new Row(csvReader.Rows[i].Id, csvReader.Rows[j].Id, attributes, value));
                 }
             }
             return rowList;
@@ -51,7 +53,7 @@ namespace UniversalPreferences.DAL
 
         public Dictionary<ushort, string> GetMappings()
         {
-            return reader.Mapping;
+            return csvReader.Mapping;
         }
 
         public int MinLeftSideIndex()
