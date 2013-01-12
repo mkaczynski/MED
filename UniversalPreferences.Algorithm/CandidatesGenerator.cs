@@ -31,7 +31,7 @@ namespace UniversalPreferences.Algorithm
         {
             var newCandidates = new List<ushort[]>();
 
-            foreach(var c in previousCandidates.OrderBy(x => x[0]))
+            foreach(var c in previousCandidates)
             {
                 var head = c.Take(c.Length - 1);
                 var tmp = previousCandidates.Where(x => x != c && x.Take(c.Length - 1).SequenceEqual(head)).
