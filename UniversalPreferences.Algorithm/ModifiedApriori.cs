@@ -77,7 +77,8 @@ namespace UniversalPreferences.Algorithm
 
             foreach (var notSupported in copy)
             {
-                results.Add(notSupported);
+                var description = GetDescription(notSupported);
+                AddNode(description, notSupported);
             }
         }
 
