@@ -1,4 +1,6 @@
-﻿namespace UniversalPreferences.Common
+﻿using System.Text;
+
+namespace UniversalPreferences.Common
 {
     public class SimpleRow
     {
@@ -12,6 +14,20 @@
 
             RelationComplied = 0;
             RelationNotComplied = 0;
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            foreach (ushort t in Transaction)
+            {
+                sb.Append(t);
+                sb.Append(", ");
+            }
+
+            sb.AppendFormat(" - ({0}, {1})", RelationNotComplied, RelationComplied);
+
+            return sb.ToString();
         }
     }
 }
