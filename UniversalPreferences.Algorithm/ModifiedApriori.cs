@@ -25,12 +25,16 @@ namespace UniversalPreferences.Algorithm
             var itemsets = candidatesGenerator.FindSetsWhichHasOneElement(transactions);
             itemsets = PruneResults(itemsets, transactions);
 
-            for (int i = 1; i < 8; ++i) //todo: po usunieciu tych nulli trzeba dodac w IDataManager info jak to moze byc dlugie
+            while (true)
             {
-                itemsets = candidatesGenerator.GetCandidates(itemsets, transactions);
-                itemsets = PruneResults(itemsets, transactions);
+                itemsets = candidatesGenerator.GetCandidates(itemsets, results, transactions);
+                if (!itemsets.Any())
+                {
+                    break;
+                }
+                itemsets = PruneResults(itemsets, transactions);   
             }
-
+            
             return results;
         }
 
@@ -73,14 +77,15 @@ namespace UniversalPreferences.Algorithm
 
             foreach (var notSupported in copy)
             {
-                results.Add(notSupported);
+                var description = GetDescription(notSupported);
+                AddNode(description, notSupported);
             }
         }
 
         private IEnumerable<ushort[]> SelectPreferencesAndGetCandidates()
         {
             var tmp = new List<ushort[]>();
-
+            
             foreach (var row in temporaryResults.Values)
             {
                 if(row.RelationNotComplied == 0) 
@@ -88,8 +93,7 @@ namespace UniversalPreferences.Algorithm
                 {
                     results.Add(row.Transaction);
                 }
-
-                if(row.RelationComplied != 0)
+                else if(row.RelationComplied != 0)
                     //te ktore maja 0 odrzucamy
                 {
                     tmp.Add(row.Transaction);

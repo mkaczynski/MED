@@ -7,6 +7,6 @@ namespace UniversalPreferences.Algorithm
     {
         IEnumerable<ushort[]> FindSetsWhichHasOneElement(IEnumerable<Row> transactions);
 
-        IEnumerable<ushort[]> GetCandidates(IEnumerable<ushort[]> previousCandidates, IEnumerable<Row> transactions);
+        IEnumerable<ushort[]> GetCandidates(IEnumerable<ushort[]> previousCandidates, IEnumerable<ushort[]> results, IEnumerable<Row> transactions);
     }
 }
