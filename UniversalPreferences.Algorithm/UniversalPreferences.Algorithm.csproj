@@ -40,8 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseAlgorithm.cs" />
     <Compile Include="CandidatesGenerator.cs" />
     <Compile Include="FakeHashTree.cs" />
+    <Compile Include="Generators.cs" />
     <Compile Include="IAlgorithm.cs" />
     <Compile Include="ICandidatesGenerator.cs" />
     <Compile Include="IResultConverter.cs" />
