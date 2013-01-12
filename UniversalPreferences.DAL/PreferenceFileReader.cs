@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace UniversalPreferences.DAL
@@ -18,6 +16,7 @@ namespace UniversalPreferences.DAL
             fileName = filename;
             ClassRelations = new Dictionary<string, HashSet<string>>();
         }
+
         public void ProcessRelationsFile()
         {
             foreach (var line in File.ReadLines(fileName))
@@ -25,15 +24,6 @@ namespace UniversalPreferences.DAL
                 ProcessLine(line);
             }
             CreatePrefencesDict();
-        }
-
-        private void CreatePrefencesDict()
-        {
-            foreach (var preference in preferences.Values)
-            {
-                var betters = preference.GetAllBetters();
-                ClassRelations[preference.Name] = new HashSet<string>(betters.Distinct().ToList());
-            }            
         }
 
         private void ProcessLine(string line)
@@ -58,6 +48,14 @@ namespace UniversalPreferences.DAL
                 return;
             preferences[name] = new Preference(name);
         }
-        
+
+        private void CreatePrefencesDict()
+        {
+            foreach (var preference in preferences.Values)
+            {
+                var betters = preference.GetAllBetters();
+                ClassRelations[preference.Name] = new HashSet<string>(betters.Distinct().ToList());
+            }
+        }
     }
 }

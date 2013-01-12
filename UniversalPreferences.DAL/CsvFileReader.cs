@@ -21,6 +21,8 @@ namespace UniversalPreferences.DAL
 
         public IList<string> ClassNames { get; private set; }
 
+        public ushort MaxAttributeId { get; private set; }
+
         public CsvFileReader(string fileName, string separator, int classNameIndex)
         {
             this.fileName = fileName;
@@ -38,6 +40,7 @@ namespace UniversalPreferences.DAL
             {
                 ProcessLine(line);
             }
+            SetMaxAttributeId();
             CreateMapping();
         }
 
@@ -59,7 +62,7 @@ namespace UniversalPreferences.DAL
                 var attributeId = internalMapping[key];
                 row.AddAttributeId(attributeId);
             }
-
+            row.SortAttibutes();
             Rows.Add(row);
         }
 
@@ -82,11 +85,17 @@ namespace UniversalPreferences.DAL
             return string.Format("{0}#{1}", i, splited[i]);
         }
 
+        private void SetMaxAttributeId()
+        {
+            MaxAttributeId = (ushort)(currentId - 1);
+        }
+
         private void CreateMapping()
         {
             foreach (var keyToIndex in internalMapping)
             {
                 Mapping[keyToIndex.Value] = keyToIndex.Key;
+                Mapping[(ushort)(keyToIndex.Value + MaxAttributeId)] = keyToIndex.Key;
             }
         }
     }

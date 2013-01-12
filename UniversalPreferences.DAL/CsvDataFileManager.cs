@@ -36,7 +36,7 @@ namespace UniversalPreferences.DAL
                     }
                     for (int l = numberOfAttributesFirst; l < numberOfAttributesFirst + numberOfAttributesSecond; ++l)
                     {
-                        attributes[l] = csvReader.Rows[j].AttributeIds[l - numberOfAttributesFirst];
+                        attributes[l] = (ushort)(csvReader.Rows[j].AttributeIds[l - numberOfAttributesFirst] + csvReader.MaxAttributeId);
                     }
 
                     bool contains = preferenceReader.ClassRelations[csvReader.Rows[i].ClassName].Contains(csvReader.Rows[j].ClassName);

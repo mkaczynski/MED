@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace UniversalPreferences.DAL
 {
@@ -24,6 +25,11 @@ namespace UniversalPreferences.DAL
         public void AddAttributeId(ushort attributeId)
         {
             AttributeIds.Add(attributeId);
+        }
+
+        public void SortAttibutes()
+        {
+            AttributeIds = AttributeIds.OrderBy(x => x).ToList();
         }
     }
 }
