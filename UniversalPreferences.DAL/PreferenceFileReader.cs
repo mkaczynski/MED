@@ -11,6 +11,7 @@ namespace UniversalPreferences.DAL
         private readonly string fileName;
         public Dictionary<string, HashSet<string>> ClassRelations { get; set; }
 
+        private readonly IDictionary<string, Preference> preferences = new Dictionary<string, Preference>(); 
 
         public PreferenceFileReader(string filename)
         {
@@ -23,36 +24,39 @@ namespace UniversalPreferences.DAL
             {
                 ProcessLine(line);
             }
+            CreatePrefencesDict();
+        }
 
-            FindTransitivePreferences();
+        private void CreatePrefencesDict()
+        {
+            foreach (var preference in preferences.Values)
+            {
+                var betters = preference.GetAllBetters();
+                ClassRelations[preference.Name] = new HashSet<string>(betters.Distinct().ToList());
+            }            
         }
 
         private void ProcessLine(string line)
         {
             string[] parts = line.Split('<');
-            if(!ClassRelations.Keys.Contains(parts[0]))
-                ClassRelations.Add(parts[0], new HashSet<string>());
-            ClassRelations[parts[0]].Add(parts[1]);
-            ClassRelations.Add(parts[1], new HashSet<string>());
+            var left = parts[0];
+            var right = parts[1];
+            CreatePreferenceIfNoExists(left);
+            CreatePreferenceIfNoExists(right);
+
+            AddRelation(left, right);
         }
 
-        private void FindTransitivePreferences()
+        private void AddRelation(string left, string right)
         {
-            var tempDict = new Dictionary<string, HashSet<string>>();
-            foreach (var item in ClassRelations.Reverse())
-            {
-                tempDict.Add(item.Key, new HashSet<string>());
-                foreach( string s in item.Value)
-                {
-                    foreach (string s2 in ClassRelations[s])
-                    {
-                        if (!item.Value.Contains(s2))
-                            tempDict[item.Key].Add(s2);  
-                    }
-                    
-                }
-                ClassRelations[item.Key].UnionWith(tempDict[item.Key]);
-            }
+            preferences[left].Betters.Add(preferences[right]);
+        }
+
+        private void CreatePreferenceIfNoExists(string name)
+        {
+            if(preferences.ContainsKey(name))
+                return;
+            preferences[name] = new Preference(name);
         }
         
     }
