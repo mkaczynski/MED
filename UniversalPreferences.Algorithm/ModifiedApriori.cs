@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UniversalPreferences.Common;
@@ -80,22 +81,53 @@ namespace UniversalPreferences.Algorithm
         private IEnumerable<ushort[]> SelectPreferencesAndGetCandidates()
         {
             var tmp = new List<ushort[]>();
-            
+
+            var found = new List<SimpleRow>();
+            var toAnalyze = new List<SimpleRow>();
+            var rejected = new List<SimpleRow>();
+
             foreach (var row in temporaryResults.Values)
             {
                 if(row.RelationNotComplied == 0) 
                     // jezeli kandydat nie wystepuje w tej klasie, to jest minimalnym poszukiwanym wzorcem
                 {
                     results.Add(row.Transaction);
+                    found.Add(row);
                 }
-                else if(row.RelationComplied != 0)
-                    //te ktore maja 0 odrzucamy
+                else if(row.RelationComplied != 0) //te ktore maja 0 odrzucamy
                 {
                     tmp.Add(row.Transaction);
+                    toAnalyze.Add(row);
+                }
+                else //odrzucone
+                {
+                    rejected.Add(row);
                 }
             }
 
+#if DEBUG
+            WriteInfo(found, toAnalyze, rejected);
+#endif
             return tmp;
+        }
+
+        private void WriteInfo(IEnumerable<SimpleRow> found, IEnumerable<SimpleRow> toAnalyze, IEnumerable<SimpleRow> rejected)
+        {
+            System.Diagnostics.Debug.WriteLine("\nIteracja");
+            System.Diagnostics.Debug.WriteLine("Znalezione");
+            WriteListInfo(found);
+            System.Diagnostics.Debug.WriteLine("Do analizy");
+            WriteListInfo(toAnalyze);
+            System.Diagnostics.Debug.WriteLine("Odrzucone");
+            WriteListInfo(rejected);
+        }
+
+        private void WriteListInfo(IEnumerable<SimpleRow> list)
+        {
+            foreach (SimpleRow simpleRow in list)
+            {
+                System.Diagnostics.Debug.WriteLine(simpleRow);
+            }
         }
 
         private void AddNode(string description, ushort[] itemset)
