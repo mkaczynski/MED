@@ -1,0 +1,31 @@
+﻿<UserControl 
+    x:Class="UniversalPreferences.App.Controls.FilesSelection"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    d:DesignHeight="300" d:DesignWidth="300">
+    
+    <Grid>
+        <Grid.ColumnDefinitions> 
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions> 
+            <RowDefinition Height="Auto"/> 
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Plik danych: "/>
+        <TextBox Margin="5,0,0,0" Text="{Binding DataFile}" Grid.Column="1" Grid.Row="0" IsEnabled="False" Width="150"/>
+        <Button Margin="5,0,0,0" Content="Wybierz" Grid.Column="2" Command="{Binding SelectDataFileCommand}"/>
+        
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="Plik relacji: " Margin="0,10,0,0"/>
+        <TextBox Margin="5,10,0,0" Text="{Binding RelationsFile}" Grid.Column="1" Grid.Row="1" IsEnabled="False" Width="150"/>
+        <Button Margin="5,10,0,0" Content="Wybierz" Grid.Row="1" Grid.Column="2" Command="{Binding SelectRelationsFileCommand}"/>
+
+    </Grid>
+</UserControl>
