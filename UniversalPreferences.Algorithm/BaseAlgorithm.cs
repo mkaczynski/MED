@@ -28,8 +28,6 @@ namespace UniversalPreferences.Algorithm
             var itemsets = candidatesGenerator.FindSetsWhichHasOneElement(transactions);
             itemsets = PruneResults(itemsets, transactions);
 
-            return results;
-
             while (true)
             {
                 itemsets = candidatesGenerator.GetCandidates(itemsets, results, transactions);
