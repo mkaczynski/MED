@@ -8,7 +8,7 @@ namespace UniversalPreferences
         static void Main(string[] args)
         {
             var manager = new ExecutionManager(new ModifiedApriori(
-                new CandidatesGenerator()), new SimpleData()); // IoC?
+                new CandidatesGenerator()), new CsvDataFileManager(@"..\..\cardata.txt", ",", 6, @"..\..\relations.txt")); // IoC?
             manager.Execute();
         }
     }

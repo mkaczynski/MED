@@ -13,7 +13,7 @@ namespace UniversalPreferences.DAL
         private List<Row> rowList = new List<Row>();
         private Dictionary<string, ushort>[] attributeMappings;
 
-        private char choice;
+        //private char choice;
         public int numberOfAttributes { get; set; }
         public int numberOfClasses { get; set; }
 
@@ -23,7 +23,7 @@ namespace UniversalPreferences.DAL
             ChoosePreferencesType();
             CreateMappings();
             ProcessObjectsFile();
-            ProcessRelationsFile(this.choice);
+            ProcessRelationsFile();
             CreateRows();
         }
 
@@ -36,7 +36,7 @@ namespace UniversalPreferences.DAL
                 Console.WriteLine("Please type [s] or [n]");
                 choice = Console.ReadLine();
             }
-            this.choice = choice[0];
+            //this.choice = choice[0];
             
         }
         private void CreateMappings()
@@ -88,7 +88,7 @@ namespace UniversalPreferences.DAL
             Console.WriteLine("Finished processing objects file");
         }
 
-        private void ProcessRelationsFile(char choice)
+        private void ProcessRelationsFile()
         {
             string line;
             string[] parts;
@@ -102,10 +102,10 @@ namespace UniversalPreferences.DAL
                 {
                     ushort classNumber = GetBGMappings(numberOfAttributes)[parts[i]];
                     classRelations.Add(classNumber, new List<ushort>());
-                    int diff = 0;
-                    if (choice == 's')
-                        diff++;
-                    for (int j = i+diff; j < numberOfClasses; ++j)
+                    //int diff = 0;
+                    //if (choice == 's')
+                     //   diff++;
+                    for (int j = i; j < numberOfClasses; ++j)
                     {
                         ushort superiorClassNumber = GetBGMappings(numberOfAttributes)[parts[j]];
                         classRelations[classNumber].Add(superiorClassNumber);
@@ -144,9 +144,9 @@ namespace UniversalPreferences.DAL
                     rowList.Add(new Row(objects[i].ObjectID, objects[j].ObjectID, attributes, value));
                 }
             }
-            if (choice == 'n')
+            //if (choice == 'n')
                 Console.WriteLine("Finished creating non-strict relations!");
-            else
+            //else
                 Console.WriteLine("Finished creating strict relations!");
 
         }
@@ -166,9 +166,9 @@ namespace UniversalPreferences.DAL
             return numberOfAttributes;
         }
 
-        public Dictionary<int, string> GetMappings()
+        public Dictionary<ushort, string> GetMappings()
         {
-            return new Dictionary<int, string>(); //TODO zwracać odpowiedni słownik
+            return new Dictionary<ushort, string>(); //TODO zwracać odpowiedni słownik
         }
     }
 }
