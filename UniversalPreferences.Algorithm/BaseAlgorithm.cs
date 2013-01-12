@@ -152,6 +152,8 @@ namespace UniversalPreferences.Algorithm
             {
                 temporaryResults.Add(description, row);
             }
+
+            OnAddNode(description, row);
         }
 
         protected virtual void OnAddNode(string description, SimpleRow row)
