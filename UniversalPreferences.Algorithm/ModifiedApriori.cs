@@ -51,11 +51,6 @@ namespace UniversalPreferences.Algorithm
 
         private void CheckItemsets(IEnumerable<ushort[]> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
         {
-            if (!itemsets.Any())
-            {
-                return;
-            }
-
             var copy = new List<ushort[]>(itemsets);
 
             var hashTree = HashTreeFactory.Create(itemsets.First().Length, 2, 3);
