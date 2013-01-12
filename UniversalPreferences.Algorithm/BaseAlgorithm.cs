@@ -20,6 +20,7 @@ namespace UniversalPreferences.Algorithm
 
         public IEnumerable<ushort[]> FindPreferences(IEnumerable<Row> transactions)
         {
+            Initialize(transactions);
             results = new List<ushort[]>();
 
             var itemsets = candidatesGenerator.FindSetsWhichHasOneElement(transactions);
