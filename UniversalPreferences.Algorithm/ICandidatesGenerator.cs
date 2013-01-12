@@ -5,8 +5,8 @@ namespace UniversalPreferences.Algorithm
 {
     public interface ICandidatesGenerator
     {
-        IEnumerable<ushort[]> FindSetsWhichHasOneElement(IEnumerable<Row> transactions);
+        IEnumerable<IEnumerable<ushort>> FindSetsWhichHasOneElement(IEnumerable<Row> transactions);
 
-        IEnumerable<ushort[]> GetCandidates(IEnumerable<ushort[]> previousCandidates, IEnumerable<ushort[]> results, IEnumerable<Row> transactions);
+        IEnumerable<IEnumerable<ushort>> GetCandidates(IEnumerable<IEnumerable<ushort>> previousCandidates, IEnumerable<IEnumerable<ushort>> results, IEnumerable<Row> transactions);
     }
 }
