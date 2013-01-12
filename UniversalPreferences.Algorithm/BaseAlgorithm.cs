@@ -214,6 +214,7 @@ namespace UniversalPreferences.Algorithm
             foreach(var elem in table)
             {
                 sb.Append(elem);
+                sb.Append(",");
             }
             return sb.ToString();
         }

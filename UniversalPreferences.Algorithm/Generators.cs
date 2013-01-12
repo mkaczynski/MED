@@ -23,7 +23,7 @@ namespace UniversalPreferences.Algorithm
         {
             //if (!eachResults.ContainsKey(description)) // to juz zlasciwie zostalo sprawdzone
             //{
-            eachResults.Add(description, row); 
+                eachResults.Add(description, row); 
             //}
         }
 
