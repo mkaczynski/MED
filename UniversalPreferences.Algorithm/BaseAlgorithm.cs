@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using UniversalPreferences.Common;
@@ -62,9 +64,11 @@ namespace UniversalPreferences.Algorithm
 
         private void CheckItemsets(IEnumerable<ushort[]> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
         {
+            var sw = new Stopwatch();
+            sw.Start();
             var copy = new List<ushort[]>(itemsets);
 
-            var hashTree = HashTreeFactory.Create(itemsets.First().Length, 2, 3);
+            var hashTree = HashTreeFactory.Create(itemsets.First().Length, 100, 2999);
             hashTree.FillTree(itemsets.Select(x => new Row { Attributes = x }));
             
             foreach (var transaction in transactions)
@@ -86,6 +90,9 @@ namespace UniversalPreferences.Algorithm
                 var description = GetDescription(notSupported);
                 AddNode(description, new SimpleRow(notSupported));
             }
+
+            sw.Stop();
+            Console.WriteLine(sw.Elapsed);
         }
 
         private IEnumerable<ushort[]> SelectPreferencesAndGetCandidates()
