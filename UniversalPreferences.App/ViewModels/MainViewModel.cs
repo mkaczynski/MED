@@ -180,7 +180,7 @@ namespace UniversalPreferences.App.ViewModels
 
             var manager = new ExecutionManager(Selected.Algorithm(),
                 //new SimpleData());
-                new CsvDataFileManager(dataFilePath, Separator, Index, relationFilePath, RelationKind.Strict)); //TODO ustawiac RelationKind w GUI
+                new CsvDataFileManager(dataFilePath, Separator, Index, relationFilePath, RelationKind.NonStrict)); //TODO ustawiac RelationKind w GUI
 
             var bg = new BackgroundWorker();
             bg.DoWork += 
