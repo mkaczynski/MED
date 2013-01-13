@@ -47,7 +47,7 @@ namespace UniversalPreferences.DAL
         private void ProcessLine(string line)
         {
             var splited = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            string className = splited[classNameIndex];
+            string className = splited[classNameIndex].Trim();
             AddClassIfNoExists(className);
 
             var row = new InternalRow(currentRowId++, className);
@@ -56,6 +56,10 @@ namespace UniversalPreferences.DAL
             {
                 if (i == classNameIndex)
                     continue;
+
+                if(string.IsNullOrWhiteSpace(splited[i]))
+                    continue;
+
                 var key = CreateAttributeKey(splited, i);
                 AddAtributeMappinigIfNoExists(key);
 
@@ -82,7 +86,7 @@ namespace UniversalPreferences.DAL
 
         private static string CreateAttributeKey(string[] splited, int i)
         {
-            return string.Format("{0}#{1}", i, splited[i]);
+            return string.Format("{0}#{1}", i, splited[i].Trim());
         }
 
         private void SetMaxAttributeId()

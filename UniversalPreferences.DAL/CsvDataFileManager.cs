@@ -8,10 +8,10 @@ namespace UniversalPreferences.DAL
         private readonly CsvFileReader csvReader;
         private readonly PreferenceFileReader preferenceReader;
 
-        public CsvDataFileManager(string fileNameObjects, string separator, int classNameColumnIndex, string fileNameRelations)
+        public CsvDataFileManager(string fileNameObjects, string separator, int classNameColumnIndex, string fileNameRelations, RelationKind kind)
         {
             csvReader = new CsvFileReader(fileNameObjects, separator, classNameColumnIndex);
-            preferenceReader = new PreferenceFileReader(fileNameRelations);
+            preferenceReader = new PreferenceFileReader(fileNameRelations, kind);
         }
 
         public void Initialize()
@@ -39,7 +39,7 @@ namespace UniversalPreferences.DAL
                         attributes[l] = (ushort)(csvReader.Rows[j].AttributeIds[l - numberOfAttributesFirst] + csvReader.MaxAttributeId);
                     }
 
-                    bool contains = preferenceReader.ClassRelations[csvReader.Rows[i].ClassName].Contains(csvReader.Rows[j].ClassName);
+                    bool contains = preferenceReader.AreInRelation(csvReader.Rows[i].ClassName, csvReader.Rows[j].ClassName);
                     Relation value;
                     if (contains)
                         value = Relation.Complied;
@@ -58,8 +58,7 @@ namespace UniversalPreferences.DAL
 
         public int MinLeftSideIndex()
         {
-            //throw new System.NotImplementedException();
-            return 7;
+            return 7; //todo!  to powinna byc polowa mapowan + 1, ale tych  mapowan jest nieparzysta liczba!
         }
     }
 }

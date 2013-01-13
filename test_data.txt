@@ -1,0 +1,4 @@
+Bergstrasse,vegetarian meal,non-vegetarian meal without pork, ,other meal
+Reichenbachstrasse,vegetarian meal, ,meal containing alcohol, 
+Klinikum,vegetarian meal,non-vegetarian meal without pork, , 
+Siedepunkt,vegetarian meal, , ,  
