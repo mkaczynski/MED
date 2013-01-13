@@ -82,7 +82,7 @@ namespace UniversalPreferences.DAL
 
         private static string CreateAttributeKey(string[] splited, int i)
         {
-            return string.Format("{0}#{1}", i, splited[i]);
+            return string.Format("{0}#{1}", i, splited[i].Trim());
         }
 
         private void SetMaxAttributeId()
