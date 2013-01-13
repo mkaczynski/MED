@@ -87,7 +87,7 @@ namespace UniversalPreferences.DAL
 
         private void SetMaxAttributeId()
         {
-            MaxAttributeId = (ushort)(currentId - 1);
+            MaxAttributeId = currentId;
         }
 
         private void CreateMapping()
