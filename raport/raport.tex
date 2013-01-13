@@ -31,6 +31,21 @@ Jak ktoś nie umie pisać w texie, to niech prześle plain text w notaniku.
 
 \section{Założenia}
 \section{Dane wejściowe i wyjściowe}
+Dane wejściowe są przekazywane do aplikacji w postaci następujących plików:
+\begin{itemize}
+\item plik zawierający zbiór danych
+\item plik z opisem relacji
+\end{itemize}
+Obsługiwanym formatem plików zawierających zbiór danych jest Csv. Wymagane jest aby w jednej z kolumn przechowywane były dane określające do której klasy należy dany wiersz. W drugim pliku znajduje się opis relacji pomiędzy klasami. \\
+Dane wyjściowe wyświetlane są w polu tekstowym wewnątrz aplikacji. W każdej linii znajduje się opis jednego ze znalezionych minimalnych wzorców. Przykładowe wyjście programu:
+\lstset{frame=single, xleftmargin=6pt, xrightmargin=6pt, framesep=6pt}
+\begin{lstlisting}
+1. (4#other meal) => (3#meal containing alcohol)
+2. (2#non-vegetarian meal without pork, 
+                  3#meal containing alcohol) => ()
+3. (4#other meal, 3#meal containing alcohol) => ()
+\end{lstlisting}
+W nawiasach wymienione są opisy znalezionych atrybutów postaci: \{numer kolumny\}\#\{wartość atrybutu\}. Dane w lewym i prawym nawiasie przedstawiają atrybuty odpowiednio z lewego i prawego obiektu. 
 \section{Szczegóły implementacji}
 
 Implementacja została przygotowana w języku C\# i działa na platformie .NET Framework 4.0. Implementacja związana z algorytmem została podzielona na 4 projekty: Algorithm, DAL, HashTree i pomocniczy projekt Common.\\
