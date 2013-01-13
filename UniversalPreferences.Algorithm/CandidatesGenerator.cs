@@ -7,7 +7,7 @@ namespace UniversalPreferences.Algorithm
 {
     public class CandidatesGenerator : ICandidatesGenerator
     {
-        public IEnumerable<ushort[]>
+        public IEnumerable<IEnumerable<ushort>>
             FindSetsWhichHasOneElement(IEnumerable<Row> transactions)
         {
             var dict = new Dictionary<ushort, ushort>();
@@ -27,15 +27,15 @@ namespace UniversalPreferences.Algorithm
             return res;
         }
 
-        public IEnumerable<ushort[]> GetCandidates(IEnumerable<ushort[]> previousCandidates, IEnumerable<ushort[]> results, IEnumerable<Row> transactions)
+        public IEnumerable<IEnumerable<ushort>> GetCandidates(IEnumerable<IEnumerable<ushort>> previousCandidates, IEnumerable<IEnumerable<ushort>> results, IEnumerable<Row> transactions)
         {
-            var newCandidates = new List<ushort[]>();
+            var newCandidates = new List<IEnumerable<ushort>>();
 
             foreach(var c in previousCandidates)
             {
-                var head = c.Take(c.Length - 1);
-                var tmp = previousCandidates.Where(x => x != c && x.Take(c.Length - 1).SequenceEqual(head)).
-                    Select(x => c.Union(x.Skip(c.Length - 1)).ToArray()).ToList();
+                var head = c.Take(c.Count() - 1);
+                var tmp = previousCandidates.Where(x => x != c && x.Take(c.Count() - 1).SequenceEqual(head)).
+                    Select(x => c.Union(x.Skip(c.Count() - 1)).ToArray()).ToList();
 
                 tmp.ForEach(Array.Sort);
                 

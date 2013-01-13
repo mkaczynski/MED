@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using UniversalPreferences.Common;
@@ -11,17 +13,17 @@ namespace UniversalPreferences.Algorithm
         private readonly ICandidatesGenerator candidatesGenerator;
 
         private Dictionary<string, SimpleRow> temporaryResults;
-        private IList<ushort[]> results;
+        private IList<IEnumerable<ushort>> results;
 
         public BaseAlgorithm(ICandidatesGenerator candidatesGenerator)
         {
             this.candidatesGenerator = candidatesGenerator;
         }
 
-        public IEnumerable<ushort[]> FindPreferences(IEnumerable<Row> transactions)
+        public IEnumerable<IEnumerable<ushort>> FindPreferences(IEnumerable<Row> transactions)
         {
             Initialize(transactions);
-            results = new List<ushort[]>();
+            results = new List<IEnumerable<ushort>>();
 
             var itemsets = candidatesGenerator.FindSetsWhichHasOneElement(transactions);
             itemsets = PruneResults(itemsets, transactions);
@@ -49,7 +51,7 @@ namespace UniversalPreferences.Algorithm
             return false;
         }
 
-        private IEnumerable<ushort[]> PruneResults(IEnumerable<ushort[]> itemsets, IEnumerable<Row> transactions)
+        private IEnumerable<IEnumerable<ushort>> PruneResults(IEnumerable<IEnumerable<ushort>> itemsets, IEnumerable<Row> transactions)
         {
             temporaryResults = new Dictionary<string, SimpleRow>();
 
@@ -60,12 +62,13 @@ namespace UniversalPreferences.Algorithm
             return res;
         }
 
-        private void CheckItemsets(IEnumerable<ushort[]> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
+        private void CheckItemsets(IEnumerable<IEnumerable<ushort>> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
         {
-            var copy = new List<ushort[]>(itemsets);
-
-            var hashTree = HashTreeFactory.Create(itemsets.First().Length, 2, 3);
-            hashTree.FillTree(itemsets.Select(x => new Row { Attributes = x }));
+            var sw = new Stopwatch();
+            sw.Start();
+            
+            var copy = CreateItemsetsCopy(itemsets);
+            var hashTree = CreateTree(itemsets);
             
             foreach (var transaction in transactions)
             {
@@ -74,23 +77,52 @@ namespace UniversalPreferences.Algorithm
                 foreach (var simpleRow in supported)
                 {
                     var description = GetDescription(simpleRow.Attributes);
-                    AddNode(description, new SimpleRow(simpleRow.Attributes));
-                    IncrementCounters(description, transaction);
-             
-                    copy.Remove(copy.FirstOrDefault(x => x.SequenceEqual(simpleRow.Attributes)));
+                    var row = AddNode(description, new SimpleRow(simpleRow.Attributes));
+                    IncrementCounters(row, transaction);
+                    Remove(copy, description);
                 }
             }
 
-            foreach (var notSupported in copy)
+            foreach (var notSupported in copy.Values)
             {
                 var description = GetDescription(notSupported);
                 AddNode(description, new SimpleRow(notSupported));
             }
+
+            sw.Stop();
+            Console.WriteLine(sw.Elapsed);
         }
 
-        private IEnumerable<ushort[]> SelectPreferencesAndGetCandidates()
+        private IDictionary<string, IEnumerable<ushort>> CreateItemsetsCopy(IEnumerable<IEnumerable<ushort>> itemsets)
         {
-            var tmp = new List<ushort[]>();
+            var dict = new Dictionary<string, IEnumerable<ushort>>();
+            foreach (var itemset in itemsets)
+            {
+                var description = GetDescription(itemset);
+                dict.Add(description, itemset);
+            }
+            return dict;
+        }
+
+        private IHashTree CreateTree(IEnumerable<IEnumerable<ushort>> itemsets)
+        {
+            var tree = HashTreeFactory.Create(itemsets.First().Count(), 100, 2999);
+            tree.FillTree(itemsets.Select(x => new Row { Attributes = x.ToArray() }));
+
+            return tree;
+        }
+
+        private void Remove(IDictionary<string, IEnumerable<ushort>> copy, string description)
+        {
+            if (copy.Count > 0)
+            {
+                copy.Remove(description);   
+            }
+        }
+
+        private IEnumerable<IEnumerable<ushort>> SelectPreferencesAndGetCandidates()
+        {
+            var tmp = new List<IEnumerable<ushort>>();
 
             var found = new List<SimpleRow>();
             var toAnalyze = new List<SimpleRow>();
@@ -147,14 +179,16 @@ namespace UniversalPreferences.Algorithm
             }
         }
 
-        private void AddNode(string description, SimpleRow row)
+        private SimpleRow AddNode(string description, SimpleRow row)
         {
-            if (!temporaryResults.ContainsKey(description))
+            SimpleRow outRow;
+            if(!temporaryResults.TryGetValue(description, out outRow))
             {
+                outRow = row;
                 temporaryResults.Add(description, row);
+                OnAddNode(description, row);
             }
-
-            OnAddNode(description, row);
+            return outRow;
         }
 
         protected virtual void OnAddNode(string description, SimpleRow row)
@@ -162,15 +196,15 @@ namespace UniversalPreferences.Algorithm
 
         }
 
-        private void IncrementCounters(string description, Row transaction)
+        private void IncrementCounters(SimpleRow row, Row transaction)
         {
             if (transaction.Value == Relation.Complied)
             {
-                temporaryResults[description].RelationComplied += 1;
+                row.RelationComplied += 1;
             }
             else
             {
-                temporaryResults[description].RelationNotComplied += 1;
+                row.RelationNotComplied += 1;
             }
         }
 
@@ -180,6 +214,7 @@ namespace UniversalPreferences.Algorithm
             foreach(var elem in table)
             {
                 sb.Append(elem);
+                sb.Append(",");
             }
             return sb.ToString();
         }

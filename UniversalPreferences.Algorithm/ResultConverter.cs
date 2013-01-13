@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UniversalPreferences.DAL;
 
 namespace UniversalPreferences.Algorithm
@@ -12,8 +14,9 @@ namespace UniversalPreferences.Algorithm
             this.dataManager = dataManager;
         }
 
-        public string Convert(ushort[] preferences)
+        public string Convert(IEnumerable<ushort> results)
         {
+            var preferences = results.ToArray();
             var sb = new StringBuilder();
             var firstProcessed = false;
 

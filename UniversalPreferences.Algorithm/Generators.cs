@@ -16,15 +16,15 @@ namespace UniversalPreferences.Algorithm
 
         protected override void Initialize(IEnumerable<Row> transactions)
         {
-            eachResults.Add(string.Empty, new SimpleRow(null) { RelationComplied = transactions.Count() });
+            eachResults.Add(string.Empty, new SimpleRow(new ushort[0]) { RelationComplied = transactions.Count() });
         }
 
         protected override void OnAddNode(string description, SimpleRow row)
         {
-            if (!eachResults.ContainsKey(description))
-            {
-                eachResults.Add(description, row);
-            }
+            //if (!eachResults.ContainsKey(description)) // to juz zlasciwie zostalo sprawdzone
+            //{
+                eachResults.Add(description, row); 
+            //}
         }
 
         protected override bool CheckIfAnySubsetIsGenerator(SimpleRow row)
@@ -47,8 +47,9 @@ namespace UniversalPreferences.Algorithm
             return false;
         }
 
-        private IEnumerable<ushort[]> GetSubsets(ushort[] set)
+        private IEnumerable<ushort[]> GetSubsets(IEnumerable<ushort> set)
         {
+            
             var subsets = set.Select((t, i) => set.Take(i).Concat(set.Skip(i + 1)).ToArray()).ToList();
             return subsets;
         }
