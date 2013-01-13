@@ -72,6 +72,8 @@ namespace UniversalPreferences.App.ViewModels
         public string Separator { get; set; }
         public bool GoToResults { get; set; }
         public Visibility ProgressBarVisibility { get; private set; }
+        public IList<RelationKind> Relations { get; private set; }
+        public RelationKind SelectedRelation { get; set; }
 
         public ICommand NextCommand { get; private set; }
         public ICommand PrevCommand { get; private set; }
@@ -132,6 +134,10 @@ namespace UniversalPreferences.App.ViewModels
 
             GoToResults = true;
             Selected = Algorithms[0];
+
+            Relations = new List<RelationKind> 
+                { RelationKind.Strict, RelationKind.NonStrict, RelationKind.Equal };
+            SelectedRelation = Relations[0];
         }
 
         private void OnSelectRelationsFileCommand(object obj)
@@ -180,7 +186,7 @@ namespace UniversalPreferences.App.ViewModels
 
             var manager = new ExecutionManager(Selected.Algorithm(),
                 //new SimpleData());
-                new CsvDataFileManager(dataFilePath, Separator, Index, relationFilePath, RelationKind.NonStrict)); //TODO ustawiac RelationKind w GUI
+                new CsvDataFileManager(dataFilePath, Separator, Index, relationFilePath, SelectedRelation));
 
             var bg = new BackgroundWorker();
             bg.DoWork += 
@@ -190,7 +196,6 @@ namespace UniversalPreferences.App.ViewModels
                         Application.Current.Dispatcher.Invoke(
                             DispatcherPriority.Normal, new Action(() => OnPropertyChanged("ProgressBarVisibility")));
                         
-
                         manager.DiagnosticsEvent += OnDiagnosticsEvent;
                         manager.Execute();
                         manager.DiagnosticsEvent -= OnDiagnosticsEvent;

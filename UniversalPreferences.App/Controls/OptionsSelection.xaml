@@ -21,6 +21,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
         
             <TextBlock Grid.Row="0" Margin="0,5,0,0" Text="Algorytm: " />
@@ -57,6 +58,20 @@
                 Grid.Row="2" Grid.Column="2" Margin="0,5,0,0" 
                 TextWrapping="WrapWithOverflow"
                 Text="znak wg którego plik z danymi jest dzielony na kolumny;&#x0a;spacja - ' ', tabulator - \t " />
+
+            <TextBlock Grid.Row="3" Margin="0,5,0,0" Text="Rodzaj relacji: " />
+            <ComboBox 
+                Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" Margin="5,5,5,0" 
+                ItemsSource="{Binding Relations}"
+                SelectedItem="{Binding SelectedRelation}"
+                >
+            </ComboBox>
+            <TextBlock 
+                Grid.Row="3" Grid.Column="2" Margin="0,5,0,0" 
+                TextWrapping="WrapWithOverflow"
+                Text="rodzaj relacji który zostanie wykorzystany do budowy zbiorów" />
+
+            
         </Grid>
         
         <CheckBox 
