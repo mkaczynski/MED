@@ -178,8 +178,8 @@ namespace UniversalPreferences.App.ViewModels
             DiagnosticsText = string.Empty;
 
             var manager = new ExecutionManager(Selected.Algorithm(),
-                new SimpleData());
-                //new CsvDataFileManager(dataFilePath, Separator, Index, relationFilePath));
+                //new SimpleData());
+                new CsvDataFileManager(dataFilePath, Separator, Index, relationFilePath));
 
             var bg = new BackgroundWorker();
             bg.DoWork += 

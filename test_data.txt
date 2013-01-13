@@ -1,0 +1,4 @@
+Bergstrasse, 1, 1, 0, 1
+Reichenbachstrasse, 1, 0, 1, 0
+Klinikum, 1, 1, 0, 0
+Siedepunkt, 1, 0, 0, 0 
