@@ -56,6 +56,10 @@ namespace UniversalPreferences.DAL
             {
                 if (i == classNameIndex)
                     continue;
+
+                if(string.IsNullOrWhiteSpace(splited[i]))
+                    continue;
+
                 var key = CreateAttributeKey(splited, i);
                 AddAtributeMappinigIfNoExists(key);
 

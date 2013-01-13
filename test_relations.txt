@@ -1,3 +1,3 @@
-Bergstrasse < Reichenbachstrasse
-Reichenbachstrasse < Siedepunkt
-Klinikum < Siedepunkt
+Bergstrasse<Reichenbachstrasse
+Reichenbachstrasse<Siedepunkt
+Klinikum<Siedepunkt
