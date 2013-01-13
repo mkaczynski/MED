@@ -11,20 +11,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using UniversalPreferences.App.ViewModels;
 
-namespace UniversalPreferences.App
+namespace UniversalPreferences.App.Controls
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ProgressView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ProgressView : UserControl
     {
-        public MainWindow()
+        public ProgressView()
         {
             InitializeComponent();
-
-            DataContext = new MainViewModel();
         }
     }
 }

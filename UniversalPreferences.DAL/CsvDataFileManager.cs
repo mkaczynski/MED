@@ -58,8 +58,7 @@ namespace UniversalPreferences.DAL
 
         public int MinLeftSideIndex()
         {
-            //throw new System.NotImplementedException();
-            return 7;
+            return 7; //todo!  to powinna byc polowa mapowan + 1, ale tych  mapowan jest nieparzysta liczba!
         }
     }
 }

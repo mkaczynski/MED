@@ -10,10 +10,9 @@
         
         <ContentPresenter 
             Content="{Binding Content}" 
-            HorizontalAlignment="Center" 
-            VerticalAlignment="Center" />
+            />
     
-        <DockPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="150">
+        <DockPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Height="80">
             <Button Command="{Binding PrevCommand}" Height="50" Width="125" Content="Prev" VerticalAlignment="Center" Margin="0,0,15,0"/>
             <Button Command="{Binding NextCommand}" Height="50" Width="125" Content="Next" VerticalAlignment="Center" />
         </DockPanel>
