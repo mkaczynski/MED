@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="BaseAlgorithm.cs" />
     <Compile Include="CandidatesGenerator.cs" />
+    <Compile Include="DiagnosticsInfo.cs" />
     <Compile Include="FakeHashTree.cs" />
     <Compile Include="Generators.cs" />
     <Compile Include="IAlgorithm.cs" />

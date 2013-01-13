@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using UniversalPreferences.Algorithm;
 using UniversalPreferences.Common;
 using UniversalPreferences.DAL;
 
-namespace UniversalPreferences
+namespace UniversalPreferences.App.ViewModels
 {
     public class ExecutionManager
     {
@@ -34,17 +35,30 @@ namespace UniversalPreferences
         {
             GetData();
             CalculatePreferences();
-            ShowResults();
+            //ShowResults();
         }
 
-        private void ShowResults()
+        public string GetResults()
         {
-            foreach(var preference in preferences)
+            int i = 0;
+            var sb = new StringBuilder();
+            foreach (var preference in preferences)
             {
                 var res = resultConverter.Convert(preference);
-                Console.WriteLine(res);
+                sb.AppendLine(string.Format("{0}. {1}", ++i, res));
+                //Console.WriteLine(res);
             }
+            return sb.ToString();
         }
+
+        //private void ShowResults()
+        //{
+        //    foreach(var preference in preferences)
+        //    {
+        //        var res = resultConverter.Convert(preference);
+        //        //Console.WriteLine(res);
+        //    }
+        //}
 
         private void CalculatePreferences()
         {
@@ -64,6 +78,5 @@ namespace UniversalPreferences
             EventHandler<DiagnosticsInfo> handler = DiagnosticsEvent;
             if (handler != null) handler(this, e);
         }
-
     }
 }

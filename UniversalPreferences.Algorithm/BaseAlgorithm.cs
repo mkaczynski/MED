@@ -10,6 +10,7 @@ namespace UniversalPreferences.Algorithm
 {
     public class BaseAlgorithm
     {
+        public event EventHandler<DiagnosticsInfo> DiagnosticsEvent;
         private readonly ICandidatesGenerator candidatesGenerator;
 
         private Dictionary<string, SimpleRow> temporaryResults;
@@ -162,20 +163,25 @@ namespace UniversalPreferences.Algorithm
 
         private void WriteInfo(IEnumerable<SimpleRow> found, IEnumerable<SimpleRow> toAnalyze, IEnumerable<SimpleRow> rejected)
         {
-            System.Diagnostics.Debug.WriteLine("\nIteracja");
-            System.Diagnostics.Debug.WriteLine("Znalezione");
-            WriteListInfo(found);
-            System.Diagnostics.Debug.WriteLine("Do analizy");
-            WriteListInfo(toAnalyze);
-            System.Diagnostics.Debug.WriteLine("Odrzucone");
-            WriteListInfo(rejected);
+            var sb = new StringBuilder();
+
+            sb.AppendLine("========================");
+            sb.AppendLine("Znalezione");
+            WriteListInfo(sb, found);
+            sb.AppendLine("Do analizy");
+            WriteListInfo(sb, toAnalyze);
+            sb.AppendLine("Odrzucone");
+            WriteListInfo(sb, rejected);
+            sb.AppendLine();
+
+            OnDiagnosticsEvent(new DiagnosticsInfo(sb.ToString()));
         }
 
-        private void WriteListInfo(IEnumerable<SimpleRow> list)
+        private void WriteListInfo(StringBuilder sb, IEnumerable<SimpleRow> list)
         {
             foreach (SimpleRow simpleRow in list)
             {
-                System.Diagnostics.Debug.WriteLine(simpleRow);
+                sb.AppendLine(simpleRow.ToString());
             }
         }
 
@@ -217,6 +223,12 @@ namespace UniversalPreferences.Algorithm
                 sb.Append(",");
             }
             return sb.ToString();
+        }
+
+        protected virtual void OnDiagnosticsEvent(DiagnosticsInfo e)
+        {
+            EventHandler<DiagnosticsInfo> handler = DiagnosticsEvent;
+            if (handler != null) handler(this, e);
         }
     }
 }
