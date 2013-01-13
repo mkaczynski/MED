@@ -5,6 +5,7 @@
 \usepackage{fullpage}
 \usepackage{hyperref}
 \usepackage[pdftex]{graphicx} % Wsparcie dla obrazkow
+\usepackage{listings}
 
 \title{Wyznaczanie reprezentacji preferencji uniwersalych}
 \author{Bartosz Górski \and Marcin Kaczyński \and Paweł Sokołowski}
@@ -86,7 +87,30 @@ W kroku pierwszym\ref{krok1} należy wbrać pliki z danymi, klikając w przycisk
 
 Plik z danymi powinien być poprawnym pod względem budowy plikiem csv. W pliku powinny być kolejne wiersze w których w każdym znajduje się taka sama liczba kolumn oddzielonych określonym separatorem.\\
 
-todo - słowo o postaci pliku z relacjami\\
+Plik z relacjami składa się z wielu linii. W każdej z nich znajduje się wpis postaci:
+\lstset{frame=single, xleftmargin=6pt, xrightmargin=6pt, framesep=6pt}
+\begin{lstlisting}
+a<b
+\end{lstlisting}
+Oznacza to, że klasa {\bf a} jest w ralacji z klasą {\bf b}.
+Dla przykładowego grafu relacji (\ref{relat}) plik powinien być postaci:
+\lstset{frame=single, xleftmargin=6pt, xrightmargin=6pt, framesep=6pt}
+\begin{lstlisting}
+Y<V
+Z<V
+X<Y
+X<Z
+U<W
+\end{lstlisting}
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=\textwidth]{img/relations.png}
+\caption{Przykładowy graf relacji}
+\label{relat}
+\end{center}
+\end{figure}
+
 
 \begin{figure}[h!]
 \begin{center}
