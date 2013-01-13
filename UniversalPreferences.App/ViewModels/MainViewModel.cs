@@ -9,6 +9,7 @@ using Microsoft.Win32;
 using UniversalPreferences.Algorithm;
 using UniversalPreferences.App.Annotations;
 using UniversalPreferences.App.Controls;
+using UniversalPreferences.Common;
 using UniversalPreferences.DAL;
 
 namespace UniversalPreferences.App.ViewModels
@@ -179,7 +180,7 @@ namespace UniversalPreferences.App.ViewModels
 
             var manager = new ExecutionManager(Selected.Algorithm(),
                 //new SimpleData());
-                new CsvDataFileManager(dataFilePath, Separator, Index, relationFilePath));
+                new CsvDataFileManager(dataFilePath, Separator, Index, relationFilePath, RelationKind.Strict)); //TODO ustawiac RelationKind w GUI
 
             var bg = new BackgroundWorker();
             bg.DoWork += 
