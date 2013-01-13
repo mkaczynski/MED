@@ -47,7 +47,7 @@ namespace UniversalPreferences.DAL
         private void ProcessLine(string line)
         {
             var splited = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            string className = splited[classNameIndex];
+            string className = splited[classNameIndex].Trim();
             AddClassIfNoExists(className);
 
             var row = new InternalRow(currentRowId++, className);

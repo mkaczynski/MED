@@ -29,8 +29,8 @@ namespace UniversalPreferences.DAL
         private void ProcessLine(string line)
         {
             string[] parts = line.Split('<');
-            var left = parts[0];
-            var right = parts[1];
+            var left = parts[0].Trim();
+            var right = parts[1].Trim();
             CreatePreferenceIfNoExists(left);
             CreatePreferenceIfNoExists(right);
 
