@@ -31,20 +31,59 @@ Jak ktoś nie umie pisać w texie, to niech prześle plain text w notaniku.
 
 \section{Założenia}
 \section{Dane wejściowe i wyjściowe}
+\label{opis_danych}
 Dane wejściowe są przekazywane do aplikacji w postaci następujących plików:
 \begin{itemize}
 \item plik zawierający zbiór danych
 \item plik z opisem relacji
 \end{itemize}
-Obsługiwanym formatem plików zawierających zbiór danych jest Csv. Wymagane jest aby w jednej z kolumn przechowywane były dane określające do której klasy należy dany wiersz. W drugim pliku znajduje się opis relacji pomiędzy klasami. \\
-Dane wyjściowe wyświetlane są w polu tekstowym wewnątrz aplikacji. W każdej linii znajduje się opis jednego ze znalezionych minimalnych wzorców. Przykładowe wyjście programu:
-\lstset{frame=single, xleftmargin=6pt, xrightmargin=6pt, framesep=6pt}
-\begin{lstlisting}
-1. (4#other meal) => (3#meal containing alcohol)
-2. (2#non-vegetarian meal without pork, 
-                  3#meal containing alcohol) => ()
-3. (4#other meal, 3#meal containing alcohol) => ()
-\end{lstlisting}
+Obsługiwanym formatem plików zawierających zbiór danych jest Csv. Wymagane jest aby w jednej z kolumn przechowywane były dane określające do której klasy należy dany wiersz. Poniżej został przedstawiony przykładowy plik: \\
+
+\begin{tabular}{l}
+low,low,4,2,big,high,unacc \\
+low,low,4,4,small,low,unacc \\
+low,low,4,4,small,med,acc \\
+low,low,4,4,small,high,good \\
+\end{tabular}
+\\
+
+W kolejnych kolumnach znajdują się atrybuty określające pewne wlaściwości zbioru danych. Separatorem oddzielającym kolumny jest znak ','. W przykładowym pliku nazwa klasy do której przynależy znajdujący się w danym wierszu obiekt znajduje się w ostatniej kolumnie, nic nie stoi jednak na przeszkodzie, aby w ten sposób interpretować dane znajdujące się w innej kolumnie. \\
+
+Kolejnym plikiem wejściowym aplikacji jest opis relacji pomiędzy klasami. Plik ten składa się z wielu linii. W każdej z nich znajduje się wpis typu:\\
+
+\begin{tabular}{l}
+a$<$b \\
+\end{tabular} \\
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=0.5\textwidth]{img/relations.png}
+\caption{Przykładowy graf relacji}
+\label{relat2}
+\end{center}
+\end{figure}
+
+Oznacza on, że klasa {\bf a} jest w ralacji z klasą {\bf b}.
+Dla przykładowego grafu relacji (\ref{relat2}) plik powinien być postaci: \\
+
+\begin{tabular}{l}
+Y$<$V \\
+Z$<$V \\
+X$<$Y \\
+X$<$Z \\
+U$<$W \\
+\end{tabular}
+\\
+
+Dane wyjściowe wyświetlane są w polu tekstowym wewnątrz aplikacji. W każdej linii znajduje się opis jednego ze znalezionych minimalnych wzorców. Przykładowe wyjście programu: \\
+
+\begin{tabular}{l}
+1. (4\#other meal) =$>$ (3\#meal containing alcohol) \\
+2. (2\#non-vegetarian meal without pork, 3\#meal containing alcohol) =$>$ () \\
+3. (4\#other meal, 3\#meal containing alcohol) =$>$ () \\
+\end{tabular}
+\\
+
 W nawiasach wymienione są opisy znalezionych atrybutów postaci: \{numer kolumny\}\#\{wartość atrybutu\}. Dane w lewym i prawym nawiasie przedstawiają atrybuty odpowiednio z lewego i prawego obiektu. 
 \section{Szczegóły implementacji}
 
@@ -171,30 +210,7 @@ W kroku pierwszym\ref{krok1} należy wbrać pliki z danymi, klikając w przycisk
 
 Plik z danymi powinien być poprawnym pod względem budowy plikiem csv. W pliku powinny być kolejne wiersze w których w każdym znajduje się taka sama liczba kolumn oddzielonych określonym separatorem.\\
 
-Plik z relacjami składa się z wielu linii. W każdej z nich znajduje się wpis postaci:
-\lstset{frame=single, xleftmargin=6pt, xrightmargin=6pt, framesep=6pt}
-\begin{lstlisting}
-a<b
-\end{lstlisting}
-Oznacza to, że klasa {\bf a} jest w ralacji z klasą {\bf b}.
-Dla przykładowego grafu relacji (\ref{relat}) plik powinien być postaci:
-\lstset{frame=single, xleftmargin=6pt, xrightmargin=6pt, framesep=6pt}
-\begin{lstlisting}
-Y<V
-Z<V
-X<Y
-X<Z
-U<W
-\end{lstlisting}
-
-\begin{figure}[h!]
-\begin{center}
-\includegraphics[width=\textwidth]{img/relations.png}
-\caption{Przykładowy graf relacji}
-\label{relat}
-\end{center}
-\end{figure}
-
+Plik z relacjami powinien być zgodny z formatem opisanym w rozdziale \nameref{opis_danych}. \\
 
 \begin{figure}[h!]
 \begin{center}
