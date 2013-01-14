@@ -58,7 +58,7 @@ namespace UniversalPreferences.DAL
 
         public int MinLeftSideIndex()
         {
-            return 7; //todo!  to powinna byc polowa mapowan + 1, ale tych  mapowan jest nieparzysta liczba!
+            return csvReader.Mapping.Count/2 + 1;
         }
     }
 }
