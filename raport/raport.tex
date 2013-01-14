@@ -66,33 +66,41 @@ jest minimalnym wzorcem, czy należy go odrzucić lub analizować dalej. Na tym 
 \end{center}
 \end{figure}
 
-Na rysunku \ref{dane_podstawowe} przedstawiono tabelę z danymi i tabelę relacji w których pozostają klasy dla tych danych. Poniżej znajdują się szczegółowe wyniki dla tego zbioru.
+Na rysunku \ref{dane_podstawowe} przedstawiono tabelę z danymi i tabelę relacji w których pozostają klasy dla tych danych. Poniżej znajdują się szczegółowe wyniki dla tego zbioru.\\
+
+Dla tego przypadku tworzone jest następujące mapowanie wartości atrybutów na liczby naturalne:\\
+
+\begin{itemize}
+\item 1 i 4 - vegetarian meal
+\item 2 i 5 - non-vegetarian meal without pork
+\item 3 i 6 - other meal
+\item 4 i 8 - meal containing alcohol
+\end{itemize}
+
+Atrybuty 5, 6, 7 i 8 powstają w wyniku połączenia dwóch zbiorów.\\
+
+W dalszej częśći tej sekcji dla skrócenia zapisów kandydaci będą opisywani trójką w postaci (0 - (12, 4)), gdzie pierwsza wartość jest indeksem atrybutu, a dwa kolejne to liczniki mówiące o wsparciu w klasach decyzyjnych.
 
 \subsubsection{Relacja ścisła}
 
 W przypadku gdy relacja ma zachodzić w sposób ścisły algorytm znajduje następujące minimalne wzorce kontrastowe:
 
 \begin{enumerate}
-\item (other meal) $=>$ (meal containing alcohol)
-\item (non-vegetarian meal without pork, meal containing alcohol) $=>$ ()
-\item (other meal, meal containing alcohol) $=>$ ()
+\item (other meal) $=>$ (meal containing alcohol) \label{res1}
+\item (non-vegetarian meal without pork, meal containing alcohol) $=>$ () \label{res2}
+\item (other meal, meal containing alcohol) $=>$ () \label{res3}
 \end{enumerate}
 
 Przebieg algorytmu dla tego przypadku, przedstawia się następująco:\\
 
 W pierwszej iteracji algorytm nie odnajduje żadnych wzorców. Kandydaci: (0 - (12, 4)), (4 - (12, 4)), (5 - (8, 0)), (6 - (4, 0)) są odrzucani,
-a dalszej analizie podlegają kandydaci: (1 - (5, 3)), (2 - (2, 2)), (7 - (3, 1)), (3 - (3, 1)).
+a dalszej analizie podlegają kandydaci: (1 - (5, 3)), (2 - (2, 2)), (7 - (3, 1)), (3 - (3, 1)). Kandydaci 0 i 4 są odrzucani ponieważ zbiór pusty jest ich generatorem, a kandydaci 5 i 6 ponieważ relacja nie jest dla nich spełniona ani razu.\\
 
-========================
-Znalezione
-2, 7,  - (0, 1)
-1, 3,  - (0, 0)
-2, 3,  - (0, 0)
-Do analizy
-1, 7,  - (1, 1)
-Odrzucone
-1, 2,  - (2, 2)
-3, 7,  - (1, 0)
+W drugiej iteracji algorytm znajduje minimalne wzorce (2, 7 - (0, 1)) mapowany na \ref{res1}, (1, 3 - (0, 0)) \ref{res2} oraz (2, 3 - (0, 0)) \ref{res3} do analizy pozostaje 1 kandydat (1, 7 - (1, 1)) z którego nie można już wygenerować kandydatów 3 elementowych, a kandydaci (1, 2 - (2, 2)) i (3, 7 - (1, 0)) są odrzucani.\\
+
+W przypadku gdy nie wykorzystuje się własności związanej z generatorami, przebieg algorytmu wygląda następująco:\\
+
+W pierwszej iteracji tylko dwóch kandydatów jest wykluczanych z dalszej analizy: (5 - (8, 0)), (6 - (4, 0)). W związku z tym w drugim kroku jest generowanych więcej kandydatów z których aż 11 podlega dalszej analizie: (0, 1 - (5, 3)), (0, 2 - (2, 2)), (0, 4 - (12, 4)), (1, 2 - (2, 2)), (1, 4 - (5, 3)), (2, 4 - (2, 2)), (0, 7 - (3, 1)), (1, 7 - (1, 1)), (4, 7 - (3, 1)), (0, 3 - (3, 1)), (3, 4 - (3, 1)). W kolejnym kroku 8 kandydatów o 3 elementach zostaje do dalszej analizy i dalej 2 kandydatów 4 elementowych.
 
 \subsubsection{Relacja nie ścisła}
 
