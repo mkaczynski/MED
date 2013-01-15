@@ -31,18 +31,18 @@ namespace UniversalPreferences.Algorithm
         {
             var newCandidates = new List<IEnumerable<ushort>>();
 
-            foreach(var c in previousCandidates)
+            for (int i = 0; i < previousCandidates.Count();i++ )
             {
+                var c = previousCandidates.ElementAt(i);
                 var head = c.Take(c.Count() - 1);
-                var tmp = previousCandidates.Where(x => x != c && x.Take(c.Count() - 1).SequenceEqual(head)).
+                var tmp = previousCandidates.Take(i).Where(x => x.Take(c.Count() - 1).SequenceEqual(head)).
                     Select(x => c.Union(x.Skip(c.Count() - 1)).ToArray()).ToList();
 
                 tmp.ForEach(Array.Sort);
                 
                 foreach (var t in tmp)
                 {
-                    if (!newCandidates.Any(x => x.SequenceEqual(t)) && 
-                        !results.Any(x => !x.Except(t).Any()))
+                    if (!results.Any(x => !x.Except(t).Any()))
                     {
                         newCandidates.Add(t);
                     }
