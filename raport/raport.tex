@@ -111,6 +111,49 @@ jest minimalnym wzorcem, czy należy go odrzucić lub analizować dalej. Na tym 
 
 \section{Wyniki}
 
+\subsection{Drzewo mieszająe}
+
+W rozdziale tym zostanie przedstawione porównanie wydajności drzewa mieszającego (\textit{HashTree}) z aiwną implementacją (\textit{FakeTree}) w postaci zwykłej tablicy. Struktury te wypełniane są transakcjami o stałej długości. Implementują one metodę \textit{GetSupportedSets}, która przyjmuje jako paramter pewną transkacje; jej zadaniem jest zwrócenie transakcji przez nią wspieranych. \\
+Dane przedstawione są w postaci tablicy, porównanie wyników przebiega na podstawie czterech parametrów:
+\begin{itemize}
+\item {\bf n} - długość transakcji, którymi wypełniana jest struktura
+\item {\bf m} - długość transakcji, dla której zwracane są wspierane transakcje (transakcja ta jest paramterem metody \textit{GetSupportedSets})
+\item {\bf L} - ilość transakcji w drzewie
+\item {\bf M} - ilość możliwych różnych atrybutów wchodzących w skład transakcji
+\end{itemize}
+
+Dla każdego zestawu parametrów wykonano 10 testów. W tabeli zostaną przedstawione sumaryczne wyniki. \\
+
+\begin{tabular}{|r|r|r|r|r|r|}
+\hline
+n & m & L & M & FakeTree & HashTree \\ \hline
+6 & 10 & 1000 & 50 & 0.0187 & 0.0046\\ \hline
+9 & 10 & 1000 & 50 & 0.0277 & 0.0041\\ \hline
+5 & 20 & 1000 & 50 & 0.0251 & 0.0104\\ \hline
+10 & 20 & 1000 & 50 & 0.1513 & 0.0054\\ \hline
+15 & 20 & 1000 & 50 & 0.0354 & 0.0046\\ \hline
+6 & 10 & 10000 & 500 & 0.1510 & 0.0036\\ \hline
+6 & 10 & 10000 & 500 & 0.1786 & 0.0036\\ \hline
+5 & 20 & 10000 & 500 & 0.1733 & 0.0049\\ \hline
+10 & 20 & 10000 & 500 & 0.2192 & 0.0052\\ \hline
+15 & 20 & 10000 & 500 & 0.2562 & 0.0038\\ \hline
+5 & 50 & 10000 & 500 & 0.2929 & 0.0125\\ \hline
+15 & 50 & 10000 & 500 & 0.5615 & 0.0209\\ \hline
+25 & 50 & 10000 & 500 & 0.5479 & 0.0093\\ \hline
+35 & 50 & 10000 & 500 & 0.5534 & 0.0053\\ \hline
+45 & 50 & 10000 & 500 & 0.6185 & 0.0045\\ \hline
+5 & 100 & 250000 & 5000 & 1.2997 & 0.0310\\ \hline
+25 & 100 & 250000 & 5000 & 1.7476 & 0.0230\\ \hline
+50 & 100 & 250000 & 5000 & 2.1987 & 0.0064\\ \hline
+90 & 100 & 250000 & 5000 & 3.3971 & 0.0061\\ \hline
+5 & 200 & 250000 & 5000 & 2.3955 & 0.0871\\ \hline
+50 & 200 & 250000 & 5000 & 3.2081 & 0.0294\\ \hline
+100 & 200 & 250000 & 5000 & 4.3364 & 0.0100\\ \hline
+175 & 200 & 250000 & 5000 & 5.9285 & 0.0081\\ \hline
+\end{tabular}
+
+We wszystkich eksperymentach \textit{HashTree} osiągął lepsze wyniki niż \textit{FakeTree}. Warto zauważyć, że wraz ze zbliżającą się wartością {\bf n} do wartości {\bf m} czas dla \textit{FakeTree} rósł, natomiast dla \textit{HashTree} malał.
+
 \subsection{Wyniki podstawowe}
 
 \begin{figure}[h!]
@@ -157,7 +200,7 @@ W przypadku gdy nie wykorzystuje się własności związanej z generatorami, prz
 
 W pierwszej iteracji tylko dwóch kandydatów jest wykluczanych z dalszej analizy: (5 - (8, 0)), (6 - (4, 0)). W związku z tym w drugim kroku jest generowanych więcej kandydatów z których aż 11 podlega dalszej analizie: (0, 1 - (5, 3)), (0, 2 - (2, 2)), (0, 4 - (12, 4)), (1, 2 - (2, 2)), (1, 4 - (5, 3)), (2, 4 - (2, 2)), (0, 7 - (3, 1)), (1, 7 - (1, 1)), (4, 7 - (3, 1)), (0, 3 - (3, 1)), (3, 4 - (3, 1)). W kolejnym kroku 8 kandydatów o 3 elementach zostaje do dalszej analizy i dalej 2 kandydatów 4 elementowych.
 
-\subsubsection{Relacja nie ścisła}
+\subsubsection{Relacja nieścisła}
 
 W przypadku gdy relacja ma zachodzić w sposób nie ścisły algorytm znajduje następujące minimalne wzorce kontrastowe:
 
