@@ -13,7 +13,6 @@ namespace UniversalPreferences.Algorithm
         public event EventHandler<DiagnosticsInfo> DiagnosticsEvent;
         private readonly ICandidatesGenerator candidatesGenerator;
 
-        private Dictionary<string, SimpleRow> temporaryResults;
         private IList<IEnumerable<ushort>> results;
 
         public BaseAlgorithm(ICandidatesGenerator candidatesGenerator)
@@ -54,74 +53,43 @@ namespace UniversalPreferences.Algorithm
 
         private IEnumerable<IEnumerable<ushort>> PruneResults(IEnumerable<IEnumerable<ushort>> itemsets, IEnumerable<Row> transactions)
         {
-            temporaryResults = new Dictionary<string, SimpleRow>();
-
-            CheckItemsets(itemsets, transactions);
-
-            var res = SelectPreferencesAndGetCandidates();
-            temporaryResults = null;
+            var hashTree = CheckItemsets(itemsets, transactions);
+            var res = SelectPreferencesAndGetCandidates(hashTree);
             return res;
         }
 
-        private void CheckItemsets(IEnumerable<IEnumerable<ushort>> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
+        private IHashTree CheckItemsets(IEnumerable<IEnumerable<ushort>> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
         {
             var sw = new Stopwatch();
             sw.Start();
-            
-            var copy = CreateItemsetsCopy(itemsets);
-            var hashTree = CreateTree(itemsets);
+
+            var simpleRows = itemsets.Select(x => new SimpleRow(x));
+            var hashTree = CreateTree(simpleRows);
             
             foreach (var transaction in transactions)
             {
                 var supported = hashTree.GetSupportedSets(transaction);
-
                 foreach (var simpleRow in supported)
                 {
-                    var description = GetDescription(simpleRow.Attributes);
-                    var row = AddNode(description, new SimpleRow(simpleRow.Attributes));
-                    IncrementCounters(row, transaction);
-                    Remove(copy, description);
+                    IncrementCounters(simpleRow, transaction);
                 }
-            }
-
-            foreach (var notSupported in copy.Values)
-            {
-                var description = GetDescription(notSupported);
-                AddNode(description, new SimpleRow(notSupported));
             }
 
             sw.Stop();
             Console.WriteLine(sw.Elapsed);
+
+            return hashTree;
         }
 
-        private IDictionary<string, IEnumerable<ushort>> CreateItemsetsCopy(IEnumerable<IEnumerable<ushort>> itemsets)
+        private IHashTree CreateTree(IEnumerable<SimpleRow> itemsets)
         {
-            var dict = new Dictionary<string, IEnumerable<ushort>>();
-            foreach (var itemset in itemsets)
-            {
-                var description = GetDescription(itemset);
-                dict.Add(description, itemset);
-            }
-            return dict;
-        }
-
-        private IHashTree CreateTree(IEnumerable<IEnumerable<ushort>> itemsets)
-        {
-            var tree = HashTreeFactory.Create(itemsets.First().Count(), 100, 2999);
-            tree.FillTree(itemsets.Select(x => new Row { Attributes = x.ToArray() }));
+            var tree = HashTreeFactory.Create(itemsets.First().Transaction.Length, 100, 2999);
+            tree.FillTree(itemsets);
 
             return tree;
         }
 
-        private void Remove(IDictionary<string, IEnumerable<ushort>> copy, string description)
-        {
-            if (copy.Count > 0)
-            {
-                copy.Remove(description);   
-            }
-        }
-
-        private IEnumerable<IEnumerable<ushort>> SelectPreferencesAndGetCandidates()
+        private IEnumerable<IEnumerable<ushort>> SelectPreferencesAndGetCandidates(IHashTree hashTree)
         {
             var tmp = new List<IEnumerable<ushort>>();
 
@@ -129,12 +97,13 @@ namespace UniversalPreferences.Algorithm
             var toAnalyze = new List<SimpleRow>();
             var rejected = new List<SimpleRow>();
 
-            foreach (var row in temporaryResults.Values)
+            foreach (var row in hashTree.GetRows())
             {
                 if(row.RelationNotComplied == 0) 
                     // jezeli kandydat nie wystepuje w tej klasie, to jest minimalnym poszukiwanym wzorcem
                 {
                     results.Add(row.Transaction);
+                    OnAddNode(row);
                     found.Add(row);
                 }
                 else if(row.RelationComplied != 0) //te ktore maja 0 odrzucamy
@@ -185,19 +154,7 @@ namespace UniversalPreferences.Algorithm
             }
         }
 
-        private SimpleRow AddNode(string description, SimpleRow row)
-        {
-            SimpleRow outRow;
-            if(!temporaryResults.TryGetValue(description, out outRow))
-            {
-                outRow = row;
-                temporaryResults.Add(description, row);
-                OnAddNode(description, row);
-            }
-            return outRow;
-        }
-
-        protected virtual void OnAddNode(string description, SimpleRow row)
+        protected virtual void OnAddNode(SimpleRow row)
         {
 
         }
