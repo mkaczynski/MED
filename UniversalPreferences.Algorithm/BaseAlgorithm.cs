@@ -30,7 +30,12 @@ namespace UniversalPreferences.Algorithm
 
             while (true)
             {
+                var sw = new Stopwatch();
+                sw.Start();
                 itemsets = candidatesGenerator.GetCandidates(itemsets, results, transactions);
+                sw.Stop();
+                Console.WriteLine("Czas generowania: {0}", sw.Elapsed);
+
                 if (!itemsets.Any())
                 {
                     break;
@@ -83,7 +88,7 @@ namespace UniversalPreferences.Algorithm
 
         private IHashTree CreateTree(IEnumerable<SimpleRow> itemsets)
         {
-            var tree = HashTreeFactory.Create(itemsets.First().Transaction.Length, 100, 2999);
+            var tree = HashTreeFactory.Create(itemsets.First().Transaction.Length, 100, 47);
             tree.FillTree(itemsets);
 
             return tree;
@@ -124,9 +129,9 @@ namespace UniversalPreferences.Algorithm
                 }
             }
 
-#if DEBUG
+//#if DEBUG
             WriteInfo(found, toAnalyze, rejected);
-#endif
+//#endif
             return tmp;
         }
 
@@ -136,11 +141,14 @@ namespace UniversalPreferences.Algorithm
 
             sb.AppendLine("========================");
             sb.AppendLine("Znalezione");
-            WriteListInfo(sb, found);
+            //WriteListInfo(sb, found);
+            sb.AppendLine(found.Count().ToString());
             sb.AppendLine("Do analizy");
-            WriteListInfo(sb, toAnalyze);
+            //WriteListInfo(sb, toAnalyze);
+            sb.AppendLine(toAnalyze.Count().ToString()); 
             sb.AppendLine("Odrzucone");
-            WriteListInfo(sb, rejected);
+            sb.AppendLine(rejected.Count().ToString());
+            //WriteListInfo(sb, rejected);
             sb.AppendLine();
 
             OnDiagnosticsEvent(new DiagnosticsInfo(sb.ToString()));

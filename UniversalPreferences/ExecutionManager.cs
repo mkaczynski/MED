@@ -27,7 +27,8 @@ namespace UniversalPreferences
 
         private void OnInternalDiagnosticsEvent(object sender, DiagnosticsInfo info)
         {
-            OnDiagnosticsEvent(info);
+            Console.WriteLine(info.Info);
+            //OnDiagnosticsEvent(info);
         }
 
         public void Execute()

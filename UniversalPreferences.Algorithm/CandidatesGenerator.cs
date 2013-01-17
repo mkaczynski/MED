@@ -42,7 +42,11 @@ namespace UniversalPreferences.Algorithm
                 
                 foreach (var t in tmp)
                 {
-                    if (!results.Any(x => !x.Except(t).Any()))
+                    var subsets = GetSubsets(t);
+
+                    if (!results.Any(x => !x.Except(t).Any()) &&
+                        subsets.All(x => previousCandidates.Any(p => p.SequenceEqual(x))))
+                    //if (!results.Any(x => x.Intersect(t).Any()))
                     {
                         newCandidates.Add(t);
                     }
@@ -50,6 +54,13 @@ namespace UniversalPreferences.Algorithm
             }
 
             return newCandidates;
+        }
+
+        private IEnumerable<ushort[]> GetSubsets(IEnumerable<ushort> set)
+        {
+            var subsets = set.Select((t, i) => set.Take(i).Concat(set.Skip(i + 1)).ToArray()).ToList();
+            subsets.ForEach(x=>Array.Sort(x));
+            return subsets;
         }
     }
 }
