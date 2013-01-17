@@ -229,9 +229,29 @@ W przypadku gdy relacja ma zachodzić w sposób równoważny algorytm znajduje n
 
 \subsection{Wyniki dla złożonych danych}
 
-A tutaj wyniki dla normalnych danych. Na pewno musi być zbiór z samochodami, ten który był na którymś lab.
+Algorytm został sprawdzony pod względem wydajności na danych pochodzących z repozytorium \textit{UCI}: Car Evaluation Data Set\footnote{http://archive.ics.uci.edu/ml/datasets/Car+Evaluation}.\\
+
+Zbiór jest podzielony na 4 klasy określające akceptowalność samochodu ze względu na: koszt zakupu, koszt utrzymania, liczbę drzwi, liczbę miejsc, pojemność bagażnika i wskaźnik bezpieczeństwa pojazdu.\\
+
+W zbiorze wyróżniono 4 klasy: nieakceptowalny, akceptowalny, dobry i bardzo dobry. Przyjęto, że pomiędzy klasami zachodzi relacja od najgorszej do najlepszej wg wymienionej kolejności. Zbiór zawiera łącznie 1728 obiektów, opisywanych przez 21 unikalnych ze względu na kolumny wartości atrybutów.\\
+
+Obliczenia przeprwadzone dla całego zbioru są więc wykonywane na blisko $3*10^6$ elementów w której każdy obiekt posiada 42 atrybuty. Charakterystyka zbioru jest na tyle niesprzyjająca, że w kolejnych iteracjach bardzo mało wyników jest odrzucanych, poprawnie klasyfikowanych lub uznawanych za generator. Z tego powodu, pełnych wyników nie udało się wygenerować i nie będą tutaj zaprezentowane. W załączeniu, znajdują się wyniki dla podzbioru omawianego zbioru (200 obiektów).\\
 
 \section{Wnioski}
+
+\begin{enumerate}
+
+\item Mimo, że w implementacji algorytmu dominującą operacją jest wyszukiwanie wspieranych przez transakcję kandydatów, okazuje się, że również generowanie kolejnej generacji kandydatów jest kosztowne obliczeniowo i należy poświęcić uwagę, na możliwie wydajne zaimplementowanie tego fragmentu kodu.
+
+Złożoność tego fragmentu kodu w implementacji w przypadku pesymistycznym wynosi $\fraq{O(n^2)}{2}$ i okazuje się istotnym problemem przy budowaniu generacji kandydatów ze zbioru liczącego od kilkudziesięciu tysięcy do kilkuset tysięcy elementów.
+
+Wydaje się, że warto do odnajdywania wszystkich elementów o (k-1) wspólnych wartości dla pewnego zbioru wykorzystać drzewo mieszające.
+
+\item Wydaje się, że w algorytmie warto było by dodać parametr związany z minimalnym wsparciem, który pozwoliłby na odrzucanie większej ilości zbiorów kandydujących. Z praktycznego punktu widzenia, mając na uwadze fakt, że zbiór w którym wyszukiwane są wzorce ma liczność równą kwadratowi zbioru wyjściowego reguły o bardzo małych wsparciach, mogą nie mieć praktycznego znaczenia.
+
+\item W implementacji udało się osiągnąć stosunkowo dobrą złożoność pamięciową. W czasie wielogodzinnego testu algorytm pracował stabilnie, chociaż można przypuszczać, że dla danych o dużej ilości cech (np. kilkaset) konieczne było by przechowywanie kandydatów w pamięci trwałej.
+
+\end{enumerate}
 
 \appendix
 \section{Podręcznik użytkownika}
