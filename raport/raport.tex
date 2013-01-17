@@ -243,7 +243,7 @@ Obliczenia przeprwadzone dla całego zbioru są więc wykonywane na blisko $3*10
 
 \item Mimo, że w implementacji algorytmu dominującą operacją jest wyszukiwanie wspieranych przez transakcję kandydatów, okazuje się, że również generowanie kolejnej generacji kandydatów jest kosztowne obliczeniowo i należy poświęcić uwagę, na możliwie wydajne zaimplementowanie tego fragmentu kodu.
 
-Złożoność tego fragmentu kodu w implementacji w przypadku pesymistycznym wynosi $\fraq{O(n^2)}{2}$ i okazuje się istotnym problemem przy budowaniu generacji kandydatów ze zbioru liczącego od kilkudziesięciu tysięcy do kilkuset tysięcy elementów.
+Złożoność tego fragmentu kodu w implementacji w przypadku pesymistycznym wynosi $\frac{O(n^2)}{2}$ i okazuje się istotnym problemem przy budowaniu generacji kandydatów ze zbioru liczącego od kilkudziesięciu tysięcy do kilkuset tysięcy elementów.
 
 Wydaje się, że warto do odnajdywania wszystkich elementów o (k-1) wspólnych wartości dla pewnego zbioru wykorzystać drzewo mieszające.
 
