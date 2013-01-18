@@ -15,21 +15,31 @@
 \maketitle
 
 \section{Opis zadania} 
+Tematem naszego zadania są preferencje uniwersalne. Wobec tego zaczniemy od wprowadzenia i opisania kilku podstawowych pojęć.
 
-Szablon do wypełnienia. Jak ktoś chce napisać jakiś konkretny rozdział to niech się przy nim wpisze - może być w komentarzu. 
-Jak nie to się później rozdzieli zadania.\\
+Na początek należy zdefiniować, co rozumiemy przez preferencję. Otóż klasa Y jest preferowana wobec klasy $X$ wtedy i tylko wtedy gdy każdy obiekt należący do klasy $Y$ jest preferowany wobec każdego obiektu z klasy $X$. Można to też ująć w następujący sposób: dla każdego obiektu z klasy $X$ istnieje obiekt z klasy $Y$ który jest względem niego preferowany.  \\
 
-Przykład wykorzystania bibliografii\cite{fst}. W bibliografii wpisy są z jakiegoś mojego wcześniejszego raportu, będą zmienione. Kompilacja:
+Dla rozważań na temat preferencji na poziomie atrybutów, a nie klas, należy również zdefiniować tak zwany kontekst preferencji. Oznaczamy go jako:
 
+			$$K = (G,M,I)$$
+gdzie $G$ to zbiór obiektów, $M$ to zbiór atrybutów, a $I$ to relacja $G \times M$, która mówi nam, jakie obiekty ze zbioru $G$ posiadają jakie atrybuty ze zbioru $M$. \\
+
+W tym kontekście możemy z kolei sformułować definicję preferencji uniwersalnych na poziomie atrybutów.  \\
+
+Mówi ona że zbiór atrybutów $B$ należący do $M$ jest uniwersalnie preferowany względem zbioru atrybutów $A$ należącego do $M$ wtedy i tylko wtedy gdy zbiór wszystkich obiektów $B'$ posiadających wszystkie atrybuty z $B$ jest preferowany względem zbioru wszystkich obiektów $A'$ posiadających wszystkie atrybuty z $A$. Można to także określić w taki sposób, że $B$ jest preferowane względem $A$ jeżeli $B'$ należy do zbioru klas lepszych od $A'$. \\
+
+Wobec powyższych faktów naszym celem jest ustalenie, czy na podstawie wiedzy o preferencji klasy $Y$ wobec klasy $X$, możemy znaleźć preferencje różnych podzbiorów atrybutów klasy $Y$ wobec tych z klasy $X$. \\
+
+Odniesiemy się teraz do konkretnego przykładu. Wiemy, że każdy samochód można uznać za obiekt posiadający pewną liczbę atrybutów (marka, rok produkcji, cena, liczba drzwi, pojemność silnika itd.). Możemy je również zaklasyfikować do danej klasy samochodów, czy to ze względu na kraj produkcji, typ auta, czy jakikolwiek inny atrybut. Zatem badając preferencje uniwersalne, chcemy móc stwierdzić, czy fakt że osoba A woli samochody małe od dużych oznacza na przykład, że woli samochody o niskim spalaniu paliwa od tych o wysokim, czy też powód leży gdzieś indziej.
+\section{Założenia}
+Mając już podstawowe definicje pojęć z tematyki naszych rozważań możemy przejśc do podstawowych założen. \\
 \begin{itemize}
-\item pdflatex raport (chyba musi być)
-\item bibtex raport
-\item pdflatex raport (x2)
+\item Mamy zdefiniowane relacje pomiędzy klasami, a nie obiektami należącymi do tych klas. W ogólności obiektów może być bardzo wiele, jednak należą one do ściśle określonej, stosunkowo niewielkiej liczby klas.
+\item Zestaw atrybutów danego obiektu jednoznacznie definiuje jego klasę - oznacza to iż nie istnieją dwa obiekty o identycznym zbiorze atrybutów należące do dwóch różnych klas. 
+\item Istnieje wiele obiektów o różnych zestawach atrybutów należących do tej samej klasy. Jest to niejako implikacja pierwszego założenia, obiekty należące do jednej klasy z pewnośćią mają jakieś cechy wspólne, ale mogą się też różnić na poziomie jednego lub wielu atrybutów. \\
+\item Wprowadzano relacja nie jest zupełna - oznacza to, że nie dla każdej pary klas $(X,Y)$ ze zbioru klas $G$ mamy określoną relację $X < Y$ lub odwrotnie. 
 \end{itemize}
 
-Jak ktoś nie umie pisać w texie, to niech prześle plain text w notaniku.
-
-\section{Założenia}
 \section{Dane wejściowe i wyjściowe}
 \label{opis_danych}
 Dane wejściowe są przekazywane do aplikacji w postaci następujących plików:
@@ -108,6 +118,39 @@ Wykonanie obliczeń (2) przebiega wg następującego schematu:\\
 
 W kolejnych iteracjach znajdywane są nowe zbiory kandydujące, dla wszystkich zbiorów obliczane są dwa liczniki mówiące o tym jakie wsparcie mają te zbiory w klasie transakcji spełniających i nie spełniających relację. Aby zapewnić wydajne obliczanie wartości omawianych liczników, wykorzystywane jest drzewo mieszające tworzone w każdej iteracji dla zbioru kandydatów. Po obliczeniu liczników podejmowana jest decyzja o tym, czy dany kandydat
 jest minimalnym wzorcem, czy należy go odrzucić lub analizować dalej. Na tym etapie (opcjonalnie) podejmowana jest decyzja czy któryś z podzbiorów danego zbioru kandydującego jest generatorem. Jeżeli tak, taki zbiór nie będzie analizowany dalej.
+
+\subsection{Złożoność}
+W tym rozdziale zostanie omówiona złożoność algorytmu. Zostały przyjęte następujące oznaczenia.
+\begin{itemize}
+\item $ n$ - liczba wejściowych transakcji
+\item $ m$ - długość wejściowych transakcji
+\item $ N = n^2$ - liczba transkacji powstałych po połączniu transakcji w pary
+\item $ M = 2m$ - długość transkacji po połączniu transakcji w pary
+\item $ L_i$ - liczba rozważanych transkacji w obrocie pętli algorytmu (linia 1) o numerze $i$
+\end{itemize}
+Poniżej został przedstawiony pseudokod algorytmu z najbardziej istotnymi ze względnu na złożoność pesymistyczną fragmentami.
+\begin{lstlisting}[numbers=left]
+for(i = 1; i < M; i++)
+{
+	Candidates = GetCandidates()
+	FillTree(Candidates)
+	for(j = 1; j < N; j++)
+		FindSupported(Tran[j])
+}
+\end{lstlisting}
+
+Z analizy powyższego pseudokodu można wyciągnąć następujące wnioski:
+\begin{itemize}
+\item Pętla z linii pierwszej wykonuje się maksymalnie $M$ razy. Obliczenia mogą zostać przerwane wcześniej jeśli wyczerpano już wszystkie wspierane transakcje.
+\item Złożoność metody GetCandidates zależy kwadratowo od liczby transakcji pochodzącej z poprzedniej pętli. Tych transakcji jest $L_{i-1}$. Dodatkowo potrzebny jest jeszcze czas na porównanie pierwszych $i-1$ elementów transkacji. Podsumowując złożoność metody jest rzędu $iL_{i-1}^2$
+\item Czas budowania drzewa jest fukncją liniową względem ilości transakcji z których jest budowany. Złożoność rzędu: $L_i$.
+\item Metoda FindSupported wywołwana jest $N$ razy dla każdego obrotu pętli z linii 1.  Przy założeniu, że zostaną odwiedzone wszystkie liście drzewa jej złożoność wynosi: $iL_i$. Czas $i$ jest potrzebny na sprawdzenie czy transkacja znajdująca się w drzewie jest wspierana przez zadaną transkacje.
+\end{itemize}
+
+Podsumowując pesymistyczna złożność algorytmu wynosi:
+$$ \sum_{i=1}^M (iL_{i-1}^2 + L_i + iNL_i) $$
+
+Jak widać jest ona ściśle zależna od liczby kandytatów na wzorzec kontrastowy przetwarzanych w danej pętli algorytmu, a liczba ta jest ściśle zależna od zadania. Należy zaznaczyć, że przedstawione tu wyliczenia są przeprowadzone dla pesymistycznej złożoność i złożoność oczekiwana jest zdecydowanie lepsza. W szczególności można się spodziewać zakończenia obliczeń znacznie wcześniej niż przy ostatnim obrocie pętli z linii 1 oraz zdecydowanie lepszej niż liniowej złożoności wyszukiwania w drzewie mieszającym.
 
 \section{Wyniki}
 
