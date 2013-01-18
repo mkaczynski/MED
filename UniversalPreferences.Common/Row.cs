@@ -10,8 +10,6 @@ namespace UniversalPreferences.Common
 
         public ushort[] Attributes { get; set; }    // tabela zawierajaca wartosci atrybutow - jedna dla obu obiektow
 
-        public HashSet<ushort> HashSet { get; set; }
-
         public Relation Value { get; set; }      // okresla czy relacja jest spelniona dla tego wiersza
 
         public Row(int firstID, int secondID, ushort[] attributes, Relation value)
@@ -23,7 +21,6 @@ namespace UniversalPreferences.Common
             {
                 this.Attributes[i] = attributes[i];
             }
-            HashSet = new HashSet<ushort>(attributes);
             this.Value = value;
         }
 

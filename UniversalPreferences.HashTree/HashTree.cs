@@ -26,7 +26,7 @@ namespace UniversalPreferences.HashTree
         public IEnumerable<SimpleRow> GetSupportedSets(Row transaction)
         {
             var supportedRows = new List<SimpleRow>();
-            root.FillSupportedRows(supportedRows, transaction.Attributes, 0, transaction.HashSet);
+            root.FillSupportedRows(supportedRows, transaction.Attributes, 0, new HashSet<ushort>(transaction.Attributes));
             return supportedRows;
         }
 
