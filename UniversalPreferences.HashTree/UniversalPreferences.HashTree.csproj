@@ -40,8 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CandidateHashTree.cs" />
+    <Compile Include="CandidateNode.cs" />
     <Compile Include="HashTree.cs" />
     <Compile Include="HashTreeFactory.cs" />
+    <Compile Include="ICandidateHashTree.cs" />
     <Compile Include="IHashTree.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

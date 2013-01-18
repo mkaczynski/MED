@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UniversalPreferences.Common;
+using UniversalPreferences.HashTree;
 
 namespace UniversalPreferences.Algorithm
 {
@@ -30,18 +31,18 @@ namespace UniversalPreferences.Algorithm
 
         public IEnumerable<IEnumerable<ushort>> GetCandidates(IEnumerable<IEnumerable<ushort>> previousCandidates, IEnumerable<IEnumerable<ushort>> results, IEnumerable<Row> transactions)
         {
-            var sorted = previousCandidates.Select(x => x.ToArray()).OrderBy(x => x, new ArrayComparer()).ToList();
-            var newCandidates = new List<IEnumerable<ushort>>();
+            var previousArrays = previousCandidates.Select(x => (ushort[])x).ToList();
+            var newCandidates = new List<ushort[]>();
             var L = previousCandidates.First().Count();
 
-            for (int i = 0; i < sorted.Count;i++ )
+            for (int i = 0; i < previousArrays.Count;i++ )
             {
-                ushort[] first = sorted[i];
+                ushort[] first = previousArrays[i];
 
                 var tmp = new List<ushort[]>();
-                for (int j = i+1; j < sorted.Count; j++)
+                for (int j = i+1; j < previousArrays.Count; j++)
                 {
-                    var second = sorted[j];
+                    var second = previousArrays[j];
                     
                     if(!AreEqual(first, second, L-1))
                     {
@@ -56,19 +57,24 @@ namespace UniversalPreferences.Algorithm
                     var max = Math.Max(first[L-1], second[L-1]);
                     newCand[L - 1] = min;
                     newCand[L] = max;
-                    tmp.Add(newCand);
-                }
-                
-                foreach (var t in tmp)
-                {
-                    if (!results.Any(x => !x.Except(t).Any()))
-                    {
-                        newCandidates.Add(t);
-                    }
+                    newCandidates.Add(newCand);
                 }
             }
 
-            return newCandidates;
+            var result = new List<IEnumerable<ushort>>();
+            var hashTree = HashTreeFactory.CreateCandidateTree(L, 100, 47);
+            hashTree.FillTree(previousArrays);
+
+            foreach (var newCandidate in newCandidates)
+            {
+                if(hashTree.GetSupportedSets(newCandidate).Count() == L+1 &&
+                    !results.Any(x => !x.Except(newCandidate).Any()))
+                {
+                    result.Add(newCandidate);
+                }
+            }
+
+            return result;
         }
 
         private bool AreEqual(ushort[] x, ushort[] y, int length)
@@ -81,25 +87,6 @@ namespace UniversalPreferences.Algorithm
                 }
             }
             return true;
-        }
-
-        class ArrayComparer : IComparer<ushort[]>
-        {
-            public int Compare(ushort[] x, ushort[] y)
-            {
-                for (int i = 0; i < x.Length; i++)
-                {
-                    if(x[i] < y[i])
-                    {
-                        return -1;
-                    }
-                    if (x[i] > y[i])
-                    {
-                        return 1;
-                    }
-                }
-                return 0;
-            }
         }
     }
 }

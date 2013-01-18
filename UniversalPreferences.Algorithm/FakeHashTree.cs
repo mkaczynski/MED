@@ -42,5 +42,10 @@ namespace UniversalPreferences.Algorithm
         {
             return rows;
         }
+
+        public void FillTree(List<ushort[]> elements)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
