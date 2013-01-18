@@ -7,7 +7,9 @@
 \usepackage[pdftex]{graphicx} % Wsparcie dla obrazkow
 \usepackage{listings}
 
-\title{Wyznaczanie reprezentacji preferencji uniwersalych}
+\newtheorem{df}{Definicja}
+
+\title{Wyznaczanie reprezentacji preferencji uniwersalnych}
 \author{Bartosz Górski \and Marcin Kaczyński \and Paweł Sokołowski}
 
 \begin{document}
@@ -15,28 +17,33 @@
 \maketitle
 
 \section{Opis zadania} 
-Tematem naszego zadania są preferencje uniwersalne. Wobec tego zaczniemy od wprowadzenia i opisania kilku podstawowych pojęć.
 
-Na początek należy zdefiniować, co rozumiemy przez preferencję. Otóż klasa Y jest preferowana wobec klasy $X$ wtedy i tylko wtedy gdy każdy obiekt należący do klasy $Y$ jest preferowany wobec każdego obiektu z klasy $X$. Można to też ująć w następujący sposób: dla każdego obiektu z klasy $X$ istnieje obiekt z klasy $Y$ który jest względem niego preferowany.  \\
+Tematem zadania jest wyszukiwanie preferencji uniwersalnych.\\
 
-Dla rozważań na temat preferencji na poziomie atrybutów, a nie klas, należy również zdefiniować tak zwany kontekst preferencji. Oznaczamy go jako:
+Klasa Y jest preferowana wobec klasy $X$ wtedy i tylko wtedy gdy każdy obiekt należący do klasy $Y$ jest preferowany wobec każdego obiektu z klasy $X$. Definicję można wyrazić w następujący sposób: dla każdego obiektu z klasy $X$ istnieje obiekt z klasy $Y$ który jest względem niego preferowany.  \\
+
+Dla rozważań na temat preferencji na poziomie atrybutów, a nie klas, należy również zdefiniować kontekst preferencji. Oznaczamy go jako:
 
 			$$K = (G,M,I)$$
+
 gdzie $G$ to zbiór obiektów, $M$ to zbiór atrybutów, a $I$ to relacja $G \times M$, która mówi nam, jakie obiekty ze zbioru $G$ posiadają jakie atrybuty ze zbioru $M$. \\
 
-W tym kontekście możemy z kolei sformułować definicję preferencji uniwersalnych na poziomie atrybutów.  \\
+W tym kontekście możemy z kolei sformułować definicję preferencji uniwersalnych na poziomie atrybutów:
 
-Mówi ona że zbiór atrybutów $B$ należący do $M$ jest uniwersalnie preferowany względem zbioru atrybutów $A$ należącego do $M$ wtedy i tylko wtedy gdy zbiór wszystkich obiektów $B'$ posiadających wszystkie atrybuty z $B$ jest preferowany względem zbioru wszystkich obiektów $A'$ posiadających wszystkie atrybuty z $A$. Można to także określić w taki sposób, że $B$ jest preferowane względem $A$ jeżeli $B'$ należy do zbioru klas lepszych od $A'$. \\
+\begin{df}{}{}{
+Zbiór atrybutów $B$ należący do $M$ jest uniwersalnie preferowany względem zbioru atrybutów $A$ należącego do $M$ wtedy i tylko wtedy gdy zbiór wszystkich obiektów $B'$ posiadających wszystkie atrybuty z $B$ jest preferowany względem zbioru wszystkich obiektów $A'$ posiadających wszystkie atrybuty z $A$. Można to także określić w taki sposób, że $B$ jest preferowane względem $A$ jeżeli $B'$ należy do zbioru klas lepszych od $A'$.}
+\end{df}
 
-Wobec powyższych faktów naszym celem jest ustalenie, czy na podstawie wiedzy o preferencji klasy $Y$ wobec klasy $X$, możemy znaleźć preferencje różnych podzbiorów atrybutów klasy $Y$ wobec tych z klasy $X$. \\
+Wobec powyższego celem zadania jest ustalenie, czy na podstawie wiedzy o preferencji klasy $Y$ wobec klasy $X$, możemy znaleźć preferencje różnych podzbiorów atrybutów klasy $Y$ wobec tych z klasy $X$. \\
 
-Odniesiemy się teraz do konkretnego przykładu. Wiemy, że każdy samochód można uznać za obiekt posiadający pewną liczbę atrybutów (marka, rok produkcji, cena, liczba drzwi, pojemność silnika itd.). Możemy je również zaklasyfikować do danej klasy samochodów, czy to ze względu na kraj produkcji, typ auta, czy jakikolwiek inny atrybut. Zatem badając preferencje uniwersalne, chcemy móc stwierdzić, czy fakt że osoba A woli samochody małe od dużych oznacza na przykład, że woli samochody o niskim spalaniu paliwa od tych o wysokim, czy też powód leży gdzieś indziej.
+Dla przykładu załóżmy, że każdy samochód można uznać za obiekt posiadający pewną liczbę atrybutów (marka, rok produkcji, cena, liczba drzwi, pojemność silnika itd.). Można je również zaklasyfikować do danej klasy samochodów, ze względu na kraj produkcji, typ auta, lub jakikolwiek inny atrybut. Badając preferencje uniwersalne, chcemy stwierdzić, czy fakt że osoba A woli samochody małe od dużych oznacza na przykład, że woli samochody o niskim spalaniu paliwa od tych o wysokim, czy też powód leży gdzieś indziej.
+
 \section{Założenia}
-Mając już podstawowe definicje pojęć z tematyki naszych rozważań możemy przejśc do podstawowych założen. \\
+
 \begin{itemize}
 \item Mamy zdefiniowane relacje pomiędzy klasami, a nie obiektami należącymi do tych klas. W ogólności obiektów może być bardzo wiele, jednak należą one do ściśle określonej, stosunkowo niewielkiej liczby klas.
 \item Zestaw atrybutów danego obiektu jednoznacznie definiuje jego klasę - oznacza to iż nie istnieją dwa obiekty o identycznym zbiorze atrybutów należące do dwóch różnych klas. 
-\item Istnieje wiele obiektów o różnych zestawach atrybutów należących do tej samej klasy. Jest to niejako implikacja pierwszego założenia, obiekty należące do jednej klasy z pewnośćią mają jakieś cechy wspólne, ale mogą się też różnić na poziomie jednego lub wielu atrybutów. \\
+\item Istnieje wiele obiektów o różnych zestawach atrybutów należących do tej samej klasy. Jest to niejako implikacja pierwszego założenia, obiekty należące do jednej klasy z pewnością mają jakieś cechy wspólne, ale mogą się też różnić na poziomie jednego lub wielu atrybutów. \\
 \item Wprowadzano relacja nie jest zupełna - oznacza to, że nie dla każdej pary klas $(X,Y)$ ze zbioru klas $G$ mamy określoną relację $X < Y$ lub odwrotnie. 
 \end{itemize}
 
@@ -57,7 +64,7 @@ low,low,4,4,small,high,good \\
 \end{tabular}
 \\
 
-W kolejnych kolumnach znajdują się atrybuty określające pewne wlaściwości zbioru danych. Separatorem oddzielającym kolumny jest znak ','. W przykładowym pliku nazwa klasy do której przynależy znajdujący się w danym wierszu obiekt znajduje się w ostatniej kolumnie, nic nie stoi jednak na przeszkodzie, aby w ten sposób interpretować dane znajdujące się w innej kolumnie. \\
+W kolejnych kolumnach znajdują się atrybuty określające pewne właściwości zbioru danych. Separatorem oddzielającym kolumny jest znak ','. W przykładowym pliku nazwa klasy do której przynależy znajdujący się w danym wierszu obiekt znajduje się w ostatniej kolumnie, nic nie stoi jednak na przeszkodzie, aby w ten sposób interpretować dane znajdujące się w innej kolumnie. \\
 
 Kolejnym plikiem wejściowym aplikacji jest opis relacji pomiędzy klasami. Plik ten składa się z wielu linii. W każdej z nich znajduje się wpis typu:\\
 
@@ -73,7 +80,7 @@ a$<$b \\
 \end{center}
 \end{figure}
 
-Oznacza on, że klasa {\bf a} jest w ralacji z klasą {\bf b}.
+Oznacza on, że klasa {\bf a} jest w relacji z klasą {\bf b}.
 Dla przykładowego grafu relacji (\ref{relat2}) plik powinien być postaci: \\
 
 \begin{tabular}{l}
@@ -101,7 +108,7 @@ Implementacja została przygotowana w języku C\# i działa na platformie .NET F
 
 W projekcie Algorithm znajdują się wszystkie klasy i interfejsy w bezpośredni sposób związane z interfejsem. Projekt DAL zawiera implementacje dostępu do danych, a więc w tym przypadku parsowanie plików z danymi do postaci wykorzystywanej w algorytmie. W projekcie HashTree znalajdują się interfejsy i implementacja drzewa mieszającego. Projekt Common zawiera wspólne klasy wykorzystywane w pozostałych projektach. W projekcie Common znajdują się niemal jedynie obiekty DTO. Obiekty te same w sobie nie wykonują operacji, dlatego nie będą szczegółowo opisywane.\\
 
-W celu zapewnienia elastyczności skorzystano w projekie ze wzorca Dependency Injection. Zgodnie z wzorcem, na implementację algorytmu składa się szereg interfejsów, których odpowiedzialności przestawiaja się następująco:\\
+W celu zapewnienia elastyczności skorzystano w projekcie ze wzorca Dependency Injection. Zgodnie z wzorcem, na implementację algorytmu składa się szereg interfejsów, których odpowiedzialności przedstawiaja się następująco:\\
 
 Za główny interfejs można uznać \textit{IAlgorithm}, a jego podstawowym zadaniem jest znajdowanie preferencji uniwersalnych. Interfejs jest implementowany przez klasy \textit{Generators} i \textit{ModifiedApriori}. Podstawowa różnica pomiędzy klasami polega na tym, że klasa Generators do obliczania minimalnych preferencji wykorzystuje informację o generatorach do odrzucania większej liczby zbiorów kandydujących. Obie implementacje operują na wierszach
 typu \textit{Row}/\textit{SimpleRow}, które są odwzorowaniem danych w postaci wygodnej do prowadzenia obliczeń. Do znajdywania zbiorów kandydujących wykorzystywany jest interfejs \textit{ICandidatesGenerator}. Za znajdowanie podzbiorów wspieranych w transakcjach odpowiada \textit{IHashTree}. Wczytywanie danych odbywa się za pomocą \textit{IDataManager}, a konwersja wyników do postaci wygodnej dla użytkownika za pomocą \textit{IResultsConverter}.\\
@@ -124,11 +131,13 @@ W tym rozdziale zostanie omówiona złożoność algorytmu. Zostały przyjęte n
 \begin{itemize}
 \item $ n$ - liczba wejściowych transakcji
 \item $ m$ - długość wejściowych transakcji
-\item $ N = n^2$ - liczba transkacji powstałych po połączniu transakcji w pary
-\item $ M = 2m$ - długość transkacji po połączniu transakcji w pary
-\item $ L_i$ - liczba rozważanych transkacji w obrocie pętli algorytmu (linia 1) o numerze $i$
+\item $ N = n^2$ - liczba transakcji powstałych po połączeniu transakcji w pary
+\item $ M = 2m$ - długość transakcji po połączeniu transakcji w pary
+\item $ L_i$ - liczba rozważanych transakcji w obrocie pętli algorytmu (linia 1) o numerze $i$
 \end{itemize}
-Poniżej został przedstawiony pseudokod algorytmu z najbardziej istotnymi ze względnu na złożoność pesymistyczną fragmentami.
+Poniżej został przedstawiony pseudokod algorytmu z najbardziej istotnymi ze względu na złożoność pesymistyczną fragmentami.
+
+\begin{center}
 \begin{lstlisting}[numbers=left]
 for(i = 1; i < M; i++)
 {
@@ -138,29 +147,30 @@ for(i = 1; i < M; i++)
 		FindSupported(Tran[j])
 }
 \end{lstlisting}
+\end{center}
 
 Z analizy powyższego pseudokodu można wyciągnąć następujące wnioski:
 \begin{itemize}
 \item Pętla z linii pierwszej wykonuje się maksymalnie $M$ razy. Obliczenia mogą zostać przerwane wcześniej jeśli wyczerpano już wszystkie wspierane transakcje.
-\item Złożoność metody GetCandidates zależy kwadratowo od liczby transakcji pochodzącej z poprzedniej pętli. Tych transakcji jest $L_{i-1}$. Dodatkowo potrzebny jest jeszcze czas na porównanie pierwszych $i-1$ elementów transkacji. Podsumowując złożoność metody jest rzędu $iL_{i-1}^2$
-\item Czas budowania drzewa jest fukncją liniową względem ilości transakcji z których jest budowany. Złożoność rzędu: $L_i$.
-\item Metoda FindSupported wywołwana jest $N$ razy dla każdego obrotu pętli z linii 1.  Przy założeniu, że zostaną odwiedzone wszystkie liście drzewa jej złożoność wynosi: $iL_i$. Czas $i$ jest potrzebny na sprawdzenie czy transkacja znajdująca się w drzewie jest wspierana przez zadaną transkacje.
+\item Złożoność metody GetCandidates zależy kwadratowo od liczby transakcji pochodzącej z poprzedniej pętli. Tych transakcji jest $L_{i-1}$. Dodatkowo potrzebny jest jeszcze czas na porównanie pierwszych $i-1$ elementów transakcji. Podsumowując złożoność metody jest rzędu $iL_{i-1}^2$
+\item Czas budowania drzewa jest funkcją liniową względem ilości transakcji z których jest budowany. Złożoność rzędu: $L_i$.
+\item Metoda FindSupported wywoływana jest $N$ razy dla każdego obrotu pętli z linii 1.  Przy założeniu, że zostaną odwiedzone wszystkie liście drzewa jej złożoność wynosi: $iL_i$. Czas $i$ jest potrzebny na sprawdzenie czy transakcja znajdująca się w drzewie jest wspierana przez zadaną transakcje.
 \end{itemize}
 
-Podsumowując pesymistyczna złożność algorytmu wynosi:
+Podsumowując pesymistyczna złożoność algorytmu wynosi:
 $$ \sum_{i=1}^M (iL_{i-1}^2 + L_i + iNL_i) $$
 
-Jak widać jest ona ściśle zależna od liczby kandytatów na wzorzec kontrastowy przetwarzanych w danej pętli algorytmu, a liczba ta jest ściśle zależna od zadania. Należy zaznaczyć, że przedstawione tu wyliczenia są przeprowadzone dla pesymistycznej złożoność i złożoność oczekiwana jest zdecydowanie lepsza. W szczególności można się spodziewać zakończenia obliczeń znacznie wcześniej niż przy ostatnim obrocie pętli z linii 1 oraz zdecydowanie lepszej niż liniowej złożoności wyszukiwania w drzewie mieszającym.
+Jak widać jest ona ściśle zależna od liczby kandydatów na wzorzec kontrastowy przetwarzanych w danej pętli algorytmu, a liczba ta jest ściśle zależna od zadania. Należy zaznaczyć, że przedstawione tu wyliczenia są przeprowadzone dla pesymistycznej złożoność i złożoność oczekiwana jest zdecydowanie lepsza. W szczególności można się spodziewać zakończenia obliczeń znacznie wcześniej niż przy ostatnim obrocie pętli z linii 1 oraz zdecydowanie lepszej niż liniowej złożoności wyszukiwania w drzewie mieszającym.
 
 \section{Wyniki}
 
-\subsection{Drzewo mieszająe}
+\subsection{Drzewo mieszające}
 
-W rozdziale tym zostanie przedstawione porównanie wydajności drzewa mieszającego (\textit{HashTree}) z aiwną implementacją (\textit{FakeTree}) w postaci zwykłej tablicy. Struktury te wypełniane są transakcjami o stałej długości. Implementują one metodę \textit{GetSupportedSets}, która przyjmuje jako paramter pewną transkacje; jej zadaniem jest zwrócenie transakcji przez nią wspieranych. \\
+W rozdziale tym zostanie przedstawione porównanie wydajności drzewa mieszającego (\textit{HashTree}) z naiwną implementacją (\textit{FakeTree}) w postaci zwykłej tablicy. Struktury te wypełniane są transakcjami o stałej długości. Implementują one metodę \textit{GetSupportedSets}, która przyjmuje jako parametr pewną transakcje; jej zadaniem jest zwrócenie transakcji przez nią wspieranych. \\
 Dane przedstawione są w postaci tablicy, porównanie wyników przebiega na podstawie czterech parametrów:
 \begin{itemize}
 \item {\bf n} - długość transakcji, którymi wypełniana jest struktura
-\item {\bf m} - długość transakcji, dla której zwracane są wspierane transakcje (transakcja ta jest paramterem metody \textit{GetSupportedSets})
+\item {\bf m} - długość transakcji, dla której zwracane są wspierane transakcje (transakcja ta jest parametrem metody \textit{GetSupportedSets})
 \item {\bf L} - ilość transakcji w drzewie
 \item {\bf M} - ilość możliwych różnych atrybutów wchodzących w skład transakcji
 \end{itemize}
@@ -195,7 +205,7 @@ n & m & L & M & FakeTree & HashTree \\ \hline
 175 & 200 & 250000 & 5000 & 5.9285 & 0.0081\\ \hline
 \end{tabular}
 
-We wszystkich eksperymentach \textit{HashTree} osiągął lepsze wyniki niż \textit{FakeTree}. Warto zauważyć, że wraz ze zbliżającą się wartością {\bf n} do wartości {\bf m} czas dla \textit{FakeTree} rósł, natomiast dla \textit{HashTree} malał.
+We wszystkich eksperymentach \textit{HashTree} osiągał lepsze wyniki niż \textit{FakeTree}. Warto zauważyć, że wraz ze zbliżającą się wartością {\bf n} do wartości {\bf m} czas dla \textit{FakeTree} rósł, natomiast dla \textit{HashTree} malał.
 
 \subsection{Wyniki podstawowe}
 
@@ -278,21 +288,38 @@ Zbiór jest podzielony na 4 klasy określające akceptowalność samochodu ze wz
 
 W zbiorze wyróżniono 4 klasy: nieakceptowalny, akceptowalny, dobry i bardzo dobry. Przyjęto, że pomiędzy klasami zachodzi relacja od najgorszej do najlepszej wg wymienionej kolejności. Zbiór zawiera łącznie 1728 obiektów, opisywanych przez 21 unikalnych ze względu na kolumny wartości atrybutów.\\
 
-Obliczenia przeprwadzone dla całego zbioru są więc wykonywane na blisko $3*10^6$ elementów w której każdy obiekt posiada 42 atrybuty. Charakterystyka zbioru jest na tyle niesprzyjająca, że w kolejnych iteracjach bardzo mało wyników jest odrzucanych, poprawnie klasyfikowanych lub uznawanych za generator. Z tego powodu, pełnych wyników nie udało się wygenerować i nie będą tutaj zaprezentowane. W załączeniu, znajdują się wyniki dla podzbioru omawianego zbioru (200 obiektów).\\
+Obliczenia przeprowadzone dla całego zbioru są więc wykonywane na blisko $3*10^6$ elementów w której każdy obiekt posiada 42 atrybuty. Charakterystyka zbioru jest na tyle niesprzyjająca, że w kolejnych iteracjach bardzo mało wyników jest odrzucanych, poprawnie klasyfikowanych lub uznawanych za generator. Z tego powodu, pełnych wyników nie udało się wygenerować i nie będą tutaj zaprezentowane. W załączeniu, znajdują się wyniki dla podzbioru omawianego zbioru (100 obiektów). W tabeli poniżej zaprezentowane są wyniki ilościowe dla obliczeń przeprowadzonych dla całego zbioru.\\
+
+\begin{tabular}{|r|r|r|r|r|r|}
+\hline
+Długość & Znalezionych & Do analizy & Odrzuconych & Czas generowania & Czas analizy \\ \hline
+1 & 2 & 40 & 0 & - & 00:00:06.2461883 \\ \hline 
+2 & 53 & 727 & 0 & 00:00:00.0057275 & 00:00:54.9421531 \\ \hline
+3 & 4 & 7936 & 0 & 00:00:00.1198564 & 00:03:52.1625432 \\ \hline
+4 & 16 & 57900 & 8 & 00:00:01.1161032 & 00:12:07.2952783 \\ \hline
+5 & 138 & 296827 & 89 & 00:00:08.9237205 & 00:26:49.7468190 \\ \hline
+6 & 358 & 1091632 & 319 & 00:01:21.4886054 & 00:42:31.4761249 \\ \hline
+7 & 402 & 2878263 & 529 & 00:12:19.8936008 & 00:46:40.8668873 \\ \hline
+8 & - & - & - & 00:38:55.9463328 & - \\ \hline
+\end{tabular}
+
+Zawrtość tabeli należy interpretować w następujący sposób: kandydaci o długości 3 zostali wygenerowani w czasie 120ms, wygenerowano łącznie 7900 takich kandydatów, z czego 4 zostały uznane za minimalne wzorce. Analiza kandydatów długości 3 trwała 3minuty 52 sekundy.\\
+
+Uzyskane czasy wydają się być akceptowalne. W ostatnim, wierszu brak jest danych o uzyskanych rezultatach.\\
+
+\subsection{Wyniki dla fragmentu zbioru cars}
+
+Znalezione wzorce znajdują się w załączonym pliku. Ogółem dla podzbioru liczącego 100 losowo wybranych obiektów znaleziono 1102 minimalne wzorce. Dużą część wyników stanowią wzorce nie wspierane w zbiorze (ich obecność wynika z definicji, ale wzorce nie mają istotnego znaczenia praktycznego). Znalezionych wzorców tego rodzaju jest ok. 300. Wśród pozostałych wzorców ciekawym wnioskiem wydaje się fakt, że poprzedniki preferencji tworzą w pliku z wynikami grupy - dzięki temu w prosty sposób widać cechy które są najmniej preferowane.
 
 \section{Wnioski}
 
 \begin{enumerate}
 
-\item Mimo, że w implementacji algorytmu dominującą operacją jest wyszukiwanie wspieranych przez transakcję kandydatów, okazuje się, że również generowanie kolejnej generacji kandydatów jest kosztowne obliczeniowo i należy poświęcić uwagę, na możliwie wydajne zaimplementowanie tego fragmentu kodu.
-
-Złożoność tego fragmentu kodu w implementacji w przypadku pesymistycznym wynosi $\frac{O(n^2)}{2}$ i okazuje się istotnym problemem przy budowaniu generacji kandydatów ze zbioru liczącego od kilkudziesięciu tysięcy do kilkuset tysięcy elementów.
-
-Wydaje się, że warto do odnajdywania wszystkich elementów o (k-1) wspólnych wartości dla pewnego zbioru wykorzystać drzewo mieszające.
+\item Mimo, że w implementacji algorytmu dominującą operacją jest wyszukiwanie wspieranych przez transakcję kandydatów, okazuje się, że również generowanie kolejnej generacji kandydatów jest kosztowne obliczeniowo i należy poświęcić uwagę, na możliwie wydajne zaimplementowanie tego fragmentu kodu. Wydaje się, że warto do odnajdywania wszystkich elementów o (k-1) wspólnych wartości dla pewnego zbioru wykorzystać drzewo mieszające.
 
 \item Wydaje się, że w algorytmie warto było by dodać parametr związany z minimalnym wsparciem, który pozwoliłby na odrzucanie większej ilości zbiorów kandydujących. Z praktycznego punktu widzenia, mając na uwadze fakt, że zbiór w którym wyszukiwane są wzorce ma liczność równą kwadratowi zbioru wyjściowego reguły o bardzo małych wsparciach, mogą nie mieć praktycznego znaczenia.
 
-\item W implementacji udało się osiągnąć stosunkowo dobrą złożoność pamięciową. W czasie wielogodzinnego testu algorytm pracował stabilnie, chociaż można przypuszczać, że dla danych o dużej ilości cech (np. kilkaset) konieczne było by przechowywanie kandydatów w pamięci trwałej.
+\item W czasie wielogodzinnego testu algorytm pracował stabilnie, chociaż można przypuszczać, że dla danych o dużej ilości cech (np. kilkaset) konieczne było by przechowywanie kandydatów w pamięci trwałej.
 
 \end{enumerate}
 
@@ -313,7 +340,7 @@ się na idei instalatora. W kolejnych krokach użytkownik wybiera kolejne dopusz
 \end{center}
 \end{figure}
 
-W kroku pierwszym\ref{krok1} należy wbrać pliki z danymi, klikając w przyciski Wybierz. Pliki wybiera się wykorzystując standardowy dialog wyboru plików z systemu Windows. Nie ma ograniczenia na rozszerzenie pliku.\\
+W kroku pierwszym\ref{krok1} należy wybrać pliki z danymi, klikając w przyciski Wybierz. Pliki wybiera się wykorzystując standardowy dialog wyboru plików z systemu Windows. Nie ma ograniczenia na rozszerzenie pliku.\\
 
 Plik z danymi powinien być poprawnym pod względem budowy plikiem csv. W pliku powinny być kolejne wiersze w których w każdym znajduje się taka sama liczba kolumn oddzielonych określonym separatorem.\\
 
