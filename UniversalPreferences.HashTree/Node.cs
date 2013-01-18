@@ -84,11 +84,11 @@ namespace UniversalPreferences.HashTree
             return depth == transactionLength || elements.Count  != pageSize;
         }
 
-        public void FillSupportedRows(ICollection<Row> supportedRows, ushort[] row, int firstIndexToCheck)
+        public void FillSupportedRows(ICollection<Row> supportedRows, ushort[] row, int firstIndexToCheck, HashSet<ushort> hashOfRow)
         {
             if (isLeafNode)
             {
-                FillSupportedRowsFromLeaf(supportedRows, row);
+                FillSupportedRowsFromLeaf(supportedRows, hashOfRow);
                 return;
             }
 
@@ -103,7 +103,7 @@ namespace UniversalPreferences.HashTree
                 if (viewedNodes.Contains(hashOfCurrentElement))
                     continue;
                 viewedNodes.Add(hashOfCurrentElement);
-                children[hashOfCurrentElement].FillSupportedRows(supportedRows, row, i+1);
+                children[hashOfCurrentElement].FillSupportedRows(supportedRows, row, i+1, hashOfRow);
             }
         }
 
@@ -118,15 +118,11 @@ namespace UniversalPreferences.HashTree
             return false;
         }
 
-        private void FillSupportedRowsFromLeaf(ICollection<Row> supportedRows, ushort[] row)
+        private void FillSupportedRowsFromLeaf(ICollection<Row> supportedRows, HashSet<ushort> hashOfRow)
         {
             foreach (var element in elements)
             {
-                // aktualnie przy oznaczeniach element.Transaction.Length = n, row.Length = m
-                // przy sprawdzaniu czy element istnieje w tablicy zlozonosc jest rowna nm
-                // przy uzyciu hashset dla sprawdzanie zlozonosc jest rowna n+m
-                var set = new HashSet<ushort>(row);
-                if (element.Attributes.All(set.Contains))
+                if (element.Attributes.All(hashOfRow.Contains))
                 {
                     supportedRows.Add(element);
                 }

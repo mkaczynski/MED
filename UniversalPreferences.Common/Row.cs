@@ -1,4 +1,6 @@
-﻿namespace UniversalPreferences.Common
+﻿using System.Collections.Generic;
+
+namespace UniversalPreferences.Common
 {
     //note: dla tej reprezentacji nalezy przechowywac mapowanie pomiedzy deskryptorem atrybutu, a jego indeksem w tabeli Atributes
     public class Row
@@ -7,6 +9,8 @@
         public int SecondObjectId { get; set; }  // identyfikator obiektu ktory z nim zestawiamy
 
         public ushort[] Attributes { get; set; }    // tabela zawierajaca wartosci atrybutow - jedna dla obu obiektow
+
+        public HashSet<ushort> HashSet { get; set; }
 
         public Relation Value { get; set; }      // okresla czy relacja jest spelniona dla tego wiersza
 
@@ -19,6 +23,7 @@
             {
                 this.Attributes[i] = attributes[i];
             }
+            HashSet = new HashSet<ushort>(attributes);
             this.Value = value;
         }
 

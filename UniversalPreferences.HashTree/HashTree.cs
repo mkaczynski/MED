@@ -23,7 +23,7 @@ namespace UniversalPreferences.HashTree
         public IEnumerable<Row> GetSupportedSets(Row transaction)
         {
             var supportedRows = new List<Row>();
-            root.FillSupportedRows(supportedRows, transaction.Attributes, 0);
+            root.FillSupportedRows(supportedRows, transaction.Attributes, 0, transaction.HashSet);
             return supportedRows;
         }
     }

@@ -29,16 +29,34 @@ namespace UniversalPreferences.Algorithm
 
         public IEnumerable<IEnumerable<ushort>> GetCandidates(IEnumerable<IEnumerable<ushort>> previousCandidates, IEnumerable<IEnumerable<ushort>> results, IEnumerable<Row> transactions)
         {
+            var sorted = previousCandidates.Select(x => x.ToArray()).OrderBy(x => x, new ArrayComparer()).ToList();
             var newCandidates = new List<IEnumerable<ushort>>();
+            var L = previousCandidates.First().Count();
 
-            for (int i = 0; i < previousCandidates.Count();i++ )
+            for (int i = 0; i < sorted.Count;i++ )
             {
-                var c = previousCandidates.ElementAt(i);
-                var head = c.Take(c.Count() - 1);
-                var tmp = previousCandidates.Take(i).Where(x => x.Take(c.Count() - 1).SequenceEqual(head)).
-                    Select(x => c.Union(x.Skip(c.Count() - 1)).ToArray()).ToList();
+                ushort[] first = sorted[i];
 
-                tmp.ForEach(Array.Sort);
+                var tmp = new List<ushort[]>();
+                for (int j = i+1; j < sorted.Count; j++)
+                {
+                    var second = sorted[j];
+                    
+                    if(!AreEqual(first, second, L-1))
+                    {
+                        break;
+                    }
+                    var newCand = new ushort[L+1];
+                    for (int k = 0; k < L-1; k++)
+                    {
+                        newCand[k] = first[k];
+                    }
+                    var min = Math.Min(first[L-1], second[L-1]);
+                    var max = Math.Max(first[L-1], second[L-1]);
+                    newCand[L - 1] = min;
+                    newCand[L] = max;
+                    tmp.Add(newCand);
+                }
                 
                 foreach (var t in tmp)
                 {
@@ -50,6 +68,37 @@ namespace UniversalPreferences.Algorithm
             }
 
             return newCandidates;
+        }
+
+        private bool AreEqual(ushort[] x, ushort[] y, int length)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                if(x[i] != y[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        class ArrayComparer : IComparer<ushort[]>
+        {
+            public int Compare(ushort[] x, ushort[] y)
+            {
+                for (int i = 0; i < x.Length; i++)
+                {
+                    if(x[i] < y[i])
+                    {
+                        return -1;
+                    }
+                    if (x[i] > y[i])
+                    {
+                        return 1;
+                    }
+                }
+                return 0;
+            }
         }
     }
 }

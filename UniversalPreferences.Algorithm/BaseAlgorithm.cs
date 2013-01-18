@@ -32,6 +32,7 @@ namespace UniversalPreferences.Algorithm
             while (true)
             {
                 itemsets = candidatesGenerator.GetCandidates(itemsets, results, transactions);
+
                 if (!itemsets.Any())
                 {
                     break;
@@ -74,7 +75,6 @@ namespace UniversalPreferences.Algorithm
             foreach (var transaction in transactions)
             {
                 var supported = hashTree.GetSupportedSets(transaction);
-
                 foreach (var simpleRow in supported)
                 {
                     var description = GetDescription(simpleRow.Attributes);
