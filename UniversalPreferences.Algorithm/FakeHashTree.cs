@@ -7,7 +7,7 @@ namespace UniversalPreferences.Algorithm
 {
     public class FakeHashTree : IHashTree
     {
-        private IEnumerable<Row> rows; 
+        private IEnumerable<SimpleRow> rows; 
 
         public static bool IsItemsetSupported(ushort[] itemset, Row transaction)
         {
@@ -16,18 +16,18 @@ namespace UniversalPreferences.Algorithm
             return count == itemset.Length;
         }
 
-        public void FillTree(IEnumerable<Row> elements)
+        public void FillTree(IEnumerable<SimpleRow> elements)
         {
             rows = elements;
         }
 
-        public IEnumerable<Row> GetSupportedSets(Row transaction)
+        public IEnumerable<SimpleRow> GetSupportedSets(Row transaction)
         {
-            var res = new List<Row>();
+            var res = new List<SimpleRow>();
 
             foreach (var row in rows)
             {
-                var intersection = transaction.Attributes.Intersect(row.Attributes);
+                var intersection = transaction.Attributes.Intersect(row.Transaction);
                 var count = intersection.Count();
                 if (count == transaction.Attributes.Length)
                 {
@@ -36,6 +36,11 @@ namespace UniversalPreferences.Algorithm
             }
 
             return res;
+        }
+
+        public IEnumerable<SimpleRow> GetRows()
+        {
+            return rows;
         }
     }
 }

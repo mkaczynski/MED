@@ -11,7 +11,7 @@ namespace UniversalPreferences.HashTree
         private readonly int transactionLength;
         private readonly int depth;
         private Node[] children;
-        private IList<Row> elements;
+        private IList<SimpleRow> elements;
 
         private bool isLeafNode;
 
@@ -29,7 +29,7 @@ namespace UniversalPreferences.HashTree
             }
             else
             {
-                elements = new List<Row>();
+                elements = new List<SimpleRow>();
             }
             
         }
@@ -43,7 +43,7 @@ namespace UniversalPreferences.HashTree
             }
         }
 
-        public void Add(Row newRow)
+        public void Add(SimpleRow newRow)
         {
             if (isLeafNode)
             {
@@ -61,12 +61,12 @@ namespace UniversalPreferences.HashTree
             children[hash].Add(newRow);
         }
 
-        private int CalculateHashForElement(Row newRow)
+        private int CalculateHashForElement(SimpleRow newRow)
         {
-            return newRow.Attributes[depth]%firstNumber;
+            return newRow.Transaction[depth]%firstNumber;
         }
 
-        private void SplitPage(Row newRow)
+        private void SplitPage(SimpleRow newRow)
         {
             isLeafNode = false;
             InitializeChildren();
@@ -84,7 +84,7 @@ namespace UniversalPreferences.HashTree
             return depth == transactionLength || elements.Count  != pageSize;
         }
 
-        public void FillSupportedRows(ICollection<Row> supportedRows, ushort[] row, int firstIndexToCheck, HashSet<ushort> hashOfRow)
+        public void FillSupportedRows(ICollection<SimpleRow> supportedRows, ushort[] row, int firstIndexToCheck, HashSet<ushort> hashOfRow)
         {
             if (isLeafNode)
             {
@@ -118,11 +118,11 @@ namespace UniversalPreferences.HashTree
             return false;
         }
 
-        private void FillSupportedRowsFromLeaf(ICollection<Row> supportedRows, HashSet<ushort> hashOfRow)
+        private void FillSupportedRowsFromLeaf(ICollection<SimpleRow> supportedRows, HashSet<ushort> hashOfRow)
         {
             foreach (var element in elements)
             {
-                if (element.Attributes.All(hashOfRow.Contains))
+                if (element.Transaction.All(hashOfRow.Contains))
                 {
                     supportedRows.Add(element);
                 }

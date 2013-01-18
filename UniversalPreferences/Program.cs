@@ -9,7 +9,7 @@ namespace UniversalPreferences
         static void Main(string[] args)
         {
             var manager = new ExecutionManager(new Generators(
-                new CandidatesGenerator()), new CsvDataFileManager(@"..\..\..\test_data.txt", ",", 0, @"..\..\..\test_relations.txt", RelationKind.Strict)); // IoC?
+                new CandidatesGenerator()), new CsvDataFileManager(@"..\..\..\test_data.txt", ",", 0, @"..\..\..\test_relations.txt", RelationKind.NonStrict)); // IoC?
             manager.Execute();
         }
     }

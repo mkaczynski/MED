@@ -24,6 +24,7 @@ namespace UniversalPreferences.Algorithm
             }
 
             var res = dict.Select(x => new[] { x.Key });
+            res = res.OrderBy(x => x[0]).ToList();
             return res;
         }
 
