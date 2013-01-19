@@ -4,7 +4,7 @@ namespace UniversalPreferences.HashTree
 {
     public interface ICandidateHashTree
     {
-        void FillTree(IEnumerable<ushort[]> elements);
+        void FillTree(IList<ushort[]> elements);
 
         IEnumerable<ushort[]> GetSupportedSets(ushort[] transaction);
         

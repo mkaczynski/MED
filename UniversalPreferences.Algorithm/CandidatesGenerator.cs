@@ -8,7 +8,7 @@ namespace UniversalPreferences.Algorithm
 {
     public class CandidatesGenerator : ICandidatesGenerator
     {
-        public IEnumerable<IEnumerable<ushort>>
+        public IList<ushort[]>
             FindSetsWhichHasOneElement(IEnumerable<Row> transactions)
         {
             var dict = new Dictionary<ushort, ushort>();
@@ -25,24 +25,26 @@ namespace UniversalPreferences.Algorithm
             }
 
             var res = dict.Select(x => new[] { x.Key });
-            res = res.OrderBy(x => x[0]).ToList();
-            return res;
+            res = res.OrderBy(x => x[0]);
+            return res.ToList();
         }
 
-        public IEnumerable<IEnumerable<ushort>> GetCandidates(IEnumerable<IEnumerable<ushort>> previousCandidates, IEnumerable<IEnumerable<ushort>> results, IEnumerable<Row> transactions)
+        public IList<ushort[]> GetCandidates(IList<ushort[]> previousCandidates, IList<ushort[]> results, IEnumerable<Row> transactions)
         {
-            var previousArrays = previousCandidates.Select(x => (ushort[])x).ToList();
-            var newCandidates = new List<ushort[]>();
             var L = previousCandidates.First().Count();
+            var hashTree = HashTreeFactory.CreateCandidateTree(L, 100, 47);
+            hashTree.FillTree(previousCandidates);
 
-            for (int i = 0; i < previousArrays.Count;i++ )
+            var newCandidates = new List<ushort[]>();
+            
+
+            for (int i = 0; i < previousCandidates.Count; i++)
             {
-                ushort[] first = previousArrays[i];
+                ushort[] first = previousCandidates[i];
 
-                var tmp = new List<ushort[]>();
-                for (int j = i+1; j < previousArrays.Count; j++)
+                for (int j = i + 1; j < previousCandidates.Count; j++)
                 {
-                    var second = previousArrays[j];
+                    var second = previousCandidates[j];
                     
                     if(!AreEqual(first, second, L-1))
                     {
@@ -57,24 +59,17 @@ namespace UniversalPreferences.Algorithm
                     var max = Math.Max(first[L-1], second[L-1]);
                     newCand[L - 1] = min;
                     newCand[L] = max;
-                    newCandidates.Add(newCand);
+
+                    if (hashTree.GetSupportedSets(newCand).Count() == L + 1 &&
+                            !results.Any(x => !x.Except(newCand).Any()))
+                    {
+                        newCandidates.Add(newCand);
+                    }
+                    
                 }
             }
 
-            var result = new List<IEnumerable<ushort>>();
-            var hashTree = HashTreeFactory.CreateCandidateTree(L, 100, 47);
-            hashTree.FillTree(previousArrays);
-
-            foreach (var newCandidate in newCandidates)
-            {
-                if(hashTree.GetSupportedSets(newCandidate).Count() == L+1 &&
-                    !results.Any(x => !x.Except(newCandidate).Any()))
-                {
-                    result.Add(newCandidate);
-                }
-            }
-
-            return result;
+            return newCandidates;
         }
 
         private bool AreEqual(ushort[] x, ushort[] y, int length)

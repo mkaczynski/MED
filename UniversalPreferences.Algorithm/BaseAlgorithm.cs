@@ -13,7 +13,7 @@ namespace UniversalPreferences.Algorithm
         public event EventHandler<DiagnosticsInfo> DiagnosticsEvent;
         private readonly ICandidatesGenerator candidatesGenerator;
 
-        private IList<IEnumerable<ushort>> results;
+        private IList<ushort[]> results;
 
         public BaseAlgorithm(ICandidatesGenerator candidatesGenerator)
         {
@@ -23,20 +23,26 @@ namespace UniversalPreferences.Algorithm
         public IEnumerable<IEnumerable<ushort>> FindPreferences(IEnumerable<Row> transactions)
         {
             Initialize(transactions);
-            results = new List<IEnumerable<ushort>>();
+            results = new List<ushort[]>();
 
             var itemsets = candidatesGenerator.FindSetsWhichHasOneElement(transactions);
             itemsets = PruneResults(itemsets, transactions);
 
+            int tranLength = 1;
             while (true)
             {
+
+                Stopwatch watch = Stopwatch.StartNew();
                 itemsets = candidatesGenerator.GetCandidates(itemsets, results, transactions);
 
+                tranLength++;
                 if (!itemsets.Any())
                 {
                     break;
                 }
                 itemsets = PruneResults(itemsets, transactions);
+                watch.Stop();
+                Console.WriteLine("Czas obrotu pętli dla transakcji o długości {0}: {1}", tranLength, watch.Elapsed);
             }
             
             return results;
@@ -52,7 +58,7 @@ namespace UniversalPreferences.Algorithm
             return false;
         }
 
-        private IEnumerable<IEnumerable<ushort>> PruneResults(IEnumerable<IEnumerable<ushort>> itemsets, IEnumerable<Row> transactions)
+        private IList<ushort[]> PruneResults(IList<ushort[]> itemsets, IEnumerable<Row> transactions)
         {
             var hashTree = CheckItemsets(itemsets, transactions);
             var res = SelectPreferencesAndGetCandidates(hashTree);
@@ -77,7 +83,7 @@ namespace UniversalPreferences.Algorithm
             }
 
             sw.Stop();
-            Console.WriteLine(sw.Elapsed);
+            Console.WriteLine("CheckItemsets " + sw.Elapsed);
 
             return hashTree;
         }
@@ -90,9 +96,9 @@ namespace UniversalPreferences.Algorithm
             return tree;
         }
 
-        private IEnumerable<IEnumerable<ushort>> SelectPreferencesAndGetCandidates(IHashTree hashTree)
+        private IList<ushort[]> SelectPreferencesAndGetCandidates(IHashTree hashTree)
         {
-            var tmp = new List<IEnumerable<ushort>>();
+            var tmp = new List<ushort[]>();
 
             var found = new List<SimpleRow>();
             var toAnalyze = new List<SimpleRow>();

@@ -11,7 +11,7 @@ namespace UniversalPreferences.HashTree
             root = new CandidateNode(pageSize, firstNumber, transactionLength, 0);
         }
 
-        public void FillTree(IEnumerable<ushort[]> elements)
+        public void FillTree(IList<ushort[]> elements)
         {
             foreach (var simpleRow in elements)
             {
