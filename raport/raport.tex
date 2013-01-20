@@ -204,6 +204,7 @@ n & m & L & M & FakeTree & HashTree \\ \hline
 100 & 200 & 250000 & 5000 & 4.3364 & 0.0100\\ \hline
 175 & 200 & 250000 & 5000 & 5.9285 & 0.0081\\ \hline
 \end{tabular}
+\\
 
 We wszystkich eksperymentach \textit{HashTree} osiągał lepsze wyniki niż \textit{FakeTree}. Warto zauważyć, że wraz ze zbliżającą się wartością {\bf n} do wartości {\bf m} czas dla \textit{FakeTree} rósł, natomiast dla \textit{HashTree} malał.
 
@@ -293,15 +294,16 @@ Obliczenia przeprowadzone dla całego zbioru są więc wykonywane na blisko $3*1
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
 Długość & Znalezionych & Do analizy & Odrzuconych & Czas generowania & Czas analizy \\ \hline
-1 & 2 & 40 & 0 & - & 00:00:06.2461883 \\ \hline 
-2 & 53 & 727 & 0 & 00:00:00.0057275 & 00:00:54.9421531 \\ \hline
-3 & 4 & 7936 & 0 & 00:00:00.1198564 & 00:03:52.1625432 \\ \hline
-4 & 16 & 57900 & 8 & 00:00:01.1161032 & 00:12:07.2952783 \\ \hline
-5 & 138 & 296827 & 89 & 00:00:08.9237205 & 00:26:49.7468190 \\ \hline
-6 & 358 & 1091632 & 319 & 00:01:21.4886054 & 00:42:31.4761249 \\ \hline
-7 & 402 & 2878263 & 529 & 00:12:19.8936008 & 00:46:40.8668873 \\ \hline
-8 & - & - & - & 00:38:55.9463328 & - \\ \hline
+1 & 2 & 40 & 0 & - & 00:00:06.2461 \\ \hline 
+2 & 53 & 727 & 0 & 00:00:00.0057 & 00:00:54.9421 \\ \hline
+3 & 4 & 7936 & 0 & 00:00:00.1198 & 00:03:52.1625 \\ \hline
+4 & 16 & 57900 & 8 & 00:00:01.1161 & 00:12:07.2952 \\ \hline
+5 & 138 & 296827 & 89 & 00:00:08.9237 & 00:26:49.7468 \\ \hline
+6 & 358 & 1091632 & 319 & 00:01:21.4886 & 00:42:31.4761 \\ \hline
+7 & 402 & 2878263 & 529 & 00:12:19.8936 & 00:46:40.8668 \\ \hline
+8 & - & - & - & 00:38:55.9463 & - \\ \hline
 \end{tabular}
+\\
 
 Zawrtość tabeli należy interpretować w następujący sposób: kandydaci o długości 3 zostali wygenerowani w czasie 120ms, wygenerowano łącznie 7900 takich kandydatów, z czego 4 zostały uznane za minimalne wzorce. Analiza kandydatów długości 3 trwała 3minuty 52 sekundy.\\
 
