@@ -90,7 +90,7 @@ namespace UniversalPreferences.Algorithm
 
         private IHashTree CreateTree(IEnumerable<SimpleRow> itemsets)
         {
-            var tree = HashTreeFactory.Create(itemsets.First().Transaction.Length, 100, 2999);
+            var tree = HashTreeFactory.Create(itemsets.First().Transaction.Length, 100, 47);
             tree.FillTree(itemsets);
 
             return tree;
