@@ -125,7 +125,33 @@ Wykonanie obliczeń (2) przebiega wg następującego schematu:\\
 
 W kolejnych iteracjach znajdywane są nowe zbiory kandydujące, dla wszystkich zbiorów obliczane są dwa liczniki mówiące o tym jakie wsparcie mają te zbiory w klasie transakcji spełniających i nie spełniających relację. Aby zapewnić wydajne obliczanie wartości omawianych liczników, wykorzystywane jest drzewo mieszające tworzone w każdej iteracji dla zbioru kandydatów. Po obliczeniu liczników podejmowana jest decyzja o tym, czy dany kandydat
 jest minimalnym wzorcem, czy należy go odrzucić lub analizować dalej. Na tym etapie (opcjonalnie) podejmowana jest decyzja czy któryś z podzbiorów danego zbioru kandydującego jest generatorem. Jeżeli tak, taki zbiór nie będzie analizowany dalej.
+\subsection{Generowanie kandydatów}
+Poniższy pseudokod przedstawia algorytm generowania nowych kandydatów o długości $n+1$. \\
+\begin{center}
+\begin{lstlisting}[numbers=left]
+List<ushort[]> GenerateCandidates(List<ushort[]> previous)
+{
+  tree = CreateTree(previous);
+  foreach(left in previous)
+  {
+    right = left.next()
+    while(right[1:n-1] = left[1:n-1])
+    {
+      new = buildNewCandidate(left, right)
+      if(tree.checkSupport(new)
+        results.add(new);
+      right = right.next()
+    }
+  }
+  return results;
+}
+\end{lstlisting}
+\end{center}
 
+W algorytmie założono, że transakcje znajdujące się w liście \textit{previous} są posortowane zgodnie z porządkiem słownikowym. Sposób ich generowania oraz pozostałe elementy algorytmu zapewnieją utrzymania tego porządku dla dłuższych transakcji.
+W 3 linii algorytmu ze zbioru transakcji o długości $n$ budowane jest drzewo mieszające. Pozwala ono w efektywny sposób sprawdzać w linii 10 czy wszystkie podzbioru o długości $n$ transakcji \textit{new} są wspierane w zbiorze \textit{previous}. \\
+
+Złożoność algorytmu w przypadku pesymistycznym jest równa $O(n^2)$. Jednak utrzymywanie posortowanej listy \textit{previous} pozwala na przerywanie pętli wewnętrznej (linia 7) w momencie gdy transakcje \textit{left} i \textit{right} różnią się chociażby na jednej z pierwszych $n-1$ pozycji. Pozwala to na znaczne ograniczenie spodziewanej złożoności algorytmu.
 \subsection{Złożoność}
 W tym rozdziale zostanie omówiona złożoność algorytmu. Zostały przyjęte następujące oznaczenia.
 \begin{itemize}
