@@ -2,8 +2,8 @@
 {
     public class ModifiedApriori : BaseAlgorithm, IAlgorithm
     {
-        public ModifiedApriori(ICandidatesGenerator candidatesGenerator) : 
-            base(candidatesGenerator)
+        public ModifiedApriori(int hashTreePageSize, int hashTreeKey, ICandidatesGenerator candidatesGenerator) : 
+            base(hashTreePageSize, hashTreeKey, candidatesGenerator)
         {
         }
     }

@@ -15,8 +15,14 @@ namespace UniversalPreferences.Algorithm
 
         private IList<ushort[]> results;
 
-        public BaseAlgorithm(ICandidatesGenerator candidatesGenerator)
+        private readonly int hashTreePageSize;
+        private readonly int hashTreeKey;
+
+        public BaseAlgorithm(int hashTreePageSize, int hashTreeKey, ICandidatesGenerator candidatesGenerator)
         {
+            this.hashTreePageSize = hashTreePageSize;
+            this.hashTreeKey = hashTreeKey;
+
             this.candidatesGenerator = candidatesGenerator;
         }
 
@@ -31,6 +37,10 @@ namespace UniversalPreferences.Algorithm
             int tranLength = 1;
             while (true)
             {
+                if (!itemsets.Any())
+                {
+                    break;
+                }
 
                 Stopwatch watch = Stopwatch.StartNew();
                 itemsets = candidatesGenerator.GetCandidates(itemsets, results, transactions);
@@ -90,7 +100,7 @@ namespace UniversalPreferences.Algorithm
 
         private IHashTree CreateTree(IEnumerable<SimpleRow> itemsets)
         {
-            var tree = HashTreeFactory.Create(itemsets.First().Transaction.Length, 100, 47);
+            var tree = HashTreeFactory.Create(itemsets.First().Transaction.Length, hashTreePageSize, hashTreeKey);
             tree.FillTree(itemsets);
 
             return tree;
@@ -100,9 +110,7 @@ namespace UniversalPreferences.Algorithm
         {
             var tmp = new List<ushort[]>();
 
-            var found = new List<SimpleRow>();
-            var toAnalyze = new List<SimpleRow>();
-            var rejected = new List<SimpleRow>();
+            int found = 0, toAnalyze = 0, rejected = 0;
 
             foreach (var row in hashTree.GetRows())
             {
@@ -111,43 +119,41 @@ namespace UniversalPreferences.Algorithm
                 {
                     results.Add(row.Transaction);
                     OnAddNode(row);
-                    found.Add(row);
+                    found += 1;
                 }
                 else if(row.RelationComplied != 0) //te ktore maja 0 odrzucamy
                 {
                     if (CheckIfAnySubsetIsGenerator(row))
                     {
-                        rejected.Add(row);
+                        rejected += 1;
                     }
                     else
                     {
                         tmp.Add(row.Transaction);
-                        toAnalyze.Add(row);                        
+                        toAnalyze += 1;                        
                     }
                 }
                 else //odrzucone
                 {
-                    rejected.Add(row);
+                    rejected += 1;
                 }
             }
 
-#if DEBUG
             WriteInfo(found, toAnalyze, rejected);
-#endif
             return tmp;
         }
 
-        private void WriteInfo(IEnumerable<SimpleRow> found, IEnumerable<SimpleRow> toAnalyze, IEnumerable<SimpleRow> rejected)
+        private void WriteInfo(int found, int toAnalyze, int rejected)
         {
             var sb = new StringBuilder();
 
             sb.AppendLine("========================");
-            sb.AppendLine("Znalezione");
-            WriteListInfo(sb, found);
-            sb.AppendLine("Do analizy");
-            WriteListInfo(sb, toAnalyze);
-            sb.AppendLine("Odrzucone");
-            WriteListInfo(sb, rejected);
+            sb.AppendLine("Znalezione " + found);
+            //WriteListInfo(sb, found);
+            sb.AppendLine("Do analizy " + toAnalyze);
+            //WriteListInfo(sb, toAnalyze);
+            sb.AppendLine("Odrzucone" + rejected);
+            //WriteListInfo(sb, rejected);
             sb.AppendLine();
 
             OnDiagnosticsEvent(new DiagnosticsInfo(sb.ToString()));

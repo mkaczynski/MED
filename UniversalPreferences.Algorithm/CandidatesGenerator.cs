@@ -8,6 +8,15 @@ namespace UniversalPreferences.Algorithm
 {
     public class CandidatesGenerator : ICandidatesGenerator
     {
+        private readonly int hashTreePageSize;
+        private readonly int hashTreeKey;
+
+        public CandidatesGenerator(int hashTreePageSize, int hashTreeKey)
+        {
+            this.hashTreePageSize = hashTreePageSize;
+            this.hashTreeKey = hashTreeKey;
+        }
+
         public IList<ushort[]>
             FindSetsWhichHasOneElement(IEnumerable<Row> transactions)
         {
@@ -32,12 +41,11 @@ namespace UniversalPreferences.Algorithm
         public IList<ushort[]> GetCandidates(IList<ushort[]> previousCandidates, IList<ushort[]> results, IEnumerable<Row> transactions)
         {
             var L = previousCandidates.First().Count();
-            var hashTree = HashTreeFactory.CreateCandidateTree(L, 100, 47);
+            var hashTree = HashTreeFactory.CreateCandidateTree(L, hashTreePageSize, hashTreeKey);
             hashTree.FillTree(previousCandidates);
 
             var newCandidates = new List<ushort[]>();
             
-
             for (int i = 0; i < previousCandidates.Count; i++)
             {
                 ushort[] first = previousCandidates[i];

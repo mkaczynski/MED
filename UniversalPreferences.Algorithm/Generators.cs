@@ -8,8 +8,8 @@ namespace UniversalPreferences.Algorithm
     {
         private readonly Dictionary<string, SimpleRow> eachResults; 
 
-        public Generators(ICandidatesGenerator candidatesGenerator) 
-            : base(candidatesGenerator)
+        public Generators(int hashTreePageSize, int hashTreeKey, ICandidatesGenerator candidatesGenerator) 
+            : base(hashTreePageSize, hashTreeKey, candidatesGenerator)
         {
             eachResults = new Dictionary<string, SimpleRow>();
         }
