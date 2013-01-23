@@ -6,6 +6,7 @@
 \usepackage{hyperref}
 \usepackage[pdftex]{graphicx} % Wsparcie dla obrazkow
 \usepackage{listings}
+\usepackage{lscape}
 
 \newtheorem{df}{Definicja}
 
@@ -41,10 +42,10 @@ Dla przykładu załóżmy, że każdy samochód można uznać za obiekt posiadaj
 \section{Założenia}
 
 \begin{itemize}
-\item Mamy zdefiniowane relacje pomiędzy klasami, a nie obiektami należącymi do tych klas. W ogólności obiektów może być bardzo wiele, jednak należą one do ściśle określonej, stosunkowo niewielkiej liczby klas.
-\item Zestaw atrybutów danego obiektu jednoznacznie definiuje jego klasę - oznacza to iż nie istnieją dwa obiekty o identycznym zbiorze atrybutów należące do dwóch różnych klas. 
-\item Istnieje wiele obiektów o różnych zestawach atrybutów należących do tej samej klasy. Jest to niejako implikacja pierwszego założenia, obiekty należące do jednej klasy z pewnością mają jakieś cechy wspólne, ale mogą się też różnić na poziomie jednego lub wielu atrybutów. \\
-\item Wprowadzano relacja nie jest zupełna - oznacza to, że nie dla każdej pary klas $(X,Y)$ ze zbioru klas $G$ mamy określoną relację $X < Y$ lub odwrotnie. 
+\item Mamy zdefiniowane relacje pomiędzy klasami, a nie obiektami należącymi do tych klas.
+
+\item Algorytm pracuje na danych w postaci transakcyjnej.
+ 
 \end{itemize}
 
 \section{Dane wejściowe i wyjściowe}
@@ -244,7 +245,8 @@ We wszystkich eksperymentach \textit{HashTree} osiągał lepsze wyniki niż \tex
 \end{center}
 \end{figure}
 
-Na rysunku \ref{dane_podstawowe} przedstawiono tabelę z danymi i tabelę relacji w których pozostają klasy dla tych danych. Poniżej znajdują się szczegółowe wyniki dla tego zbioru.\\
+Na rysunku \ref{dane_podstawowe}\footnote{Dane zaczerpnięto z artykułu: Modeling Preferences over Attribute Sets in
+Formal Concept Analysis, Sergei Obiedkov} przedstawiono tabelę z danymi i tabelę relacji w których pozostają klasy dla tych danych. Poniżej znajdują się szczegółowe wyniki dla tego zbioru.\\
 
 Dla tego przypadku tworzone jest następujące mapowanie wartości atrybutów na liczby naturalne:\\
 
@@ -315,35 +317,50 @@ Zbiór jest podzielony na 4 klasy określające akceptowalność samochodu ze wz
 
 W zbiorze wyróżniono 4 klasy: nieakceptowalny, akceptowalny, dobry i bardzo dobry. Przyjęto, że pomiędzy klasami zachodzi relacja od najgorszej do najlepszej wg wymienionej kolejności. Zbiór zawiera łącznie 1728 obiektów, opisywanych przez 21 unikalnych ze względu na kolumny wartości atrybutów.\\
 
-Obliczenia przeprowadzone dla całego zbioru są więc wykonywane na blisko $3*10^6$ elementów w której każdy obiekt posiada 42 atrybuty. Charakterystyka zbioru jest na tyle niesprzyjająca, że w kolejnych iteracjach bardzo mało wyników jest odrzucanych, poprawnie klasyfikowanych lub uznawanych za generator. Z tego powodu, pełnych wyników nie udało się wygenerować i nie będą tutaj zaprezentowane. W załączeniu, znajdują się wyniki dla podzbioru omawianego zbioru (100 obiektów). W tabeli poniżej zaprezentowane są wyniki ilościowe dla obliczeń przeprowadzonych dla całego zbioru.\\
+Obliczenia przeprowadzone dla całego zbioru są więc wykonywane na blisko $3*10^6$ elementów w której każdy obiekt posiada 42 atrybuty. Charakterystyka zbioru jest na tyle niesprzyjająca, że w kolejnych iteracjach bardzo mało wyników jest odrzucanych, poprawnie klasyfikowanych lub uznawanych za generator. Pełne wyniki otrzymane dla omawianego zbioru znajdują się w pliku wyniki.txt. W tabeli poniżej zaprezentowane są wyniki ilościowe dla obliczeń przeprowadzonych dla całego zbioru. Parametry drzewa mieszajacego: pageSize = 100, key = 47.
+
+\vspace{0.5cm}
 
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
 Długość & Znalezionych & Do analizy & Odrzuconych & Czas generowania & Czas analizy \\ \hline
-1 & 2 & 40 & 0 & - & 00:00:06.2461 \\ \hline 
-2 & 53 & 727 & 0 & 00:00:00.0057 & 00:00:54.9421 \\ \hline
-3 & 4 & 7936 & 0 & 00:00:00.1198 & 00:03:52.1625 \\ \hline
-4 & 16 & 57900 & 8 & 00:00:01.1161 & 00:12:07.2952 \\ \hline
-5 & 138 & 296827 & 89 & 00:00:08.9237 & 00:26:49.7468 \\ \hline
-6 & 358 & 1091632 & 319 & 00:01:21.4886 & 00:42:31.4761 \\ \hline
-7 & 402 & 2878263 & 529 & 00:12:19.8936 & 00:46:40.8668 \\ \hline
-8 & - & - & - & 00:38:55.9463 & - \\ \hline
+1 & 2 & 40 & 0 & - & 00:00:08.637 \\ \hline 
+2 & 53 & 727 & 0 & 00:00:00.014 & 00:01:04.399 \\ \hline
+3 & 4 & 7936 & 0 & 00:00:00.119 & 00:04:27.911 \\ \hline
+4 & 16 & 57900 & 8 & 00:00:01.116 & 00:13:40.111 \\ \hline
+5 & 138 & 296827 & 89 & 00:00:08.923 & 00:31:20.697 \\ \hline
+6 & 358 & 1091632 & 319 & 00:01:21.488 & 00:47:41.648 \\ \hline
+7 & 402 & 2878263 & 529 & 00:12:19.893 & 00:48:43.142 \\ \hline
+8 & 347 & 5322277 & 541 & 00:38:55.946 & 00:37:47.039 \\ \hline
+9 & 210 & 6555566 & 490 & - & 00:20:00.744 \\ \hline
+10 & 62 & 4826364 & 305 & - & 00:06:47.708 \\ \hline
+11 & 5 & 1604811 & 82 & - & 00:01:12.696 \\ \hline
+12 & 0 & 0 & 5 & - & 00:00:01.722 \\ \hline
 \end{tabular}
-\\
 
-Zawrtość tabeli należy interpretować w następujący sposób: kandydaci o długości 3 zostali wygenerowani w czasie 120ms, wygenerowano łącznie 7900 takich kandydatów, z czego 4 zostały uznane za minimalne wzorce. Analiza kandydatów długości 3 trwała 3minuty 52 sekundy.\\
+\vspace{0.5cm}
 
-Uzyskane czasy wydają się być akceptowalne. W ostatnim, wierszu brak jest danych o uzyskanych rezultatach.\\
+Zawrtość tabeli należy interpretować w następujący sposób: kandydaci o długości 3 zostali wygenerowani w czasie 120ms, wygenerowano łącznie 7900 takich kandydatów, z czego 4 zostały uznane za minimalne wzorce. Analiza kandydatów długości 3 trwała 4 minuty 27 sekund.\\
 
-\subsection{Wyniki dla fragmentu zbioru cars}
+Uzyskane czasy wydają się być akceptowalne. Łącznie znaleziono 1597 wzorców.\\
 
-Znalezione wzorce znajdują się w załączonym pliku. Ogółem dla podzbioru liczącego 100 losowo wybranych obiektów znaleziono 1102 minimalne wzorce. Dużą część wyników stanowią wzorce nie wspierane w zbiorze (ich obecność wynika z definicji, ale wzorce nie mają istotnego znaczenia praktycznego). Znalezionych wzorców tego rodzaju jest ok. 300. Wśród pozostałych wzorców ciekawym wnioskiem wydaje się fakt, że poprzedniki preferencji tworzą w pliku z wynikami grupy - dzięki temu w prosty sposób widać cechy które są najmniej preferowane.
+\subsubsection{Zużycie pamięci}
+
+Na wykresie \ref{pamiec} przedstawiono zależność zużycia pamięci w czasie. Pomiary zostały wykonywane z wykorzystaniem mechanizmów GC i próbkowania w 3 sekundowych odstępach czasu.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=\textwidth]{img/pamiec.pdf}
+\caption{Wykres wykorzystania pamięci w czasie dla zbioru cars}
+\label{pamiec}
+\end{center}
+\end{figure}
 
 \section{Wnioski}
 
 \begin{enumerate}
 
-\item Mimo, że w implementacji algorytmu dominującą operacją jest wyszukiwanie wspieranych przez transakcję kandydatów, okazuje się, że również generowanie kolejnej generacji kandydatów jest kosztowne obliczeniowo i należy poświęcić uwagę, na możliwie wydajne zaimplementowanie tego fragmentu kodu. Wydaje się, że warto do odnajdywania wszystkich elementów o (k-1) wspólnych wartości dla pewnego zbioru wykorzystać drzewo mieszające.
+\item Mimo, że w implementacji algorytmu dominującą operacją jest wyszukiwanie wspieranych przez transakcję kandydatów, okazuje się, że również generowanie kolejnej generacji kandydatów jest kosztowne obliczeniowo i należy poświęcić uwagę, na możliwie wydajne zaimplementowanie tego fragmentu kodu. 
 
 \item Wydaje się, że w algorytmie warto było by dodać parametr związany z minimalnym wsparciem, który pozwoliłby na odrzucanie większej ilości zbiorów kandydujących. Z praktycznego punktu widzenia, mając na uwadze fakt, że zbiór w którym wyszukiwane są wzorce ma liczność równą kwadratowi zbioru wyjściowego reguły o bardzo małych wsparciach, mogą nie mieć praktycznego znaczenia.
 
@@ -355,54 +372,28 @@ Znalezione wzorce znajdują się w załączonym pliku. Ogółem dla podzbioru li
 \appendix
 \section{Podręcznik użytkownika}
 
-Do uruchomienia aplikacji wymagany jest zainstalowany .NET Framework 4.0. Nie jest konieczna instalacja dodatkowych programów, bibliotek lub komponentów.\\
+Do uruchomienia aplikacji wymagany jest zainstalowany .NET Framework 4.0. Nie jest konieczna instalacja dodatkowych programów, bibliotek lub komponentów. Aplikacja została przygotowana w dwóch wersjach: x86 oraz x64, dla dużych zbiorów danych zaleca się korzystanie z wersji x64.\\
 
-Do obsługi algorytmu został przygotowany prosty graficzny interfejs, opierający
-się na idei instalatora. W kolejnych krokach użytkownik wybiera kolejne dopuszczalne opcje i zatwierdza je klikając przycisk Next. Możliwe jest cofnięcie się do poprzedniego widoku za pomocą przycisku Prev. Kolejne widoki wyglądają następująco:
+Aplikacja posiada prosty interfejs konsolowy. Uruchomienie sprowadza się do wykonia komendy \textit{UniversalPreferences parametry}, gdzie parametry należy podać w formacie klucz:wartosc:
 
-\begin{figure}[h!]
-\begin{center}
-\includegraphics[width=\textwidth]{img/1.png}
-\caption{Wybór plików z danymi}
-\label{krok1}
-\end{center}
-\end{figure}
+\begin{itemize}
+\item data:sciezka - ścieżka do pliku z danymi
+\item relations:sciezka - ścieżka do pliku z relacjami
+\item delim:znak - znak dzielący kolumny w pliku danych
+\item index:numer - indeks kolumny z danymi
+\item pageSize:liczba - rozmiar strony w drzewie mieszającym
+\item key:liczba - klucz mieszający
+\item relationType - {NonStrict, Strict, Equals}
+\end{itemize}
 
-W kroku pierwszym\ref{krok1} należy wybrać pliki z danymi, klikając w przyciski Wybierz. Pliki wybiera się wykorzystując standardowy dialog wyboru plików z systemu Windows. Nie ma ograniczenia na rozszerzenie pliku.\\
+Parametry można podawać w dowolnej kolejności. Ostatnie 3 parametry są opcjonalne - ich domyślne wartości to: pageSize = 100, key = 47, relationType = NonStrict. Spacje w nazwach plików nie są dopuszczalne.\\
 
-Plik z danymi powinien być poprawnym pod względem budowy plikiem csv. W pliku powinny być kolejne wiersze w których w każdym znajduje się taka sama liczba kolumn oddzielonych określonym separatorem.\\
+Aby zapisać wyniki zwracane przez program, należy przekierować standardowe wyjście na plik docelowy.\\
 
-Plik z relacjami powinien być zgodny z formatem opisanym w rozdziale \nameref{opis_danych}. \\
+Przykładowe wykonanie może wyglądać następująco:\\
 
-\begin{figure}[h!]
-\begin{center}
-\includegraphics[width=\textwidth]{img/2.png}
-\caption{Wybór parametrów}
-\label{krok2}
-\end{center}
-\end{figure}
+UniversalPreferences data:cardata.txt relations:relation.txt index:6 delim:,
 
-W kroku drugim\ref{krok2} należy wybrać parametry algorytmu. Dopuszczono wybór samego algorytmu - możliwe jest wykonanie algorytmu w wersji wykorzystującej oraz nie wykorzystującej faktu o podzbiorach będących generatorami.\\
-
-W tym kroku należy również wybrać separator wykorzystywany w pliku danych, określić indeks kolumny która zawiera klasę do której przypisany jest dany wiersz, oraz określić rodzaj relacji na podstawie którego uzupełniane są dane w tabeli transakcji.\\
-
-\begin{figure}[h!]
-\begin{center}
-\includegraphics[width=\textwidth]{img/3.png}
-\caption{Widok obliczeń}
-\label{krok3}
-\end{center}
-\end{figure}
-
-Krok trzeci\ref{krok3} to widok prezentowany w trakcie wykonywania obliczeń. W widoku wyświetlane są informacje diagnostyczne mówiące o tym które zbiory kandydujące zostały uznane za minimalne wzorce kontrastowe, które zostały odrzucone a które zostaną poddane dalszej analizie. Jeżeli w poprzednim kroku zaznaczono opcję Automatycznie przejdź do zakładki wyników po zakończeniu obliczeń, to po znalezieniu wszystkich wzorców program wyświetli widok wyników\ref{krok4}.\\
-
-\begin{figure}[h!]
-\begin{center}
-\includegraphics[width=\textwidth]{img/4.png}
-\caption{Widok wyników}
-\label{krok4}
-\end{center}
-\end{figure}
 
 \bibliographystyle{plain}
 \bibliography{bibliografia}
