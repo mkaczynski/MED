@@ -10,11 +10,17 @@ namespace UniversalPreferences.Algorithm
     {
         private readonly int hashTreePageSize;
         private readonly int hashTreeKey;
+        private Func<SimpleRow, int> calculateMin;
 
         public CandidatesGenerator(int hashTreePageSize, int hashTreeKey)
         {
             this.hashTreePageSize = hashTreePageSize;
             this.hashTreeKey = hashTreeKey;
+        }
+
+        public void Initialize(Func<SimpleRow, int> func)
+        {
+            calculateMin = func;
         }
 
         public IList<SimpleRow>
@@ -90,18 +96,14 @@ namespace UniversalPreferences.Algorithm
 
         private void CompleteCounters(SimpleRow simpleRow, IEnumerable<SimpleRow> previous)
         {
-            var subsets = GetSubsets(simpleRow.Transaction);
-
-            if(subsets.Count() != previous.Count())
-                Console.WriteLine("Kaczka pało zjebałeś :)");
-
-            var min = previous.Min(x => /*x.RelationComplied +*/ x.RelationNotComplied);
-            var elem = previous.FirstOrDefault(x => /*x.RelationComplied +*/ x.RelationNotComplied == min);
+            if(calculateMin == null)
+                return;
+           
+            var min = previous.Min(x => calculateMin(x));
+            var elem = previous.FirstOrDefault(x => calculateMin(x) == min);
 
             simpleRow.MinRelationComplied = elem.RelationComplied;
             simpleRow.MinRelationNotComplied = elem.RelationNotComplied;
-
-            //var supported = hashTree.GetSupportedSets(new Row(0, 0, simpleRow.Transaction, Relation.Complied));
         }
 
         private bool AreEqual(ushort[] x, ushort[] y, int length)
@@ -114,11 +116,6 @@ namespace UniversalPreferences.Algorithm
                 }
             }
             return true;
-        }
-
-        private IEnumerable<ushort[]> GetSubsets(IEnumerable<ushort> set)
-        {
-            return set.Select((t, i) => set.Take(i).Concat(set.Skip(i + 1)).ToArray()).ToList();
         }
     }
 }

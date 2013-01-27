@@ -22,14 +22,24 @@ namespace UniversalPreferences.Algorithm
             if(method == "P")
                 return;
 
+            Func<SimpleRow, int> minCalculateMethod; 
+            
             generators = true;
             if (method == "G")
+            {
                 hasGenerator =
                     row => row.MinRelationComplied + row.MinRelationNotComplied ==
                            row.RelationComplied + row.RelationNotComplied;
+                minCalculateMethod = x => x.RelationComplied + x.RelationNotComplied;
+            }
             else
+            {
                 hasGenerator =
                     row => row.MinRelationNotComplied == row.RelationNotComplied;
+                minCalculateMethod = x => x.RelationNotComplied;
+            }
+
+            candidatesGenerator.Initialize(minCalculateMethod);
         }
 
         public event EventHandler<DiagnosticsInfo> DiagnosticsEvent;
@@ -163,8 +173,7 @@ namespace UniversalPreferences.Algorithm
                 }
                 else if(row.RelationComplied != 0) //te ktore maja 0 odrzucamy
                 {
-                    if ( 
-                        /*row.MinRelationComplied +*/ row.MinRelationNotComplied == /*row.RelationComplied +*/ row.RelationNotComplied)
+                    if (generators && hasGenerator(row))
                     {
                         rejected += 1;
                     }

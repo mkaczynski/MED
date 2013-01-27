@@ -285,13 +285,13 @@ Formal Concept Analysis, Sergei Obiedkov} przedstawiono tabelę z danymi i tabel
 Dla tego przypadku tworzone jest następujące mapowanie wartości atrybutów na liczby naturalne:\\
 
 \begin{itemize}
-\item 1 i 4 - vegetarian meal
-\item 2 i 5 - non-vegetarian meal without pork
-\item 3 i 6 - other meal
-\item 4 i 8 - meal containing alcohol
+\item 0 i 3 - vegetarian meal
+\item 1 i 4 - non-vegetarian meal without pork
+\item 2 i 5 - other meal
+\item 3 i 7 - meal containing alcohol
 \end{itemize}
 
-Atrybuty 5, 6, 7 i 8 powstają w wyniku połączenia dwóch zbiorów.\\
+Atrybuty 4, 5, 6 i 7 powstają w wyniku połączenia dwóch zbiorów.\\
 
 W dalszej częśći tej sekcji dla skrócenia zapisów kandydaci będą opisywani trójką w postaci (0 - (12, 4)), gdzie pierwsza wartość jest indeksem atrybutu, a dwa kolejne to liczniki mówiące o wsparciu w klasach decyzyjnych.
 
@@ -424,7 +424,8 @@ Aplikacja posiada prosty interfejs konsolowy. Uruchomienie sprowadza się do wyk
 \item index:numer - indeks kolumny z danymi
 \item pageSize:liczba - rozmiar strony w drzewie mieszającym
 \item key:liczba - klucz mieszający
-\item relationType - {NonStrict, Strict, Equal}
+\item relationType:wartosc - {NonStrict, Strict, Equals}
+\item method:T - {T - metoda Terleckiego, G - wykorzystanie generatorów, P - wersja podstawowa}
 \end{itemize}
 
 Parametry można podawać w dowolnej kolejności. Ostatnie 3 parametry są opcjonalne - ich domyślne wartości to: pageSize = 100, key = 47, relationType = NonStrict. Spacje w nazwach plików nie są dopuszczalne.\\
