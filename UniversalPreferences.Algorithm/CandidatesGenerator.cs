@@ -17,10 +17,13 @@ namespace UniversalPreferences.Algorithm
             this.hashTreeKey = hashTreeKey;
         }
 
-        public IList<ushort[]>
+        public IList<SimpleRow>
             FindSetsWhichHasOneElement(IEnumerable<Row> transactions)
         {
             var dict = new Dictionary<ushort, ushort>();
+
+            var compiled = transactions.Count(x => x.Value == Relation.Complied);
+            var notCompiled = transactions.Count() - compiled;
 
             foreach (var transaction in transactions)
             {
@@ -35,24 +38,25 @@ namespace UniversalPreferences.Algorithm
 
             var res = dict.Select(x => new[] { x.Key });
             res = res.OrderBy(x => x[0]);
-            return res.ToList();
+            
+            return res.Select(x => new SimpleRow(x) { MinRelationComplied = compiled, MinRelationNotComplied = notCompiled }).ToList();
         }
 
-        public IList<ushort[]> GetCandidates(IList<ushort[]> previousCandidates, IList<ushort[]> results, IEnumerable<Row> transactions)
+        public IList<SimpleRow> GetCandidates(IList<SimpleRow> previousCandidates, IList<SimpleRow> results, IEnumerable<Row> transactions)
         {
-            var L = previousCandidates.First().Count();
+            var L = previousCandidates.First().Transaction.Count();
             var hashTree = HashTreeFactory.CreateCandidateTree(L, hashTreePageSize, hashTreeKey);
             hashTree.FillTree(previousCandidates);
 
-            var newCandidates = new List<ushort[]>();
+            var newCandidates = new List<SimpleRow>();
             
             for (int i = 0; i < previousCandidates.Count; i++)
             {
-                ushort[] first = previousCandidates[i];
+                ushort[] first = previousCandidates[i].Transaction;
 
                 for (int j = i + 1; j < previousCandidates.Count; j++)
                 {
-                    var second = previousCandidates[j];
+                    var second = previousCandidates[j].Transaction;
                     
                     if(!AreEqual(first, second, L-1))
                     {
@@ -68,16 +72,36 @@ namespace UniversalPreferences.Algorithm
                     newCand[L - 1] = min;
                     newCand[L] = max;
 
-                    if (hashTree.GetSupportedSets(newCand).Count() == L + 1 &&
-                            !results.Any(x => !x.Except(newCand).Any()))
+                    var sr = new SimpleRow(newCand);
+                    var supportedPrevCandidates = hashTree.GetSupportedSets(sr);
+                    if (supportedPrevCandidates.Count() == L + 1 &&
+                            !results.Any(x => !x.Transaction.Except(newCand).Any()))
                     {
-                        newCandidates.Add(newCand);
+                        CompleteCounters(sr, supportedPrevCandidates);
+
+                        newCandidates.Add(sr);
                     }
                     
                 }
             }
 
             return newCandidates;
+        }
+
+        private void CompleteCounters(SimpleRow simpleRow, IEnumerable<SimpleRow> previous)
+        {
+            var subsets = GetSubsets(simpleRow.Transaction);
+
+            if(subsets.Count() != previous.Count())
+                Console.WriteLine("Kaczka pało zjebałeś :)");
+
+            var min = previous.Min(x => /*x.RelationComplied +*/ x.RelationNotComplied);
+            var elem = previous.FirstOrDefault(x => /*x.RelationComplied +*/ x.RelationNotComplied == min);
+
+            simpleRow.MinRelationComplied = elem.RelationComplied;
+            simpleRow.MinRelationNotComplied = elem.RelationNotComplied;
+
+            //var supported = hashTree.GetSupportedSets(new Row(0, 0, simpleRow.Transaction, Relation.Complied));
         }
 
         private bool AreEqual(ushort[] x, ushort[] y, int length)
@@ -90,6 +114,11 @@ namespace UniversalPreferences.Algorithm
                 }
             }
             return true;
+        }
+
+        private IEnumerable<ushort[]> GetSubsets(IEnumerable<ushort> set)
+        {
+            return set.Select((t, i) => set.Take(i).Concat(set.Skip(i + 1)).ToArray()).ToList();
         }
     }
 }

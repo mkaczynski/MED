@@ -16,5 +16,8 @@ namespace UniversalPreferences
 
         public Type Algorithm { get; set; }
         public RelationKind RelationKind { get; set; }
+
+        public bool WriteIterationResults { get; set; }
+        public string Method { get; set; } // P, T, G
     }
 }

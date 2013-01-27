@@ -15,7 +15,7 @@ namespace UniversalPreferences
         private IResultConverter resultConverter;
 
         private IList<Row> data;
-        private IList<IEnumerable<ushort>> preferences;
+        private IList<SimpleRow> preferences;
 
         public ExecutionManager(IAlgorithm algorithm, IDataManager dataManager)
         {
@@ -42,14 +42,14 @@ namespace UniversalPreferences
         {
             foreach(var preference in preferences)
             {
-                var res = resultConverter.Convert(preference);
+                var res = resultConverter.Convert(preference.Transaction);
                 Console.WriteLine(res);
             }
         }
 
         private void CalculatePreferences()
         {
-            preferences = new List<IEnumerable<ushort>>(algorithm.FindPreferences(data));
+            preferences = new List<SimpleRow>(algorithm.FindPreferences(data));
         }
         
         private void GetData()

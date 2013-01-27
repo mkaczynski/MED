@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UniversalPreferences.Common;
 
 namespace UniversalPreferences.HashTree
 {
@@ -11,7 +12,7 @@ namespace UniversalPreferences.HashTree
             root = new CandidateNode(pageSize, firstNumber, transactionLength, 0);
         }
 
-        public void FillTree(IList<ushort[]> elements)
+        public void FillTree(IList<SimpleRow> elements)
         {
             foreach (var simpleRow in elements)
             {
@@ -19,10 +20,10 @@ namespace UniversalPreferences.HashTree
             }
         }
 
-        public IEnumerable<ushort[]> GetSupportedSets(ushort[] transaction)
+        public IEnumerable<SimpleRow> GetSupportedSets(SimpleRow transaction)
         {
-            var supportedRows = new List<ushort[]>();
-            root.FillSupportedRows(supportedRows, transaction, 0, new HashSet<ushort>(transaction));
+            var supportedRows = new List<SimpleRow>();
+            root.FillSupportedRows(supportedRows, transaction, 0, new HashSet<ushort>(transaction.Transaction));
             return supportedRows;
         }
     }

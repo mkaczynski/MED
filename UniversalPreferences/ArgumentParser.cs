@@ -44,7 +44,28 @@ namespace UniversalPreferences
             var relation = FindKeyPairOrDefault("relationType", "NonStrict");
             result.RelationKind = ParseRelation(relation);
 
+            var write = FindKeyPairOrDefault("write", "true");
+            bool w;
+            if (bool.TryParse(write, out w))
+            {
+                result.WriteIterationResults = w;
+            }
+            else
+            {
+                result.WriteIterationResults = true;
+            }
+
+            var method = FindKeyPairOrDefault("method", "T");
+            CheckMethod(method);
+            result.Method = method;
+
             return result;
+        }
+
+        private void CheckMethod(string method)
+        {
+            if(method != "T" && method != "P" && method != "G")
+                throw new ArgumentException("Dopuszczalne metody to: T - Terleckiego, G - z Generatorem, P - wersja podstawowa");
         }
 
         private RelationKind ParseRelation(string relation)

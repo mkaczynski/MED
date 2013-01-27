@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using UniversalPreferences.Common;
 
 namespace UniversalPreferences.HashTree
 {
     public interface ICandidateHashTree
     {
-        void FillTree(IList<ushort[]> elements);
+        void FillTree(IList<SimpleRow> elements);
 
-        IEnumerable<ushort[]> GetSupportedSets(ushort[] transaction);
+        IEnumerable<SimpleRow> GetSupportedSets(SimpleRow transaction);
         
     }
 }

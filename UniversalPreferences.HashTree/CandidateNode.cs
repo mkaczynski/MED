@@ -6,12 +6,12 @@ namespace UniversalPreferences.HashTree
 {
     public class CandidateNode
     {
-         private readonly int pageSize;
+        private readonly int pageSize;
         private readonly int firstNumber;
         private readonly int transactionLength;
         private readonly int depth;
         private CandidateNode[] children;
-        private IList<ushort[]> elements;
+        private IList<SimpleRow> elements;
 
         private bool isLeafNode;
 
@@ -29,7 +29,7 @@ namespace UniversalPreferences.HashTree
             }
             else
             {
-                elements = new List<ushort[]>();
+                elements = new List<SimpleRow>();
             }
             
         }
@@ -43,7 +43,7 @@ namespace UniversalPreferences.HashTree
             }
         }
 
-        public void Add(ushort[] newRow)
+        public void Add(SimpleRow newRow)
         {
             if (isLeafNode)
             {
@@ -61,12 +61,12 @@ namespace UniversalPreferences.HashTree
             children[hash].Add(newRow);
         }
 
-        private int CalculateHashForElement(ushort[] newRow)
+        private int CalculateHashForElement(SimpleRow newRow)
         {
-            return newRow[depth]%firstNumber;
+            return newRow.Transaction[depth]%firstNumber;
         }
 
-        private void SplitPage(ushort[] newRow)
+        private void SplitPage(SimpleRow newRow)
         {
             isLeafNode = false;
             InitializeChildren();
@@ -84,7 +84,7 @@ namespace UniversalPreferences.HashTree
             return depth == transactionLength || elements.Count  != pageSize;
         }
 
-        public void FillSupportedRows(ICollection<ushort[]> supportedRows, ushort[] row, int firstIndexToCheck, HashSet<ushort> hashOfRow)
+        public void FillSupportedRows(ICollection<SimpleRow> supportedRows, SimpleRow row, int firstIndexToCheck, HashSet<ushort> hashOfRow)
         {
             if (isLeafNode)
             {
@@ -93,12 +93,12 @@ namespace UniversalPreferences.HashTree
             }
 
             var viewedNodes = new HashSet<int>();
-            for (int i = firstIndexToCheck; i < row.Length; i++)
+            for (int i = firstIndexToCheck; i < row.Transaction.Length; i++)
             {
-                if (CanCutSearching(row.Length, i))
+                if (CanCutSearching(row.Transaction.Length, i))
                     return;
 
-                var currentElement = row[i];
+                var currentElement = row.Transaction[i];
                 var hashOfCurrentElement = currentElement%firstNumber;
                 if (viewedNodes.Contains(hashOfCurrentElement))
                     continue;
@@ -118,11 +118,11 @@ namespace UniversalPreferences.HashTree
             return false;
         }
 
-        private void FillSupportedRowsFromLeaf(ICollection<ushort[]> supportedRows, HashSet<ushort> hashOfRow)
+        private void FillSupportedRowsFromLeaf(ICollection<SimpleRow> supportedRows, HashSet<ushort> hashOfRow)
         {
             foreach (var element in elements)
             {
-                if (element.All(hashOfRow.Contains))
+                if (element.Transaction.All(hashOfRow.Contains))
                 {
                     supportedRows.Add(element);
                 }

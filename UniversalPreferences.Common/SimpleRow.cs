@@ -11,6 +11,9 @@ namespace UniversalPreferences.Common
         public int RelationComplied { get; set; }
         public int RelationNotComplied { get; set; }
 
+        public int MinRelationComplied { get; set; }
+        public int MinRelationNotComplied { get; set; }
+
         public SimpleRow(IEnumerable<ushort> transaction)
         {
             Transaction = transaction.ToArray();

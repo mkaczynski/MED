@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading;
 using UniversalPreferences.Algorithm;
-using UniversalPreferences.Common;
 using UniversalPreferences.DAL;
 
 namespace UniversalPreferences
@@ -30,17 +29,21 @@ namespace UniversalPreferences
                 var p = new Program();
                 using (new Timer(x => p.WriteMemoryUsage(), null, 0, 3000))
                 {
+                    var dataManager = new CsvDataFileManager(
+                        arguments.DataFilePath,
+                        arguments.Delimiter,
+                        arguments.ClassIndex,
+                        arguments.RelationsFilePath,
+                        arguments.RelationKind);
+
                     var manager = new ExecutionManager(
                         new Generators(
                             arguments.HashTreePageSize,
                             arguments.HashTreeFirstNumber,
-                            new CandidatesGenerator(arguments.HashTreePageSize, arguments.HashTreeFirstNumber)), 
-                            new CsvDataFileManager(
-                                arguments.DataFilePath, 
-                                arguments.Delimiter, 
-                                arguments.ClassIndex,
-                                arguments.RelationsFilePath,
-                                arguments.RelationKind));
+                            arguments.WriteIterationResults,
+                            arguments.Method,
+                            new CandidatesGenerator(arguments.HashTreePageSize, arguments.HashTreeFirstNumber), 
+                            new ResultConverter(dataManager)), dataManager);
 
                     manager.Execute();
                 }
