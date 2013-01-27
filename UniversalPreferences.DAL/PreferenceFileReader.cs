@@ -88,12 +88,12 @@ namespace UniversalPreferences.DAL
 
         private bool AreInStrictRelation(string left, string right)
         {
-            return ClassRelations[left].Contains(right);
+            return ClassRelations.ContainsKey(left) && ClassRelations[left].Contains(right);
         }
 
         private bool AreInNonStrictRelation(string left, string right)
         {
-            return left == right || ClassRelations[left].Contains(right);
+            return AreInEqualRelation(left, right) || AreInStrictRelation(left, right);
         }
 
         private bool AreInEqualRelation(string left, string right)

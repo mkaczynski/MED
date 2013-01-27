@@ -126,10 +126,10 @@ namespace UniversalPreferences.App.ViewModels
             Algorithms = 
                 new List<AlgorithmDescription>
                     {
-                        new AlgorithmDescription(
-                            "z generatorem", () => new Generators(new CandidatesGenerator())),
-                        new AlgorithmDescription(
-                            "bez generatora", () => new ModifiedApriori(new CandidatesGenerator()))
+                        //new AlgorithmDescription(
+                        //    "z generatorem", () => new Generators(new CandidatesGenerator())),
+                        //new AlgorithmDescription(
+                        //    "bez generatora", () => new ModifiedApriori(new CandidatesGenerator()))
                     };
 
             GoToResults = true;

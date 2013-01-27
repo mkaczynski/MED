@@ -8,6 +8,6 @@ namespace UniversalPreferences.Algorithm
     {
         event EventHandler<DiagnosticsInfo> DiagnosticsEvent;
 
-        IEnumerable<IEnumerable<ushort>> FindPreferences(IEnumerable<Row> transactions); // byc moze bedzie zwracac w formie listy obiektow a nie listy tablic
+        IEnumerable<SimpleRow> FindPreferences(IEnumerable<Row> transactions); // byc moze bedzie zwracac w formie listy obiektow a nie listy tablic
     }
 }

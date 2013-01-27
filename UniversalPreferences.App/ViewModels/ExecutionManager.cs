@@ -16,7 +16,7 @@ namespace UniversalPreferences.App.ViewModels
         private IResultConverter resultConverter;
 
         private IList<Row> data;
-        private IList<IEnumerable<ushort>> preferences;
+        private IList<SimpleRow> preferences;
 
         public ExecutionManager(IAlgorithm algorithm, IDataManager dataManager)
         {
@@ -44,7 +44,7 @@ namespace UniversalPreferences.App.ViewModels
             var sb = new StringBuilder();
             foreach (var preference in preferences)
             {
-                var res = resultConverter.Convert(preference);
+                var res = resultConverter.Convert(preference.Transaction);
                 sb.AppendLine(string.Format("{0}. {1}", ++i, res));
                 //Console.WriteLine(res);
             }
@@ -62,7 +62,7 @@ namespace UniversalPreferences.App.ViewModels
 
         private void CalculatePreferences()
         {
-            preferences = new List<IEnumerable<ushort>>(algorithm.FindPreferences(data));
+            preferences = new List<SimpleRow>(algorithm.FindPreferences(data));
         }
         
         private void GetData()

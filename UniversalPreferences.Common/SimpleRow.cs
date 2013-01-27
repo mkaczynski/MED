@@ -1,18 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace UniversalPreferences.Common
 {
     public class SimpleRow
     {
-        public HashSet<ushort> Transaction { get; private set; }
+        public ushort [] Transaction { get; private set; }
         public int RelationComplied { get; set; }
         public int RelationNotComplied { get; set; }
 
+        public int MinRelationComplied { get; set; }
+        public int MinRelationNotComplied { get; set; }
+
         public SimpleRow(IEnumerable<ushort> transaction)
         {
-            Transaction = new HashSet<ushort>(transaction);
+            Transaction = transaction.ToArray();
 
             RelationComplied = 0;
             RelationNotComplied = 0;

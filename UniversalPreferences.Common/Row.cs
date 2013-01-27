@@ -1,4 +1,6 @@
-﻿namespace UniversalPreferences.Common
+﻿using System.Collections.Generic;
+
+namespace UniversalPreferences.Common
 {
     //note: dla tej reprezentacji nalezy przechowywac mapowanie pomiedzy deskryptorem atrybutu, a jego indeksem w tabeli Atributes
     public class Row

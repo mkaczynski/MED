@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using UniversalPreferences.Common;
@@ -10,33 +11,85 @@ namespace UniversalPreferences.Algorithm
 {
     public class BaseAlgorithm
     {
-        public event EventHandler<DiagnosticsInfo> DiagnosticsEvent;
-        private readonly ICandidatesGenerator candidatesGenerator;
+        int found = 0, toAnalyze = 0, rejected = 0;
 
-        private Dictionary<string, SimpleRow> temporaryResults;
-        private IList<IEnumerable<ushort>> results;
+        private readonly bool writeIterationResultsToFile;
+        private bool generators;
+        private Func<SimpleRow, bool> hasGenerator; 
 
-        public BaseAlgorithm(ICandidatesGenerator candidatesGenerator)
+        private void InitializeGeneratorMethod(string method)
         {
-            this.candidatesGenerator = candidatesGenerator;
+            if(method == "P")
+                return;
+
+            generators = true;
+            if (method == "G")
+                hasGenerator =
+                    row => row.MinRelationComplied + row.MinRelationNotComplied ==
+                           row.RelationComplied + row.RelationNotComplied;
+            else
+                hasGenerator =
+                    row => row.MinRelationNotComplied == row.RelationNotComplied;
         }
 
-        public IEnumerable<IEnumerable<ushort>> FindPreferences(IEnumerable<Row> transactions)
+        public event EventHandler<DiagnosticsInfo> DiagnosticsEvent;
+        private readonly ICandidatesGenerator candidatesGenerator;
+        private readonly IResultConverter resultConverter;
+
+        private IList<SimpleRow> results;
+
+        private readonly int hashTreePageSize;
+        private readonly int hashTreeKey;
+
+        public BaseAlgorithm(int hashTreePageSize, int hashTreeKey, bool writeIterationResultsToFile, string method, 
+            ICandidatesGenerator candidatesGenerator, IResultConverter resultConverter)
+        {
+            this.hashTreePageSize = hashTreePageSize;
+            this.hashTreeKey = hashTreeKey;
+            this.resultConverter = resultConverter;
+
+            this.candidatesGenerator = candidatesGenerator;
+
+            this.writeIterationResultsToFile = writeIterationResultsToFile;
+            
+            InitializeGeneratorMethod(method);
+        }
+
+        public IEnumerable<SimpleRow> FindPreferences(IEnumerable<Row> transactions)
         {
             Initialize(transactions);
-            results = new List<IEnumerable<ushort>>();
+            results = new List<SimpleRow>();
+
+            Console.WriteLine("Informacje dla kandydatow o dl. 1\n");
 
             var itemsets = candidatesGenerator.FindSetsWhichHasOneElement(transactions);
             itemsets = PruneResults(itemsets, transactions);
 
+            WriteInfo(found, toAnalyze, rejected);
+
+            int tranLength = 1;
             while (true)
             {
-                itemsets = candidatesGenerator.GetCandidates(itemsets, results, transactions);
                 if (!itemsets.Any())
                 {
                     break;
                 }
+
+                Stopwatch watch = Stopwatch.StartNew();
+                itemsets = candidatesGenerator.GetCandidates(itemsets, results, transactions);
+
+                tranLength++;
+                if (!itemsets.Any())
+                {
+                    break;
+                }
+
+                Console.WriteLine("Informacje dla kandydatow o dl. {0}\n", tranLength);
                 itemsets = PruneResults(itemsets, transactions);
+                watch.Stop();
+                Console.WriteLine("Czas obrotu petli dla transakcji o dlugosci {0}: {1}", tranLength, watch.Elapsed);
+
+                WriteInfo(found, toAnalyze, rejected);
             }
             
             return results;
@@ -52,152 +105,117 @@ namespace UniversalPreferences.Algorithm
             return false;
         }
 
-        private IEnumerable<IEnumerable<ushort>> PruneResults(IEnumerable<IEnumerable<ushort>> itemsets, IEnumerable<Row> transactions)
+        private IList<SimpleRow> PruneResults(IList<SimpleRow> itemsets, IEnumerable<Row> transactions)
         {
-            temporaryResults = new Dictionary<string, SimpleRow>();
-
-            CheckItemsets(itemsets, transactions);
-
-            var res = SelectPreferencesAndGetCandidates();
-            temporaryResults = null;
+            var hashTree = CheckItemsets(itemsets, transactions);
+            var res = SelectPreferencesAndGetCandidates(hashTree);
             return res;
         }
 
-        private void CheckItemsets(IEnumerable<IEnumerable<ushort>> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
+        private IHashTree CheckItemsets(IEnumerable<SimpleRow> itemsets, IEnumerable<Row> transactions) //todo: lepsza nazwa
         {
             var sw = new Stopwatch();
             sw.Start();
-            
-            var copy = CreateItemsetsCopy(itemsets);
+
             var hashTree = CreateTree(itemsets);
             
             foreach (var transaction in transactions)
             {
                 var supported = hashTree.GetSupportedSets(transaction);
-
                 foreach (var simpleRow in supported)
                 {
-                    var description = GetDescription(simpleRow.Attributes);
-                    var row = AddNode(description, new SimpleRow(simpleRow.Attributes));
-                    IncrementCounters(row, transaction);
-                    Remove(copy, description);
+                    IncrementCounters(simpleRow, transaction);
                 }
             }
 
-            foreach (var notSupported in copy.Values)
-            {
-                var description = GetDescription(notSupported);
-                AddNode(description, new SimpleRow(notSupported));
-            }
-
             sw.Stop();
-            Console.WriteLine(sw.Elapsed);
+            Console.WriteLine("Czas obliczania wsparc znalezionych kandydatow: " + sw.Elapsed);
+
+            return hashTree;
         }
 
-        private IDictionary<string, IEnumerable<ushort>> CreateItemsetsCopy(IEnumerable<IEnumerable<ushort>> itemsets)
+        private IHashTree CreateTree(IEnumerable<SimpleRow> itemsets)
         {
-            var dict = new Dictionary<string, IEnumerable<ushort>>();
-            foreach (var itemset in itemsets)
-            {
-                var description = GetDescription(itemset);
-                dict.Add(description, itemset);
-            }
-            return dict;
-        }
-
-        private IHashTree CreateTree(IEnumerable<IEnumerable<ushort>> itemsets)
-        {
-            var tree = HashTreeFactory.Create(itemsets.First().Count(), 100, 2999);
-            tree.FillTree(itemsets.Select(x => new Row { Attributes = x.ToArray() }));
+            var tree = HashTreeFactory.Create(itemsets.First().Transaction.Length, hashTreePageSize, hashTreeKey);
+            tree.FillTree(itemsets);
 
             return tree;
         }
 
-        private void Remove(IDictionary<string, IEnumerable<ushort>> copy, string description)
+        private IList<SimpleRow> SelectPreferencesAndGetCandidates(IHashTree hashTree)
         {
-            if (copy.Count > 0)
-            {
-                copy.Remove(description);   
-            }
-        }
+            var tmp = new List<SimpleRow>();
+            var curResults = new List<SimpleRow>();
 
-        private IEnumerable<IEnumerable<ushort>> SelectPreferencesAndGetCandidates()
-        {
-            var tmp = new List<IEnumerable<ushort>>();
+            found = 0;
+            toAnalyze = 0; 
+            rejected = 0;
 
-            var found = new List<SimpleRow>();
-            var toAnalyze = new List<SimpleRow>();
-            var rejected = new List<SimpleRow>();
-
-            foreach (var row in temporaryResults.Values)
+            foreach (var row in hashTree.GetRows())
             {
                 if(row.RelationNotComplied == 0) 
                     // jezeli kandydat nie wystepuje w tej klasie, to jest minimalnym poszukiwanym wzorcem
                 {
-                    results.Add(row.Transaction);
-                    found.Add(row);
+                    curResults.Add(row);
+                    results.Add(row);
+                    //OnAddNode(row);
+                    found += 1;
                 }
                 else if(row.RelationComplied != 0) //te ktore maja 0 odrzucamy
                 {
-                    if (CheckIfAnySubsetIsGenerator(row))
+                    if ( 
+                        /*row.MinRelationComplied +*/ row.MinRelationNotComplied == /*row.RelationComplied +*/ row.RelationNotComplied)
                     {
-                        rejected.Add(row);
+                        rejected += 1;
                     }
                     else
                     {
-                        tmp.Add(row.Transaction);
-                        toAnalyze.Add(row);                        
+                        tmp.Add(row);
+                        toAnalyze += 1;                        
                     }
                 }
                 else //odrzucone
                 {
-                    rejected.Add(row);
+                    rejected += 1;
                 }
             }
 
-#if DEBUG
-            WriteInfo(found, toAnalyze, rejected);
-#endif
+            WriteResultsToFile(curResults);
+
             return tmp;
         }
 
-        private void WriteInfo(IEnumerable<SimpleRow> found, IEnumerable<SimpleRow> toAnalyze, IEnumerable<SimpleRow> rejected)
+        private void WriteResultsToFile(List<SimpleRow> curResults)
+        {
+            var filePath = "wyniki_z_iteracji.txt";
+            if (writeIterationResultsToFile)
+            {
+                using (var streamWriter = new StreamWriter(filePath, true))
+                {
+                    curResults.ForEach(x => 
+                        streamWriter.WriteLine(string.Format("{0}", resultConverter.Convert(x.Transaction))));
+                }
+            }
+        }
+
+        private void WriteInfo(int found, int toAnalyze, int rejected)
         {
             var sb = new StringBuilder();
 
+            sb.AppendLine("Znalezione: " + found);
+            //WriteListInfo(sb, found);
+            sb.AppendLine("Do analizy: " + toAnalyze);
+            //WriteListInfo(sb, toAnalyze);
+            sb.AppendLine("Odrzucone:  " + rejected);
+            //WriteListInfo(sb, rejected);
+            sb.AppendLine();
             sb.AppendLine("========================");
-            sb.AppendLine("Znalezione");
-            WriteListInfo(sb, found);
-            sb.AppendLine("Do analizy");
-            WriteListInfo(sb, toAnalyze);
-            sb.AppendLine("Odrzucone");
-            WriteListInfo(sb, rejected);
             sb.AppendLine();
 
             OnDiagnosticsEvent(new DiagnosticsInfo(sb.ToString()));
         }
 
-        private void WriteListInfo(StringBuilder sb, IEnumerable<SimpleRow> list)
-        {
-            foreach (SimpleRow simpleRow in list)
-            {
-                sb.AppendLine(simpleRow.ToString());
-            }
-        }
-
-        private SimpleRow AddNode(string description, SimpleRow row)
-        {
-            SimpleRow outRow;
-            if(!temporaryResults.TryGetValue(description, out outRow))
-            {
-                outRow = row;
-                temporaryResults.Add(description, row);
-                OnAddNode(description, row);
-            }
-            return outRow;
-        }
-
-        protected virtual void OnAddNode(string description, SimpleRow row)
+        protected virtual void OnAddNode(SimpleRow row)
         {
 
         }

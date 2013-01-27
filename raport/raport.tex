@@ -41,11 +41,11 @@ Dla przykładu załóżmy, że każdy samochód można uznać za obiekt posiadaj
 
 \section{Założenia}
 
+
+Mając podstawowe definicje pojęć z tematyki naszych rozważań możemy przejśc do podstawowych założen. \\
 \begin{itemize}
 \item Mamy zdefiniowane relacje pomiędzy klasami, a nie obiektami należącymi do tych klas.
-
 \item Algorytm pracuje na danych w postaci transakcyjnej.
- 
 \end{itemize}
 
 \section{Dane wejściowe i wyjściowe}
@@ -188,6 +188,40 @@ Podsumowując pesymistyczna złożoność algorytmu wynosi:
 $$ \sum_{i=1}^M (iL_{i-1}^2 + L_i + iNL_i) $$
 
 Jak widać jest ona ściśle zależna od liczby kandydatów na wzorzec kontrastowy przetwarzanych w danej pętli algorytmu, a liczba ta jest ściśle zależna od zadania. Należy zaznaczyć, że przedstawione tu wyliczenia są przeprowadzone dla pesymistycznej złożoność i złożoność oczekiwana jest zdecydowanie lepsza. W szczególności można się spodziewać zakończenia obliczeń znacznie wcześniej niż przy ostatnim obrocie pętli z linii 1 oraz zdecydowanie lepszej niż liniowej złożoności wyszukiwania w drzewie mieszającym.
+
+\subsection{Złożoność}
+W tym rozdziale zostanie omówiona złożoność algorytmu. Zostały przyjęte następujące oznaczenia.
+\begin{itemize}
+\item $ n$ - liczba wejściowych transakcji
+\item $ m$ - długość wejściowych transakcji
+\item $ N = n^2$ - liczba transkacji powstałych po połączniu transakcji w pary
+\item $ M = 2m$ - długość transkacji po połączniu transakcji w pary
+\item $ L_i$ - liczba rozważanych transkacji w obrocie pętli algorytmu (linia 1) o numerze $i$
+\end{itemize}
+Poniżej został przedstawiony pseudokod algorytmu z najbardziej istotnymi ze względnu na złożoność pesymistyczną fragmentami.
+\begin{lstlisting}[numbers=left]
+for(i = 1; i < M; i++)
+{
+	Candidates = GetCandidates()
+	FillTree(Candidates)
+	for(j = 1; j < N; j++)
+		FindSupported(Tran[j])
+}
+\end{lstlisting}
+
+Z analizy powyższego pseudokodu można wyciągnąć następujące wnioski:
+\begin{itemize}
+\item Pętla z linii pierwszej wykonuje się maksymalnie $M$ razy. Obliczenia mogą zostać przerwane wcześniej jeśli wyczerpano już wszystkie wspierane transakcje.
+\item Złożoność metody GetCandidates zależy kwadratowo od liczby transakcji pochodzącej z poprzedniej pętli. Tych transakcji jest $L_{i-1}$. Dodatkowo potrzebny jest jeszcze czas na porównanie pierwszych $i-1$ elementów transkacji. Podsumowując złożoność metody jest rzędu $iL_{i-1}^2$
+\item Czas budowania drzewa jest fukncją liniową względem ilości transakcji z których jest budowany. Złożoność rzędu: $L_i$.
+\item Metoda FindSupported wywołwana jest $N$ razy dla każdego obrotu pętli z linii 1.  Przy założeniu, że zostaną odwiedzone wszystkie liście drzewa jej złożoność wynosi: $iL_i$. Czas $i$ jest potrzebny na sprawdzenie czy transkacja znajdująca się w drzewie jest wspierana przez zadaną transkacje.
+\end{itemize}
+
+Podsumowując pesymistyczna złożność algorytmu wynosi:
+$$ \sum_{i=1}^M (iL_{i-1}^2 + L_i + iNL_i) $$
+
+Jak widać jest ona ściśle zależna od liczby kandytatów na wzorzec kontrastowy przetwarzanych w danej pętli algorytmu. Liczba ta jest ściśle zależna od zadania.
+
 
 \section{Wyniki}
 

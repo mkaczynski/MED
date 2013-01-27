@@ -2,15 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using UniversalPreferences.Common;
+using UniversalPreferences.HashTree;
 
 namespace UniversalPreferences.Algorithm
 {
     public class CandidatesGenerator : ICandidatesGenerator
     {
-        public IEnumerable<IEnumerable<ushort>>
+        private readonly int hashTreePageSize;
+        private readonly int hashTreeKey;
+
+        public CandidatesGenerator(int hashTreePageSize, int hashTreeKey)
+        {
+            this.hashTreePageSize = hashTreePageSize;
+            this.hashTreeKey = hashTreeKey;
+        }
+
+        public IList<SimpleRow>
             FindSetsWhichHasOneElement(IEnumerable<Row> transactions)
         {
             var dict = new Dictionary<ushort, ushort>();
+
+            var compiled = transactions.Count(x => x.Value == Relation.Complied);
+            var notCompiled = transactions.Count() - compiled;
 
             foreach (var transaction in transactions)
             {
@@ -24,32 +37,88 @@ namespace UniversalPreferences.Algorithm
             }
 
             var res = dict.Select(x => new[] { x.Key });
-            return res;
+            res = res.OrderBy(x => x[0]);
+            
+            return res.Select(x => new SimpleRow(x) { MinRelationComplied = compiled, MinRelationNotComplied = notCompiled }).ToList();
         }
 
-        public IEnumerable<IEnumerable<ushort>> GetCandidates(IEnumerable<IEnumerable<ushort>> previousCandidates, IEnumerable<IEnumerable<ushort>> results, IEnumerable<Row> transactions)
+        public IList<SimpleRow> GetCandidates(IList<SimpleRow> previousCandidates, IList<SimpleRow> results, IEnumerable<Row> transactions)
         {
-            var newCandidates = new List<IEnumerable<ushort>>();
+            var L = previousCandidates.First().Transaction.Count();
+            var hashTree = HashTreeFactory.CreateCandidateTree(L, hashTreePageSize, hashTreeKey);
+            hashTree.FillTree(previousCandidates);
 
-            for (int i = 0; i < previousCandidates.Count();i++ )
+            var newCandidates = new List<SimpleRow>();
+            
+            for (int i = 0; i < previousCandidates.Count; i++)
             {
-                var c = previousCandidates.ElementAt(i);
-                var head = c.Take(c.Count() - 1);
-                var tmp = previousCandidates.Take(i).Where(x => x.Take(c.Count() - 1).SequenceEqual(head)).
-                    Select(x => c.Union(x.Skip(c.Count() - 1)).ToArray()).ToList();
+                ushort[] first = previousCandidates[i].Transaction;
 
-                tmp.ForEach(Array.Sort);
-                
-                foreach (var t in tmp)
+                for (int j = i + 1; j < previousCandidates.Count; j++)
                 {
-                    if (!results.Any(x => !x.Except(t).Any()))
+                    var second = previousCandidates[j].Transaction;
+                    
+                    if(!AreEqual(first, second, L-1))
                     {
-                        newCandidates.Add(t);
+                        break;
                     }
+                    var newCand = new ushort[L+1];
+                    for (int k = 0; k < L-1; k++)
+                    {
+                        newCand[k] = first[k];
+                    }
+                    var min = Math.Min(first[L-1], second[L-1]);
+                    var max = Math.Max(first[L-1], second[L-1]);
+                    newCand[L - 1] = min;
+                    newCand[L] = max;
+
+                    var sr = new SimpleRow(newCand);
+                    var supportedPrevCandidates = hashTree.GetSupportedSets(sr);
+                    if (supportedPrevCandidates.Count() == L + 1 &&
+                            !results.Any(x => !x.Transaction.Except(newCand).Any()))
+                    {
+                        CompleteCounters(sr, supportedPrevCandidates);
+
+                        newCandidates.Add(sr);
+                    }
+                    
                 }
             }
 
             return newCandidates;
+        }
+
+        private void CompleteCounters(SimpleRow simpleRow, IEnumerable<SimpleRow> previous)
+        {
+            var subsets = GetSubsets(simpleRow.Transaction);
+
+            if(subsets.Count() != previous.Count())
+                Console.WriteLine("Kaczka pało zjebałeś :)");
+
+            var min = previous.Min(x => /*x.RelationComplied +*/ x.RelationNotComplied);
+            var elem = previous.FirstOrDefault(x => /*x.RelationComplied +*/ x.RelationNotComplied == min);
+
+            simpleRow.MinRelationComplied = elem.RelationComplied;
+            simpleRow.MinRelationNotComplied = elem.RelationNotComplied;
+
+            //var supported = hashTree.GetSupportedSets(new Row(0, 0, simpleRow.Transaction, Relation.Complied));
+        }
+
+        private bool AreEqual(ushort[] x, ushort[] y, int length)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                if(x[i] != y[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private IEnumerable<ushort[]> GetSubsets(IEnumerable<ushort> set)
+        {
+            return set.Select((t, i) => set.Take(i).Concat(set.Skip(i + 1)).ToArray()).ToList();
         }
     }
 }

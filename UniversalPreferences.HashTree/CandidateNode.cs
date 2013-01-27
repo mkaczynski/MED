@@ -4,18 +4,18 @@ using UniversalPreferences.Common;
 
 namespace UniversalPreferences.HashTree
 {
-    internal class Node
+    public class CandidateNode
     {
         private readonly int pageSize;
         private readonly int firstNumber;
         private readonly int transactionLength;
         private readonly int depth;
-        private Node[] children;
+        private CandidateNode[] children;
         private IList<SimpleRow> elements;
 
         private bool isLeafNode;
 
-        public Node(int pageSize, int firstNumber, int transactionLength, int depth)
+        public CandidateNode(int pageSize, int firstNumber, int transactionLength, int depth)
         {
             this.pageSize = pageSize;
             this.firstNumber = firstNumber;
@@ -36,10 +36,10 @@ namespace UniversalPreferences.HashTree
 
         private void InitializeChildren()
         {
-            children = new Node[firstNumber];
+            children = new CandidateNode[firstNumber];
             for (int i = 0; i < firstNumber; i++)
             {
-                children[i] = new Node(pageSize, firstNumber, transactionLength, depth + 1);
+                children[i] = new CandidateNode(pageSize, firstNumber, transactionLength, depth + 1);
             }
         }
 
@@ -84,7 +84,7 @@ namespace UniversalPreferences.HashTree
             return depth == transactionLength || elements.Count  != pageSize;
         }
 
-        public void FillSupportedRows(ICollection<SimpleRow> supportedRows, ushort[] row, int firstIndexToCheck, HashSet<ushort> hashOfRow)
+        public void FillSupportedRows(ICollection<SimpleRow> supportedRows, SimpleRow row, int firstIndexToCheck, HashSet<ushort> hashOfRow)
         {
             if (isLeafNode)
             {
@@ -93,12 +93,12 @@ namespace UniversalPreferences.HashTree
             }
 
             var viewedNodes = new HashSet<int>();
-            for (int i = firstIndexToCheck; i < row.Length; i++)
+            for (int i = firstIndexToCheck; i < row.Transaction.Length; i++)
             {
-                if (CanCutSearching(row.Length, i))
+                if (CanCutSearching(row.Transaction.Length, i))
                     return;
 
-                var currentElement = row[i];
+                var currentElement = row.Transaction[i];
                 var hashOfCurrentElement = currentElement%firstNumber;
                 if (viewedNodes.Contains(hashOfCurrentElement))
                     continue;
@@ -127,6 +127,6 @@ namespace UniversalPreferences.HashTree
                     supportedRows.Add(element);
                 }
             }
-        }
+        } 
     }
 }
