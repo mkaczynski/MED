@@ -444,13 +444,15 @@ Aplikacja posiada prosty interfejs konsolowy. Uruchomienie sprowadza się do wyk
 \item relations:sciezka - ścieżka do pliku z relacjami
 \item delim:znak - znak dzielący kolumny w pliku danych
 \item index:numer - indeks kolumny z danymi
+\item method:T - {T - metoda Terleckiego, G - wykorzystanie generatorów, P - wersja podstawowa}
+\item write:true - {true, false}, określa czy w każdej iteracji wyniki będą
+zapisywane do pliku
 \item pageSize:liczba - rozmiar strony w drzewie mieszającym
 \item key:liczba - klucz mieszający
 \item relationType:wartosc - {NonStrict, Strict, Equals}
-\item method:T - {T - metoda Terleckiego, G - wykorzystanie generatorów, P - wersja podstawowa}
 \end{itemize}
 
-Parametry można podawać w dowolnej kolejności. Ostatnie 3 parametry są opcjonalne - ich domyślne wartości to: pageSize = 100, key = 47, relationType = NonStrict. Spacje w nazwach plików nie są dopuszczalne.\\
+Parametry można podawać w dowolnej kolejności. Ostatnie 5 parametró jest opcjonalne - ich domyślne wartości to: pageSize = 100, key = 47, relationType = NonStrict, method = T, write = true. Spacje w nazwach plików nie są dopuszczalne.\\
 
 Aby zapisać wyniki zwracane przez program, należy przekierować standardowe wyjście na plik docelowy.\\
 
