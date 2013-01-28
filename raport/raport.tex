@@ -42,7 +42,7 @@ Dla przykładu załóżmy, że każdy samochód można uznać za obiekt posiadaj
 \section{Założenia}
 
 
-Mając podstawowe definicje pojęć z tematyki naszych rozważań możemy przejśc do podstawowych założen. \\
+Mając podstawowe definicje pojęć z tematyki naszych rozważań możemy przejść do podstawowych założeć. \\
 \begin{itemize}
 \item Mamy zdefiniowane relacje pomiędzy klasami, a nie obiektami należącymi do tych klas.
 \item Algorytm pracuje na danych w postaci transakcyjnej.
@@ -107,9 +107,9 @@ W nawiasach wymienione są opisy znalezionych atrybutów postaci: \{numer kolumn
 
 Implementacja została przygotowana w języku C\# i działa na platformie .NET Framework 4.0. Implementacja związana z algorytmem została podzielona na 4 projekty: Algorithm, DAL, HashTree i pomocniczy projekt Common.\\
 
-W projekcie Algorithm znajdują się wszystkie klasy i interfejsy w bezpośredni sposób związane z interfejsem. Projekt DAL zawiera implementacje dostępu do danych, a więc w tym przypadku parsowanie plików z danymi do postaci wykorzystywanej w algorytmie. W projekcie HashTree znalajdują się interfejsy i implementacja drzewa mieszającego. Projekt Common zawiera wspólne klasy wykorzystywane w pozostałych projektach. W projekcie Common znajdują się niemal jedynie obiekty DTO. Obiekty te same w sobie nie wykonują operacji, dlatego nie będą szczegółowo opisywane.\\
+W projekcie Algorithm znajdują się wszystkie klasy i interfejsy w bezpośredni sposób związane z interfejsem. Projekt DAL zawiera implementacje dostępu do danych, a więc w tym przypadku parsowanie plików z danymi do postaci wykorzystywanej w algorytmie. W projekcie HashTree znajdują się interfejsy i implementacja drzewa mieszającego. Projekt Common zawiera wspólne klasy wykorzystywane w pozostałych projektach. W projekcie Common znajdują się niemal jedynie obiekty DTO. Obiekty te same w sobie nie wykonują operacji, dlatego nie będą szczegółowo opisywane.\\
 
-W celu zapewnienia elastyczności skorzystano w projekcie ze wzorca Dependency Injection. Zgodnie z wzorcem, na implementację algorytmu składa się szereg interfejsów, których odpowiedzialności przedstawiaja się następująco:\\
+W celu zapewnienia elastyczności skorzystano w projekcie ze wzorca Dependency Injection. Zgodnie z wzorcem, na implementację algorytmu składa się szereg interfejsów, których odpowiedzialności przedstawiają się następująco:\\
 
 Za główny interfejs można uznać \textit{IAlgorithm}, a jego podstawowym zadaniem jest znajdowanie preferencji uniwersalnych. Interfejs jest implementowany przez klasy \textit{Generators} i \textit{ModifiedApriori}. Podstawowa różnica pomiędzy klasami polega na tym, że klasa Generators do obliczania minimalnych preferencji wykorzystuje informację o generatorach do odrzucania większej liczby zbiorów kandydujących. Obie implementacje operują na wierszach
 typu \textit{Row}/\textit{SimpleRow}, które są odwzorowaniem danych w postaci wygodnej do prowadzenia obliczeń. Do znajdywania zbiorów kandydujących wykorzystywany jest interfejs \textit{ICandidatesGenerator}. Za znajdowanie podzbiorów wspieranych w transakcjach odpowiada \textit{IHashTree}. Wczytywanie danych odbywa się za pomocą \textit{IDataManager}, a konwersja wyników do postaci wygodnej dla użytkownika za pomocą \textit{IResultsConverter}.\\
@@ -149,7 +149,7 @@ List<ushort[]> GenerateCandidates(List<ushort[]> previous)
 \end{lstlisting}
 \end{center}
 
-W algorytmie założono, że zbiory znajdująca się w liście \textit{previous} są posortowane zgodnie z porządkiem słownikowym. Sposób ich generowania oraz pozostałe elementy algorytmu zapewnieją utrzymania tego porządku dla dłuższych zbiorów.
+W algorytmie założono, że zbiory znajdująca się w liście \textit{previous} są posortowane zgodnie z porządkiem słownikowym. Sposób ich generowania oraz pozostałe elementy algorytmu zapewniają utrzymania tego porządku dla dłuższych zbiorów.
 W 3 linii algorytmu z listy kandydatów wygenerowanych w poprzedniej iteracji algorytmu (o długości $n$) budowane jest drzewo mieszające. Pozwala ono w efektywny sposób sprawdzać w linii 10 czy wszystkie podzbioru o długości $n$ kandydata \textit{new} są wspierane w liście \textit{previous}. \\
 
 Złożoność algorytmu w przypadku pesymistycznym jest równa $O(n^2)$. Jednak utrzymywanie posortowanej listy \textit{previous} pozwala na przerywanie pętli wewnętrznej (linia 7) w momencie gdy zbiory \textit{left} i \textit{right} różnią się chociażby na jednej z pierwszych $n-1$ pozycji. Pozwala to na znaczne ograniczenie spodziewanej złożoności algorytmu.
@@ -158,7 +158,7 @@ Złożoność algorytmu w przypadku pesymistycznym jest równa $O(n^2)$. Jednak 
 Drzewo mieszające zostało sparametryzowane przy pomocy dwóch wartości:
 \begin{itemize}
 \item {\bf page size} - określa maksymalną liczbę elementów znajdujących się w węźle drzewa
-\item {\bf first number} - liczba pierwsza używana przaz funkcję mieszającą
+\item {\bf first number} - liczba pierwsza używana przez funkcję mieszającą
 \end{itemize}
 
 Algorytm dodawania kolejnych kandydatów do drzewa przebiega w następujący sposób.
@@ -167,7 +167,8 @@ Algorytm dodawania kolejnych kandydatów do drzewa przebiega w następujący spo
 \item Na podstawie obliczonej wartości wybierany jest jeden z potomków węzła do którego powinien zostać dodany kandydat.
 \item Jeżeli węzeł potomny jest liściem i liczba jego elementów jest mniejsza od {\bf page size} lub jest to liść na ostatnim poziomie drzewa kandydat zostaje dodany do danego węzła.
 \item Jeżeli węzeł nie jest liściem obliczana jest wartość funkcji mieszającej dla kolejnego elementu kandydata i wykonywany jest ponownie krok 2.
-\item Jeżeli węzeł jest liściem nie znajdującym się na ostatnim poziomie drzewa i liczba kandydatów znajdujących się w tym liściu osiągneła wartość {\bf page size} węzeł ten przestaje być liściem i wszyscy kandydaci dodawaniu są do jego potomków zgodnie z wyliczoną dla nich wartością funkcji mieszającej.
+\item Jeżeli węzeł jest liściem nie znajdującym się na ostatnim poziomie drzewa i liczba kandydatów znajdujących się w tym liściu osiągnęła wartość {\bf page size} węzeł ten przestaje być liściem i wszyscy kandydaci dodawaniu są do jego potomków zgodnie z wyliczoną dla nich wartością funkcji mieszającej.
+\item Jeżeli węzeł jest liściem nie znajdującym się na ostatnim poziomie drzewa i liczba kandydatów znajdujących się w tym liściu osiągnęła wartość {\bf page size} węzeł ten przestaje być liściem i wszyscy kandydaci dodawaniu są do jego potomków zgodnie z wyliczoną dla nich wartością funkcji mieszającej.
 \end{enumerate}
 
 \subsection{Preferencje}
@@ -179,7 +180,7 @@ Dictionary<string, HashSet<string>> relations;
 \end{lstlisting}
 \end{center}
 
-Klasy reprezentowane są przez napis odpowiadający ich nazwie. Każdy wpis w słowniku zawiere parę: nazwa klasy - nazwy klas będące z nią w relacji. Dzięki takiej reprezentacji możliwe jest sprawdzanie czy dane dwie klasy są ze sobą w relacji w czasie stałym. \\
+Klasy reprezentowane są przez napis odpowiadający ich nazwie. Każdy wpis w słowniku zawiera parę: nazwa klasy - nazwy klas będące z nią w relacji. Dzięki takiej reprezentacji możliwe jest sprawdzanie czy dane dwie klasy są ze sobą w relacji w czasie stałym. \\
 
 Np: sprawdzenie czy klasy {\bf left} i {\bf right} są ze sobą w relacji przebiega następująco:
 \begin{center}
@@ -212,7 +213,7 @@ for(i = 1; i < M; i++)
 \end{lstlisting}
 \end{center}
 
-W 3 linii algorytmu generowani są kandydaci długości $i$. W 4 linii drzewo mieszające uzupełniane jest kolekcją wygenerowanych kandydatów, natomist w linii 6 dla każdego wiersza macierzy preferencji znajdowani są wspierani przez niego kandydaci.
+W 3 linii algorytmu generowani są kandydaci długości $i$. W 4 linii drzewo mieszające uzupełniane jest kolekcją wygenerowanych kandydatów, natomiast w linii 6 dla każdego wiersza macierzy preferencji znajdowani są wspierani przez niego kandydaci.
 Z analizy powyższego pseudokodu można wyciągnąć następujące wnioski:
 \begin{itemize}
 \item Pętla z linii pierwszej wykonuje się maksymalnie $M$ razy. Obliczenia mogą zostać przerwane wcześniej jeżeli nie wygenerowano nowych kandydatów.
@@ -231,7 +232,7 @@ Jak widać jest ona ściśle zależna od liczby kandydatów na wzorzec kontrasto
 
 \subsection{Drzewo mieszające}
 
-W rozdziale tym zostanie przedstawione porównanie wydajności drzewa mieszającego (\textit{HashTree}) z naiwną implementacją (\textit{FakeTree}) w postaci zwykłej tablicy. Struktury te wypełniane są kandydatami na wzorce kontekstowe o stałej długości. Implementują one metodę \textit{GetSupportedSets}, która przyjmuje jako parametr pewnien wiersz macierzy preferencji; jej zadaniem jest zwrócenie kandydatów przez niego wspieranych. \\
+W rozdziale tym zostanie przedstawione porównanie wydajności drzewa mieszającego (\textit{HashTree}) z naiwną implementacją (\textit{FakeTree}) w postaci zwykłej tablicy. Struktury te wypełniane są kandydatami na wzorce kontekstowe o stałej długości. Implementują one metodę \textit{GetSupportedSets}, która przyjmuje jako parametr pewien wiersz macierzy preferencji; jej zadaniem jest zwrócenie kandydatów przez niego wspieranych. \\
 Dane przedstawione są w postaci tablicy, porównanie wyników przebiega na podstawie czterech parametrów:
 \begin{itemize}
 \item {\bf n} - długość kandydatów, którymi wypełniana jest struktura
@@ -297,7 +298,7 @@ Dla tego przypadku tworzone jest następujące mapowanie wartości atrybutów na
 
 Atrybuty 4, 5, 6 i 7 powstają w wyniku połączenia dwóch zbiorów.\\
 
-W dalszej częśći tej sekcji dla skrócenia zapisów kandydaci będą opisywani trójką w postaci (0 - (12, 4)), gdzie pierwsza wartość jest indeksem atrybutu, a dwa kolejne to liczniki mówiące o wsparciu w klasach decyzyjnych.
+W dalszej części tej sekcji dla skrócenia zapisów kandydaci będą opisywani trójką w postaci (0 - (12, 4)), gdzie pierwsza wartość jest indeksem atrybutu, a dwa kolejne to liczniki mówiące o wsparciu w klasach decyzyjnych.
 
 \subsubsection{Relacja ścisła}
 
@@ -355,7 +356,7 @@ Zbiór jest podzielony na 4 klasy określające akceptowalność samochodu ze wz
 
 W zbiorze wyróżniono 4 klasy: nieakceptowalny, akceptowalny, dobry i bardzo dobry. Przyjęto, że pomiędzy klasami zachodzi relacja od najgorszej do najlepszej wg wymienionej kolejności. Zbiór zawiera łącznie 1728 obiektów, opisywanych przez 21 unikalnych ze względu na kolumny wartości atrybutów.\\
 
-Obliczenia przeprowadzone dla całego zbioru są więc wykonywane na blisko $3*10^6$ elementów w której każdy obiekt posiada 42 atrybuty. Charakterystyka zbioru jest na tyle niesprzyjająca, że w kolejnych iteracjach bardzo mało wyników jest odrzucanych, poprawnie klasyfikowanych lub uznawanych za generator. Pełne wyniki otrzymane dla omawianego zbioru znajdują się w pliku wyniki.txt. W tabeli poniżej zaprezentowane są wyniki ilościowe dla obliczeń przeprowadzonych dla całego zbioru. Parametry drzewa mieszajacego: pageSize = 100, key = 47. Poszukiwano wzorców dla relacji nieściełej, wykorzystując własność Terleckiego.
+Obliczenia przeprowadzone dla całego zbioru są więc wykonywane na blisko $3*10^6$ elementów w której każdy obiekt posiada 42 atrybuty. Charakterystyka zbioru jest na tyle niesprzyjająca, że w kolejnych iteracjach bardzo mało wyników jest odrzucanych, poprawnie klasyfikowanych lub uznawanych za generator. Pełne wyniki otrzymane dla omawianego zbioru znajdują się w pliku wyniki.txt. W tabeli poniżej zaprezentowane są wyniki ilościowe dla obliczeń przeprowadzonych dla całego zbioru. Parametry drzewa mieszającego: pageSize = 100, key = 47. Poszukiwano wzorców dla relacji nieścisłej, wykorzystując własność Terleckiego.
 
 \vspace{0.5cm}
 
@@ -400,7 +401,7 @@ Długość & Znalezionych & Do analizy & Odrzuconych & Czas iteracji\\ \hline
 
 \vspace{0.5cm}
 
-Zawrtość tabeli należy interpretować w następujący sposób: kandydaci o długości 3 zostali wygenerowani w czasie 120ms, wygenerowano łącznie 7900 takich kandydatów, z czego 4 zostały uznane za minimalne wzorce. Analiza kandydatów długości 3 trwała 4 minuty 27 sekund. Obliczenia przeprowadzono na komputerze z procesorem Intel i7 3.4GHz, 16GB ram.\\
+Zawartość tabeli należy interpretować w następujący sposób: kandydaci o długości 3 zostali wygenerowani w czasie 120ms, wygenerowano łącznie 7900 takich kandydatów, z czego 4 zostały uznane za minimalne wzorce. Analiza kandydatów długości 3 trwała 4 minuty 27 sekund. Obliczenia przeprowadzono na komputerze z procesorem Intel i7 3.4GHz, 16GB ram.\\
 
 Uzyskane czasy wydają się być akceptowalne. Łącznie znaleziono 1597 wzorców.\\
 
@@ -441,7 +442,7 @@ Na wykresie \ref{pamiec} przedstawiono zależność zużycia pamięci w czasie. 
 
 Do uruchomienia aplikacji wymagany jest zainstalowany .NET Framework 4.0. Nie jest konieczna instalacja dodatkowych programów, bibliotek lub komponentów. Aplikacja została przygotowana w dwóch wersjach: x86 oraz x64, dla dużych zbiorów danych zaleca się korzystanie z wersji x64.\\
 
-Aplikacja posiada prosty interfejs konsolowy. Uruchomienie sprowadza się do wykonia komendy \textit{UniversalPreferences parametry}, gdzie parametry należy podać w formacie klucz:wartosc:
+Aplikacja posiada prosty interfejs konsolowy. Uruchomienie sprowadza się do wykonania komendy \textit{UniversalPreferences parametry}, gdzie parametry należy podać w formacie klucz:wartosc:
 
 \begin{itemize}
 \item data:sciezka - ścieżka do pliku z danymi
@@ -466,7 +467,7 @@ Przykładowe wykonanie może wyglądać następująco:\\
 UniversalPreferences data:cardata.txt relations:relation.txt index:6 delim:,
 
 
-\bibliographystyle{plain}
-\bibliography{bibliografia}
+% \bibliographystyle{plain}
+% \bibliography{bibliografia}
 
 \end{document}
