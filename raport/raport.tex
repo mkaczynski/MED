@@ -351,25 +351,47 @@ Zbiór jest podzielony na 4 klasy określające akceptowalność samochodu ze wz
 
 W zbiorze wyróżniono 4 klasy: nieakceptowalny, akceptowalny, dobry i bardzo dobry. Przyjęto, że pomiędzy klasami zachodzi relacja od najgorszej do najlepszej wg wymienionej kolejności. Zbiór zawiera łącznie 1728 obiektów, opisywanych przez 21 unikalnych ze względu na kolumny wartości atrybutów.\\
 
-Obliczenia przeprowadzone dla całego zbioru są więc wykonywane na blisko $3*10^6$ elementów w której każdy obiekt posiada 42 atrybuty. Charakterystyka zbioru jest na tyle niesprzyjająca, że w kolejnych iteracjach bardzo mało wyników jest odrzucanych, poprawnie klasyfikowanych lub uznawanych za generator. Pełne wyniki otrzymane dla omawianego zbioru znajdują się w pliku wyniki.txt. W tabeli poniżej zaprezentowane są wyniki ilościowe dla obliczeń przeprowadzonych dla całego zbioru. Parametry drzewa mieszajacego: pageSize = 100, key = 47.
+Obliczenia przeprowadzone dla całego zbioru są więc wykonywane na blisko $3*10^6$ elementów w której każdy obiekt posiada 42 atrybuty. Charakterystyka zbioru jest na tyle niesprzyjająca, że w kolejnych iteracjach bardzo mało wyników jest odrzucanych, poprawnie klasyfikowanych lub uznawanych za generator. Pełne wyniki otrzymane dla omawianego zbioru znajdują się w pliku wyniki.txt. W tabeli poniżej zaprezentowane są wyniki ilościowe dla obliczeń przeprowadzonych dla całego zbioru. Parametry drzewa mieszajacego: pageSize = 100, key = 47. Poszukiwano wzorców dla relacji nieściełej, wykorzystując własność Terleckiego.
 
 \vspace{0.5cm}
 
-\begin{tabular}{|r|r|r|r|r|r|}
+\begin{tabular}{|r|r|r|r|r|}
 \hline
-Długość & Znalezionych & Do analizy & Odrzuconych & Czas generowania & Czas analizy \\ \hline
-1 & 2 & 40 & 0 & - & 00:00:08.637 \\ \hline 
-2 & 53 & 727 & 0 & 00:00:00.014 & 00:01:04.399 \\ \hline
-3 & 4 & 7936 & 0 & 00:00:00.119 & 00:04:27.911 \\ \hline
-4 & 16 & 57900 & 8 & 00:00:01.116 & 00:13:40.111 \\ \hline
-5 & 138 & 296827 & 89 & 00:00:08.923 & 00:31:20.697 \\ \hline
-6 & 358 & 1091632 & 319 & 00:01:21.488 & 00:47:41.648 \\ \hline
-7 & 402 & 2878263 & 529 & 00:12:19.893 & 00:48:43.142 \\ \hline
-8 & 347 & 5322277 & 541 & 00:38:55.946 & 00:37:47.039 \\ \hline
-9 & 210 & 6555566 & 490 & - & 00:20:00.744 \\ \hline
-10 & 62 & 4826364 & 305 & - & 00:06:47.708 \\ \hline
-11 & 5 & 1604811 & 82 & - & 00:01:12.696 \\ \hline
-12 & 0 & 0 & 5 & - & 00:00:01.722 \\ \hline
+Długość & Znalezionych & Do analizy & Odrzuconych & Czas iteracji \\ \hline
+1  & 2 & 40 & 0 & 00:00:07.967 \\ \hline 
+2  & 53 & 727 & 0 & 00:00:55.509 \\ \hline
+3  & 4 & 7932 & 4 & 00:03:54.407 \\ \hline
+4  & 16 & 57773 & 16 & 00:12:32.015 \\ \hline
+5  & 138 & 294890 & 267 & 00:28:11.867 \\ \hline
+6  & 358 & 1073453 & 1159 & 00:44:27.682 \\ \hline
+7  & 402 & 2767984 & 1897 & 00:58:16.358 \\ \hline
+8  & 347 & 4894458 & 2090 & 01:12:06.853 \\ \hline
+9  & 210 & 5539918 & 1637 & 01:14:27.725 \\ \hline
+10 & 62 & 3489242 & 728 & 00:51:50.042 \\ \hline
+11 & 5 & 859068 & 121 & 00:14:57.773 \\ \hline
+12 & 0 & 0 & 4 & 00:00:20.830 \\ \hline
+
+\end{tabular}
+
+W tabeli poniżej, dla porównania zaprezentowano wyniki uzyskane w przypadku gdy przy tworzeniu zbiorów kandydujących odrzucane były te zbiory których podzbiór był jednocześnie generatorem i minimalnym wzorcem kontrastowym.
+
+\vspace{0.5cm}
+
+\begin{tabular}{|r|r|r|r|r|}
+\hline
+Długość & Znalezionych & Do analizy & Odrzuconych & Czas iteracji\\ \hline
+1 & 2 & 40 & 0 &  00:00:08.637 \\ \hline 
+2 & 53 & 727 & 0 & 00:01:04.399 \\ \hline
+3 & 4 & 7936 & 0 & 00:04:27.911 \\ \hline
+4 & 16 & 57900 & 8 & 00:13:41.542 \\ \hline
+5 & 138 & 296827 & 89 & 00:31:31.924 \\ \hline
+6 & 358 & 1091632 & 319 & 00:49:20.457 \\ \hline
+7 & 402 & 2878263 & 529 & 01:00:49.850 \\ \hline
+8 & 347 & 5322277 & 541 & 01:16:16.170 \\ \hline
+9 & 210 & 6555566 & 490 & 01:29:21.114 \\ \hline
+10 & 62 & 4826364 & 305 & 01:10:39.947 \\ \hline
+11 & 5 & 1604811 & 82 & 00:26:38.900 \\ \hline
+12 & 0 & 0 & 5 & 00:00:45.475 \\ \hline
 \end{tabular}
 
 \vspace{0.5cm}
