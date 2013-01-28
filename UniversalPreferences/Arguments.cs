@@ -18,6 +18,12 @@ namespace UniversalPreferences
         public RelationKind RelationKind { get; set; }
 
         public bool WriteIterationResults { get; set; }
-        public string Method { get; set; } // P, T, G
+        // P, T, G
+        public string Method { get; set; }
+        
+
+        public string PreferenceMatrix { get; set; }
+
+
     }
 }

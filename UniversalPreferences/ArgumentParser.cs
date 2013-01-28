@@ -59,6 +59,9 @@ namespace UniversalPreferences
             CheckMethod(method);
             result.Method = method;
 
+            var preferenceMatrix = FindKeyPairOrDefault("preferenceMatrix", null);
+            result.PreferenceMatrix = preferenceMatrix;
+
             return result;
         }
 

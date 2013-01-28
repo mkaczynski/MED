@@ -1,15 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using UniversalPreferences.Common;
 
 namespace UniversalPreferences.DAL
 {
     public class CsvDataFileManager : IDataManager
     {
+        private readonly string preferenceMatrix;
         private readonly CsvFileReader csvReader;
         private readonly PreferenceFileReader preferenceReader;
 
-        public CsvDataFileManager(string fileNameObjects, string separator, int classNameColumnIndex, string fileNameRelations, RelationKind kind)
+        public CsvDataFileManager(string fileNameObjects, string separator, int classNameColumnIndex, string fileNameRelations, RelationKind kind, string preferenceMatrix)
         {
+            this.preferenceMatrix = preferenceMatrix;
             csvReader = new CsvFileReader(fileNameObjects, separator, classNameColumnIndex);
             preferenceReader = new PreferenceFileReader(fileNameRelations, kind);
         }
@@ -48,7 +53,34 @@ namespace UniversalPreferences.DAL
                     rowList.Add(new Row(csvReader.Rows[i].Id, csvReader.Rows[j].Id, attributes, value));
                 }
             }
+            if(preferenceMatrix != null)
+            {
+                WritePreferenceMatriToFile(rowList);
+            }
             return rowList;
+        }
+
+        private void WritePreferenceMatriToFile(List<Row> rowList)
+        {
+            using (var writer = new StreamWriter(preferenceMatrix, false))
+            {
+                foreach (var row in rowList)
+                {
+                    var line = BuildPreferenceMatrixLine(row);
+                    writer.WriteLine(line);
+                }
+            }
+        }
+
+        private string BuildPreferenceMatrixLine(Row row)
+        {
+            StringBuilder sb = new StringBuilder();
+            var left = string.Join(", ", row.Attributes.Where(x => x + 1< MinLeftSideIndex()).Select(x => GetMappings()[x]));
+            sb.Append(left);
+            sb.AppendFormat(" | {0} | ", row.Value == Relation.Complied ? "x" : " ");
+            var right = string.Join(", ", row.Attributes.Where(x => x + 1>= MinLeftSideIndex()).Select(x => GetMappings()[x]));
+            sb.Append(right);
+            return sb.ToString();
         }
 
         public Dictionary<ushort, string> GetMappings()

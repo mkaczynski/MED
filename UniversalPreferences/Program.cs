@@ -34,7 +34,8 @@ namespace UniversalPreferences
                         arguments.Delimiter,
                         arguments.ClassIndex,
                         arguments.RelationsFilePath,
-                        arguments.RelationKind);
+                        arguments.RelationKind,
+                        arguments.PreferenceMatrix);
 
                     var manager = new ExecutionManager(
                         new Generators(
