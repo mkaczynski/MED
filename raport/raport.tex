@@ -139,7 +139,7 @@ List<ushort[]> GenerateCandidates(List<ushort[]> previous)
     while(right[1:n-1] = left[1:n-1])
     {
       new = buildNewCandidate(left, right)
-      if(tree.checkSupport(new)
+      if(!tree.canPrune(new)
         results.add(new);
       right = right.next()
     }
@@ -149,18 +149,54 @@ List<ushort[]> GenerateCandidates(List<ushort[]> previous)
 \end{lstlisting}
 \end{center}
 
-W algorytmie założono, że transakcje znajdujące się w liście \textit{previous} są posortowane zgodnie z porządkiem słownikowym. Sposób ich generowania oraz pozostałe elementy algorytmu zapewnieją utrzymania tego porządku dla dłuższych transakcji.
-W 3 linii algorytmu ze zbioru transakcji o długości $n$ budowane jest drzewo mieszające. Pozwala ono w efektywny sposób sprawdzać w linii 10 czy wszystkie podzbioru o długości $n$ transakcji \textit{new} są wspierane w zbiorze \textit{previous}. \\
+W algorytmie założono, że zbiory znajdująca się w liście \textit{previous} są posortowane zgodnie z porządkiem słownikowym. Sposób ich generowania oraz pozostałe elementy algorytmu zapewnieją utrzymania tego porządku dla dłuższych zbiorów.
+W 3 linii algorytmu z listy kandydatów wygenerowanych w poprzedniej iteracji algorytmu (o długości $n$) budowane jest drzewo mieszające. Pozwala ono w efektywny sposób sprawdzać w linii 10 czy wszystkie podzbioru o długości $n$ kandydata \textit{new} są wspierane w liście \textit{previous}. \\
 
-Złożoność algorytmu w przypadku pesymistycznym jest równa $O(n^2)$. Jednak utrzymywanie posortowanej listy \textit{previous} pozwala na przerywanie pętli wewnętrznej (linia 7) w momencie gdy transakcje \textit{left} i \textit{right} różnią się chociażby na jednej z pierwszych $n-1$ pozycji. Pozwala to na znaczne ograniczenie spodziewanej złożoności algorytmu.
+Złożoność algorytmu w przypadku pesymistycznym jest równa $O(n^2)$. Jednak utrzymywanie posortowanej listy \textit{previous} pozwala na przerywanie pętli wewnętrznej (linia 7) w momencie gdy zbiory \textit{left} i \textit{right} różnią się chociażby na jednej z pierwszych $n-1$ pozycji. Pozwala to na znaczne ograniczenie spodziewanej złożoności algorytmu.
+
+\subsection{Drzewo mieszające}
+Drzewo mieszające zostało sparametryzowane przy pomocy dwóch wartości:
+\begin{itemize}
+\item {\bf page size} - określa maksymalną liczbę elementów znajdujących się w węźle drzewa
+\item {\bf first number} - liczba pierwsza używana przaz funkcję mieszającą
+\end{itemize}
+
+Algorytm dodawania kolejnych kandydatów do drzewa przebiega w następujący sposób.
+\begin{enumerate}
+\item Obliczana jest wartość funkcji mieszającej będąca resztą z dzielenia przez {\bf first number} dla pierwszego elementu kandydata.
+\item Na podstawie obliczonej wartości wybierany jest jeden z potomków węzła do którego powinien zostać dodany kandydat.
+\item Jeżeli węzeł potomny jest liściem i liczba jego elementów jest mniejsza od {\bf page size} lub jest to liść na ostatnim poziomie drzewa kandydat zostaje dodany do danego węzła.
+\item Jeżeli węzeł nie jest liściem obliczana jest wartość funkcji mieszającej dla kolejnego elementu kandydata i wykonywany jest ponownie krok 2.
+\item Jeżeli węzeł jest liściem nie znajdującym się na ostatnim poziomie drzewa i liczba kandydatów znajdujących się w tym liściu osiągneła wartość {\bf page size} węzeł ten przestaje być liściem i wszyscy kandydaci dodawaniu są do jego potomków zgodnie z wyliczoną dla nich wartością funkcji mieszającej.
+\end{enumerate}
+
+\subsection{Preferencje}
+
+Dane pochodzące z pliku z preferencjami przechowywane są w następującej strukturze:
+\begin{center}
+\begin{lstlisting}
+Dictionary<string, HashSet<string>> relations;
+\end{lstlisting}
+\end{center}
+
+Klasy reprezentowane są przez napis odpowiadający ich nazwie. Każdy wpis w słowniku zawiere parę: nazwa klasy - nazwy klas będące z nią w relacji. Dzięki takiej reprezentacji możliwe jest sprawdzanie czy dane dwie klasy są ze sobą w relacji w czasie stałym. \\
+
+Np: sprawdzenie czy klasy {\bf left} i {\bf right} są ze sobą w relacji przebiega następująco:
+\begin{center}
+\begin{lstlisting}
+bool inRelation = relations.ContainsKey(left) && 
+				  relations[left].Contains(right);
+\end{lstlisting}
+\end{center}
+
 \subsection{Złożoność}
 W tym rozdziale zostanie omówiona złożoność algorytmu. Zostały przyjęte następujące oznaczenia.
 \begin{itemize}
 \item $ n$ - liczba wejściowych transakcji
 \item $ m$ - długość wejściowych transakcji
-\item $ N = n^2$ - liczba transakcji powstałych po połączeniu transakcji w pary
-\item $ M = 2m$ - długość transakcji po połączeniu transakcji w pary
-\item $ L_i$ - liczba rozważanych transakcji w obrocie pętli algorytmu (linia 1) o numerze $i$
+\item $ N = n^2$ - liczba wierszy w macierzy preferencji powstałych po połączeniu transakcji w pary
+\item $ M = 2m$ - długość wierszy w macierzy preferencji po połączeniu transakcji w pary
+\item $ L_i$ - liczba rozważanych kandydatów w obrocie pętli algorytmu (linia 1) o numerze $i$
 \end{itemize}
 Poniżej został przedstawiony pseudokod algorytmu z najbardziej istotnymi ze względu na złożoność pesymistyczną fragmentami.
 
@@ -176,12 +212,13 @@ for(i = 1; i < M; i++)
 \end{lstlisting}
 \end{center}
 
+W 3 linii algorytmu generowani są kandydaci długości $i$. W 4 linii drzewo mieszające uzupełniane jest kolekcją wygenerowanych kandydatów, natomist w linii 6 dla każdego wiersza macierzy preferencji znajdowani są wspierani przez niego kandydaci.
 Z analizy powyższego pseudokodu można wyciągnąć następujące wnioski:
 \begin{itemize}
-\item Pętla z linii pierwszej wykonuje się maksymalnie $M$ razy. Obliczenia mogą zostać przerwane wcześniej jeśli wyczerpano już wszystkie wspierane transakcje.
-\item Złożoność metody GetCandidates zależy kwadratowo od liczby transakcji pochodzącej z poprzedniej pętli. Tych transakcji jest $L_{i-1}$. Dodatkowo potrzebny jest jeszcze czas na porównanie pierwszych $i-1$ elementów transakcji. Podsumowując złożoność metody jest rzędu $iL_{i-1}^2$
-\item Czas budowania drzewa jest funkcją liniową względem ilości transakcji z których jest budowany. Złożoność rzędu: $L_i$.
-\item Metoda FindSupported wywoływana jest $N$ razy dla każdego obrotu pętli z linii 1.  Przy założeniu, że zostaną odwiedzone wszystkie liście drzewa jej złożoność wynosi: $iL_i$. Czas $i$ jest potrzebny na sprawdzenie czy transakcja znajdująca się w drzewie jest wspierana przez zadaną transakcje.
+\item Pętla z linii pierwszej wykonuje się maksymalnie $M$ razy. Obliczenia mogą zostać przerwane wcześniej jeżeli nie wygenerowano nowych kandydatów.
+\item Złożoność metody GetCandidates zależy kwadratowo od liczby kandydatów pochodzącej z poprzedniej pętli. Liczba tych kandydatów wynosi $L_{i-1}$. Dodatkowo potrzebny jest jeszcze czas na porównanie pierwszych $i-1$ elementów kandydatów. Podsumowując złożoność metody jest rzędu $iL_{i-1}^2$
+\item Czas budowania drzewa jest funkcją liniową względem ilości wygenerowanych kandydatów z których jest budowane. Złożoność rzędu: $L_i$.
+\item Metoda FindSupported wywoływana jest $N$ razy dla każdego obrotu pętli z linii 1.  Przy założeniu, że zostaną odwiedzone wszystkie liście drzewa jej złożoność wynosi: $iL_i$. Czas $i$ jest potrzebny na sprawdzenie czy kandydat znajdujący się w drzewie jest wspierana przez zadany wiersz macierzy preferencji.
 \end{itemize}
 
 Podsumowując pesymistyczna złożoność algorytmu wynosi:
@@ -189,51 +226,18 @@ $$ \sum_{i=1}^M (iL_{i-1}^2 + L_i + iNL_i) $$
 
 Jak widać jest ona ściśle zależna od liczby kandydatów na wzorzec kontrastowy przetwarzanych w danej pętli algorytmu, a liczba ta jest ściśle zależna od zadania. Należy zaznaczyć, że przedstawione tu wyliczenia są przeprowadzone dla pesymistycznej złożoność i złożoność oczekiwana jest zdecydowanie lepsza. W szczególności można się spodziewać zakończenia obliczeń znacznie wcześniej niż przy ostatnim obrocie pętli z linii 1 oraz zdecydowanie lepszej niż liniowej złożoności wyszukiwania w drzewie mieszającym.
 
-\subsection{Złożoność}
-W tym rozdziale zostanie omówiona złożoność algorytmu. Zostały przyjęte następujące oznaczenia.
-\begin{itemize}
-\item $ n$ - liczba wejściowych transakcji
-\item $ m$ - długość wejściowych transakcji
-\item $ N = n^2$ - liczba transkacji powstałych po połączniu transakcji w pary
-\item $ M = 2m$ - długość transkacji po połączniu transakcji w pary
-\item $ L_i$ - liczba rozważanych transkacji w obrocie pętli algorytmu (linia 1) o numerze $i$
-\end{itemize}
-Poniżej został przedstawiony pseudokod algorytmu z najbardziej istotnymi ze względnu na złożoność pesymistyczną fragmentami.
-\begin{lstlisting}[numbers=left]
-for(i = 1; i < M; i++)
-{
-	Candidates = GetCandidates()
-	FillTree(Candidates)
-	for(j = 1; j < N; j++)
-		FindSupported(Tran[j])
-}
-\end{lstlisting}
-
-Z analizy powyższego pseudokodu można wyciągnąć następujące wnioski:
-\begin{itemize}
-\item Pętla z linii pierwszej wykonuje się maksymalnie $M$ razy. Obliczenia mogą zostać przerwane wcześniej jeśli wyczerpano już wszystkie wspierane transakcje.
-\item Złożoność metody GetCandidates zależy kwadratowo od liczby transakcji pochodzącej z poprzedniej pętli. Tych transakcji jest $L_{i-1}$. Dodatkowo potrzebny jest jeszcze czas na porównanie pierwszych $i-1$ elementów transkacji. Podsumowując złożoność metody jest rzędu $iL_{i-1}^2$
-\item Czas budowania drzewa jest fukncją liniową względem ilości transakcji z których jest budowany. Złożoność rzędu: $L_i$.
-\item Metoda FindSupported wywołwana jest $N$ razy dla każdego obrotu pętli z linii 1.  Przy założeniu, że zostaną odwiedzone wszystkie liście drzewa jej złożoność wynosi: $iL_i$. Czas $i$ jest potrzebny na sprawdzenie czy transkacja znajdująca się w drzewie jest wspierana przez zadaną transkacje.
-\end{itemize}
-
-Podsumowując pesymistyczna złożność algorytmu wynosi:
-$$ \sum_{i=1}^M (iL_{i-1}^2 + L_i + iNL_i) $$
-
-Jak widać jest ona ściśle zależna od liczby kandytatów na wzorzec kontrastowy przetwarzanych w danej pętli algorytmu. Liczba ta jest ściśle zależna od zadania.
-
 
 \section{Wyniki}
 
 \subsection{Drzewo mieszające}
 
-W rozdziale tym zostanie przedstawione porównanie wydajności drzewa mieszającego (\textit{HashTree}) z naiwną implementacją (\textit{FakeTree}) w postaci zwykłej tablicy. Struktury te wypełniane są transakcjami o stałej długości. Implementują one metodę \textit{GetSupportedSets}, która przyjmuje jako parametr pewną transakcje; jej zadaniem jest zwrócenie transakcji przez nią wspieranych. \\
+W rozdziale tym zostanie przedstawione porównanie wydajności drzewa mieszającego (\textit{HashTree}) z naiwną implementacją (\textit{FakeTree}) w postaci zwykłej tablicy. Struktury te wypełniane są kandydatami na wzorce kontekstowe o stałej długości. Implementują one metodę \textit{GetSupportedSets}, która przyjmuje jako parametr pewnien wiersz macierzy preferencji; jej zadaniem jest zwrócenie kandydatów przez niego wspieranych. \\
 Dane przedstawione są w postaci tablicy, porównanie wyników przebiega na podstawie czterech parametrów:
 \begin{itemize}
-\item {\bf n} - długość transakcji, którymi wypełniana jest struktura
-\item {\bf m} - długość transakcji, dla której zwracane są wspierane transakcje (transakcja ta jest parametrem metody \textit{GetSupportedSets})
-\item {\bf L} - ilość transakcji w drzewie
-\item {\bf M} - ilość możliwych różnych atrybutów wchodzących w skład transakcji
+\item {\bf n} - długość kandydatów, którymi wypełniana jest struktura
+\item {\bf m} - długość wiersza, dla którego zwracani są wspierani kandydaci (wiersz ta jest parametrem metody \textit{GetSupportedSets})
+\item {\bf L} - ilość kandydatów w drzewie
+\item {\bf M} - ilość możliwych różnych atrybutów z których składają się kandydaci
 \end{itemize}
 
 Dla każdego zestawu parametrów wykonano 10 testów. W tabeli zostaną przedstawione sumaryczne wyniki. \\
@@ -340,7 +344,7 @@ W przypadku gdy relacja ma zachodzić w sposób równoważny algorytm znajduje n
 \item (non-vegetarian meal without pork, meal containing alcohol) $=>$ ()
 \item (other meal, meal containing alcohol) $=>$ ()
 \item () $=>$ (non-vegetarian meal without pork, meal containing alcohol)
-\item () $=>$ (other meal, meal containing alcohol)
+\item () $=>$ (other meal, meal containing alcohol)preferenceMatrix
 \end{enumerate}
 
 \subsection{Wyniki dla złożonych danych}
@@ -450,9 +454,10 @@ zapisywane do pliku
 \item pageSize:liczba - rozmiar strony w drzewie mieszającym
 \item key:liczba - klucz mieszający
 \item relationType:wartosc - {NonStrict, Strict, Equals}
+\item preferenceMatrix:sciezka - ścieżka do pliku do którego zostanie wypisana macierz preferencji
 \end{itemize}
 
-Parametry można podawać w dowolnej kolejności. Ostatnie 5 parametró jest opcjonalne - ich domyślne wartości to: pageSize = 100, key = 47, relationType = NonStrict, method = T, write = true. Spacje w nazwach plików nie są dopuszczalne.\\
+Parametry można podawać w dowolnej kolejności. Ostatnie 6 parametrów jest opcjonalnch - ich domyślne wartości to: pageSize = 100, key = 47, relationType = NonStrict, method = T, write = true, preferenceMatrix = null (oznacza to, że macierz preferencji nie będzie wypisywana). Spacje w nazwach plików nie są dopuszczalne.\\
 
 Aby zapisać wyniki zwracane przez program, należy przekierować standardowe wyjście na plik docelowy.\\
 
